@@ -27,6 +27,7 @@ public class Principal {
 			System.out.println("5-Crear fichero");
 			System.out.println("6-Renombrar fichero");
 			System.out.println("7-MostrarTodo");
+			System.out.println("8-Mostrar el tamaño(real) de una carpeta");
 			opcion = t.nextInt(); t.nextLine();
 			switch(opcion) {
 			case 1:
