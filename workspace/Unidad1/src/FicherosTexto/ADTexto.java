@@ -1,8 +1,12 @@
 package FicherosTexto;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ADTexto {
 	
@@ -35,6 +39,92 @@ public class ADTexto {
 					a.getLanzamiento()+";"+
 					a.isSeguir()+"\n");
 			resultado = true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return resultado;
+	}
+
+
+
+	public ArrayList<Artista> obtenerArtistas() {
+		// TODO Auto-generated method stub
+		ArrayList<Artista> resultado = new ArrayList<>();
+		
+		BufferedReader f = null;
+		
+		try {
+			f= new BufferedReader(new FileReader(nombreF));
+			
+			String linea;
+			while((linea=f.readLine())!=null) {
+				String[] campos = linea.split(";");
+				//Creamos objeto artista a partir de los datos del fichero
+				Artista a = new Artista(campos[0], 
+						campos[1], 
+						Long.parseLong(campos[2]),
+						Integer.parseInt(campos[3]), 
+						Boolean.parseBoolean(campos[4]));
+				//Añadir artista al resultado
+				resultado.add(a);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("No hay artistas");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return resultado;
+	}
+
+
+
+	public Artista obtenerArtista(String nombreBuscado) {
+		// TODO Auto-generated method stub
+		Artista resultado = null;
+		BufferedReader f = null;
+		try {
+			f= new BufferedReader(new FileReader(nombreF));
+			String linea="";
+			while((linea= f.readLine())!=null) {
+				String[] campos = linea.split(";");
+				//Comprobamos si el valor leído es el buscado
+				if(campos[0].equalsIgnoreCase(nombreBuscado)) {
+					//Creo el objeto artista y finalizo
+					resultado = new Artista(campos[0], 
+							campos[1], 
+							Long.parseLong(campos[2]),
+							Integer.parseInt(campos[3]), 
+							Boolean.parseBoolean(campos[4]));
+					return resultado;
+				}
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
