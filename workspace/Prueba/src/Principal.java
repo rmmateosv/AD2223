@@ -11,7 +11,7 @@ public class Principal {
 			System.out.println("0-Salir");			
 			opcion = t.nextInt(); t.nextLine();
 			switch(opcion) {
-			case '1':
+			case 1:
 				
 				break;
 			}

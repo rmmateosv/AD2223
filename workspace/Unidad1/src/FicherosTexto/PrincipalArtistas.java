@@ -23,7 +23,7 @@ public class PrincipalArtistas {
 			System.out.println("5-Mostrar algunos Artista");
 			opcion = t.nextInt(); t.nextLine();
 			switch(opcion) {
-			case '1':
+			case 1:
 				crearArtista();
 				break;
 			}
