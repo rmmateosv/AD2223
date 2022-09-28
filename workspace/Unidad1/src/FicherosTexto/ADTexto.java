@@ -2,6 +2,7 @@ package FicherosTexto;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -139,6 +140,86 @@ public class ADTexto {
 				}
 			}
 		}
+		return resultado;
+	}
+
+
+
+	public boolean modificarSeguir(Artista a, boolean b) {
+		// TODO Auto-generated method stub
+		boolean resultado=false;
+		
+		//Declarar los ficheros
+		BufferedReader fO = null;
+		BufferedWriter fTmp = null;
+		
+		try {
+			fO= new BufferedReader(new FileReader(nombreF));
+			//Si el fichero existe, hay que sobreescribirlo
+			fTmp = new BufferedWriter(new FileWriter("artistas.tmp",false));
+			String linea;
+			while((linea = fO.readLine())!=null) {
+				String[] campos = linea.split(";");
+				//Comprobar si el artista leído es el que hay que modificar
+				if(campos[0].equalsIgnoreCase(a.getNombre())) {
+					campos[4]="false";
+					fTmp.write(String.join(";",campos));
+					
+				}
+				else {
+					//Escribimos la línea tal y como se ha leído
+					fTmp.write(linea+"\n");
+				}
+			}
+					
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("No existen artistas");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			//Cerrar los dos ficheros
+			if(fO != null) {
+				try {
+					fO.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(fTmp!=null) {
+				try {
+					fTmp.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		//Borramos el fichero original
+		File fOriginal = new File(nombreF);
+		File fTemporal = new File("artistas.tmp");
+		
+		if(fOriginal.delete()) {
+			//REnombramos el fichero temporal
+			if(fTemporal.renameTo(fOriginal)) {
+				resultado = true;
+			}
+			else {
+				System.out.println("Error al renombrar el fichero temporal");
+			}
+		}
+		else {
+			System.out.println("Error al borrar el fichero original");
+		}
+		
+		
+		
+		
+		
 		return resultado;
 	}
 
