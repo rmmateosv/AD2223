@@ -21,7 +21,7 @@ public class PrincipalArtistas {
 			System.out.println("2-Mostrar Artistas");
 			System.out.println("3-Dejar de seguir Artista (Modificación)");
 			System.out.println("4-Borrar Artista");
-			System.out.println("5-Mostrar algunos Artista");
+			System.out.println("5-Mostrar  Artista seguidos");
 			opcion = t.nextInt(); t.nextLine();
 			switch(opcion) {
 			case 1:
@@ -33,8 +33,43 @@ public class PrincipalArtistas {
 			case 3:
 				dejarSeguir();
 				break;
+			case 4:
+				borrarArtista();
+				break;
+			case 5:
+				mostrarSeguidos();
+				break;
 			}
 		}while(opcion!=0);
+	}
+
+	private static void mostrarSeguidos() {
+		// TODO Auto-generated method stub
+		ArrayList<Artista> artistas = fArtistas.obtenerArtistasSeguidos();
+		for(Artista a:artistas) {
+			a.mostrar();
+		}
+		
+	}
+
+	private static void borrarArtista() {
+		// TODO Auto-generated method stub
+		mostrarArtistas();
+		System.out.println("Introduce el nombre del artista a borrar:");
+		String nombre = t.nextLine();
+		
+		Artista a = fArtistas.obtenerArtista(nombre);
+		if(a!=null) {
+			if(fArtistas.borrarArtista(a)) {
+				System.out.println("Artista borrado");
+			}
+			else {
+				System.out.println("Error, no se ha borrado el artista");
+			}
+		}
+		else {
+			System.out.println("Error no existe el artista");
+		}
 	}
 
 	private static void dejarSeguir() {

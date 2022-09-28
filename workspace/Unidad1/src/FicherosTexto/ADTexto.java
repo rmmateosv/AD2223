@@ -163,7 +163,7 @@ public class ADTexto {
 				//Comprobar si el artista leído es el que hay que modificar
 				if(campos[0].equalsIgnoreCase(a.getNombre())) {
 					campos[4]="false";
-					fTmp.write(String.join(";",campos));
+					fTmp.write(String.join(";",campos)+"\n");
 					
 				}
 				else {
@@ -219,6 +219,122 @@ public class ADTexto {
 		
 		
 		
+		
+		return resultado;
+	}
+
+
+
+	public boolean borrarArtista(Artista a) {
+		// TODO Auto-generated method stub
+		boolean resultado =false;
+		BufferedReader fO=null;
+		BufferedWriter fTmp=null;
+		try {
+			fO= new BufferedReader(new FileReader(nombreF));
+			fTmp = new BufferedWriter(new FileWriter("artistas.tmp",false));
+			
+			String linea;
+			while((linea=fO.readLine())!=null) {
+				String[] campos = linea.split(";");
+				
+				if(!campos[0].equalsIgnoreCase(a.getNombre())) {
+					//Si el artista no es el que hay que borrar
+					//lo pasamos al temporal tal y como se ha leído
+					fTmp.write(linea+"\n");
+				}
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Aún no hay artistas");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(fO!=null) {
+				try {
+					fO.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(fTmp!=null) {
+				try {
+					fTmp.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		//Borrar fichero original y renombra el temporal
+		File fOriginal = new File(nombreF);
+		if(fOriginal.delete()) {
+			File fTemporal = new File("artistas.tmp");
+			if(fTemporal.renameTo(fOriginal)) {
+				resultado=true;
+			}
+			else {
+				System.out.println("Error, al renombrar el fichero temporal");
+			}
+		}
+		else {
+			System.out.println("Error, al borrar el fichero original");
+		}
+		
+		
+		return resultado;
+	}
+
+
+
+	public ArrayList<Artista> obtenerArtistasSeguidos() {
+		// TODO Auto-generated method stub
+		ArrayList<Artista> resultado = new ArrayList<>();
+		
+		BufferedReader f = null;
+		
+		try {
+			f= new BufferedReader(new FileReader(nombreF));
+			String linea;
+			while((linea=f.readLine())!=null) {
+				String[] campos = linea.split(";");
+				//Compruebo que sigo al artista
+				if(Boolean.parseBoolean(campos[4])) {
+					//Creamos objeto artista
+					Artista a = new Artista(campos[0], 
+							campos[1], 
+							Long.parseLong(campos[2]), 
+							Integer.parseInt(campos[3]), 
+							Boolean.parseBoolean(campos[4]));
+					//Añado objeto a a resultado
+					resultado.add(a);
+					
+				}
+				
+			}
+			
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("No hay artistas");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 		
 		return resultado;
 	}
