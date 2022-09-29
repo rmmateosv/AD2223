@@ -7,7 +7,7 @@ import FicherosTexto.Artista;
 
 public class Album {
 	//Tamaño de un registro= 213B
-	//4(id)+100(titulo)+8(fecha)+100(artista)+1(activo)
+	//4B(id)+100B(titulo)+8B(fecha)+100B(artista)+1B(activo)
 	private int id;
 	private String titulo;
 	private Date fechaP;
