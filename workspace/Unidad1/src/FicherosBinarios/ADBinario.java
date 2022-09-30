@@ -3,6 +3,7 @@ package FicherosBinarios;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -311,22 +312,33 @@ public class ADBinario {
 			FTmp = new DataOutputStream(new FileOutputStream(nombreTmp,false));
 			
 			while(true) {
-				Album a = new Album();
-				//Leemos el id
-				a.setId(fO.readInt());
-				String tit="";
+				//Leer id
+				int id = fO.readInt();
+				//Escribir id
+				FTmp.writeInt(id);
+				//Leer y escribir el título
 				for(int i=0;i<50;i++) {
-					tit+=fO.readChar();
+					FTmp.writeChar(fO.readChar());
 				}
-				a.setTitulo(tit.trim());
-				a.setFechaP(new Date(fO.readLong()));
+				//Leer y escribir la fecha publicación
+				FTmp.writeLong(fO.readLong());
+				
 				String nombre="";
 				for(int i=0;i<50;i++) {
 					nombre+=fO.readChar();
 				}
-				Artista art = fArtista.obtenerArtista(nombre.trim());
-				a.setArtista(art);
-				a.setActivo(fO.readBoolean());
+				//Comprobamos si es el que hay que modificar
+				if(id==al.getId()) {
+					//Escribo el nombre del nuevo artista CON 50 CARACTERES!!!
+					StringBuffer texto = new StringBuffer(ar.getNombre());
+					texto.setLength(50);
+					FTmp.writeChars(texto.toString());
+				}
+				else {
+					FTmp.writeChars(nombre);
+				}
+				//Leer y escribir activo
+				FTmp.writeBoolean(fO.readBoolean());
 			}
 			
 		} 
@@ -339,6 +351,125 @@ public class ADBinario {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		finally {
+			if(fO!=null) {
+				try {
+					fO.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(FTmp!=null) {
+				try {
+					FTmp.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		File fOriginal = new File(nombreF);
+		if(fOriginal.delete()) {
+			File fTemporal = new File(nombreTmp);
+			if(fTemporal.renameTo(fOriginal)) {
+				resultado=true;
+			}
+			else {
+				System.out.println("Error al renombrar el fichero temporal");
+			}
+		}
+		else {
+			System.out.println("Error al borrar el fichero original");
+		}
+		return resultado;
+	}
+
+	public boolean borrarAlbum(Album al) {
+		// TODO Auto-generated method stub
+		boolean resultado=false;
+		
+		//Declaramos ficheros
+		DataInputStream fO = null;
+		DataOutputStream FTmp = null;
+				
+		try {
+			//Abrimos ficheros
+			fO = new DataInputStream(new FileInputStream(nombreF));
+			FTmp = new DataOutputStream(new FileOutputStream(nombreTmp,false));
+			
+			while(true) {
+				//Leer id
+				int id = fO.readInt();
+				//Escribir id
+				FTmp.writeInt(id);
+				//Leer y escribir el título
+				for(int i=0;i<50;i++) {
+					FTmp.writeChar(fO.readChar());
+				}
+				//Leer y escribir la fecha publicación
+				FTmp.writeLong(fO.readLong());
+				
+				String nombre="";
+				for(int i=0;i<50;i++) {
+					nombre+=fO.readChar();
+				}
+				//Comprobamos si es el que hay que modificar
+				if(id==al.getId()) {
+					//Escribo el nombre del nuevo artista CON 50 CARACTERES!!!
+					StringBuffer texto = new StringBuffer(ar.getNombre());
+					texto.setLength(50);
+					FTmp.writeChars(texto.toString());
+				}
+				else {
+					FTmp.writeChars(nombre);
+				}
+				//Leer y escribir activo
+				FTmp.writeBoolean(fO.readBoolean());
+			}
+			
+		} 
+		catch (EOFException e) {
+			// TODO: handle exception
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Aún no hay datos");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(fO!=null) {
+				try {
+					fO.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(FTmp!=null) {
+				try {
+					FTmp.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		File fOriginal = new File(nombreF);
+		if(fOriginal.delete()) {
+			File fTemporal = new File(nombreTmp);
+			if(fTemporal.renameTo(fOriginal)) {
+				resultado=true;
+			}
+			else {
+				System.out.println("Error al renombrar el fichero temporal");
+			}
+		}
+		else {
+			System.out.println("Error al borrar el fichero original");
 		}
 		return resultado;
 	}

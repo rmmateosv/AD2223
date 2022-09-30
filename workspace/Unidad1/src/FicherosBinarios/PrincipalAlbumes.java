@@ -39,10 +39,32 @@ public class PrincipalAlbumes {
 			case 3:
 				modificarArtista();
 				break;
+			case 4:
+				borrarAlbum();
+				break;
 			}	
 
 		} while (opcion != 0);
 
+	}
+
+	private static void borrarAlbum() {
+		// TODO Auto-generated method stub
+		mostrarAlbumes();
+		System.out.println("Id de álbum a borrar");
+		int id = t.nextInt();t.nextLine();
+		Album al = fAlbumes.obtenerAlbum(id);
+		if(al!=null) {
+			 if(fAlbumes.borrarAlbum(al)) {
+				 System.out.println("Álbum borrado");
+			 }
+			 else {
+				 System.out.println("Error al borrar  el álbum");
+			 }
+		}
+		else {
+			System.out.println("Error, no existe el álbum");
+		}
 	}
 
 	private static void modificarArtista() {
