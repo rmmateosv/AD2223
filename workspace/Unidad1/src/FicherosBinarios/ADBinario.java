@@ -243,6 +243,105 @@ public class ADBinario {
 		}
 		return resultado;
 	}
+
+	public Album obtenerAlbum(int id) {
+		// TODO Auto-generated method stub
+		Album resultado=null;
+		DataInputStream f = null;
+		try {
+			f= new DataInputStream(new FileInputStream(nombreF));
+			while(true) {
+				Album a = new Album();
+				//Leemos el id
+				a.setId(f.readInt());
+				String tit="";
+				for(int i=0;i<50;i++) {
+					tit+=f.readChar();
+				}
+				a.setTitulo(tit.trim());
+				a.setFechaP(new Date(f.readLong()));
+				String nombre="";
+				for(int i=0;i<50;i++) {
+					nombre+=f.readChar();
+				}
+				Artista art = fArtista.obtenerArtista(nombre.trim());
+				a.setArtista(art);
+				a.setActivo(f.readBoolean());
+				//Si el álbum es el buscado terminamos
+				if(a.getId()==id) {
+					//Álbum encontrado					
+					return a;
+				}
+			}
+		} 
+		catch (EOFException e) {
+			// TODO: handle exception
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Aún no hay álbumes");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}		
+		return resultado;
+	}
+
+	public boolean modificarArtista(Album al, Artista ar) {
+		// TODO Auto-generated method stub
+		boolean resultado=false;
+		
+		//Declaramos ficheros
+		DataInputStream fO = null;
+		DataOutputStream FTmp = null;
+				
+		try {
+			//Abrimos ficheros
+			fO = new DataInputStream(new FileInputStream(nombreF));
+			FTmp = new DataOutputStream(new FileOutputStream(nombreTmp,false));
+			
+			while(true) {
+				Album a = new Album();
+				//Leemos el id
+				a.setId(fO.readInt());
+				String tit="";
+				for(int i=0;i<50;i++) {
+					tit+=fO.readChar();
+				}
+				a.setTitulo(tit.trim());
+				a.setFechaP(new Date(fO.readLong()));
+				String nombre="";
+				for(int i=0;i<50;i++) {
+					nombre+=fO.readChar();
+				}
+				Artista art = fArtista.obtenerArtista(nombre.trim());
+				a.setArtista(art);
+				a.setActivo(fO.readBoolean());
+			}
+			
+		} 
+		catch (EOFException e) {
+			// TODO: handle exception
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Aún no hay datos");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
 	
 	
 	

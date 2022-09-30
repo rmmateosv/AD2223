@@ -35,10 +35,47 @@ public class PrincipalAlbumes {
 			case 2:
 				crearAlbum();
 				break;
-			}
+			
+			case 3:
+				modificarArtista();
+				break;
+			}	
 
 		} while (opcion != 0);
 
+	}
+
+	private static void modificarArtista() {
+		// TODO Auto-generated method stub
+		mostrarAlbumes();
+		System.out.println("Id de álbum a moficar");
+		int id = t.nextInt();t.nextLine();
+		Album al = fAlbumes.obtenerAlbum(id);
+		if(al!=null) {
+			// Mostrar Artistas
+			ArrayList<Artista> artistas = fArtistas.obtenerArtistas();
+			for (Artista a : artistas) {
+				a.mostrar();
+			}
+			System.out.println("Introduce el nombre del nuevo artista");
+			String nombre = t.nextLine();
+			Artista ar = fArtistas.obtenerArtista(nombre);
+			if(ar!=null) {
+				if(fAlbumes.modificarArtista(al,ar)) {
+					System.out.println("Álbum modificado");
+				}
+				else {
+					System.out.println("Error, al modificar el álbum");
+				}
+			}
+			else {
+				System.out.println("Error, no existe el artista");
+			}
+			
+		}
+		else {
+			System.out.println("Error, no existe el álbum");
+		}
 	}
 
 	private static void crearAlbum() {
