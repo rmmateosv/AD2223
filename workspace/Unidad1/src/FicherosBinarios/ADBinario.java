@@ -471,6 +471,64 @@ public class ADBinario {
 		}
 		return resultado;
 	}
+
+	public ArrayList<Album> obtenerAlbumes(Artista a) {
+		// TODO Auto-generated method stub
+		ArrayList<Album> resultado = new ArrayList<>();
+		
+		DataInputStream f = null;
+		try {
+			f=new DataInputStream(new FileInputStream(nombreF));
+			while(true) {
+				Album al = new Album();
+				al.setId(f.readInt());
+				al.setTitulo("");
+				for(int i=0;i<50;i++) {
+					al.setTitulo(al.getTitulo()+f.readChar());
+				}
+				al.setTitulo(al.getTitulo().trim());
+				
+				al.setFechaP(new Date(f.readLong()));
+				
+				String nombreA = "";
+				for(int i=0;i<50;i++) {
+					nombreA+=f.readChar();
+				}
+				
+				al.setArtista(fArtista.obtenerArtista(nombreA.trim()));
+				al.setActivo(f.readBoolean());
+				//Comprobamos si el álbum es del artista elegido
+				!!!EXPLICAR POR QUÉ NO FUCNIONA SI COMPARO OBJETOS
+				if(al.getArtista().getNombre().equalsIgnoreCase(a.getNombre())) {
+					resultado.add(al);
+				}
+				
+			}
+		} 
+		
+		catch (EOFException e) {
+			// TODO: handle exception
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return resultado;
+	}
 	
 	
 	

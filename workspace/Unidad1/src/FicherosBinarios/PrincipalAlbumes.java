@@ -42,10 +42,34 @@ public class PrincipalAlbumes {
 			case 4:
 				borrarAlbum();
 				break;
+			case 5:
+				mostrarAlbumArtista();
+				break;
 			}	
 
 		} while (opcion != 0);
 
+	}
+
+	private static void mostrarAlbumArtista() {
+		// TODO Auto-generated method stub
+		// Mostrar Artistas
+		ArrayList<Artista> artistas = fArtistas.obtenerArtistas();
+		for (Artista a : artistas) {
+			a.mostrar();
+		}
+		System.out.println("Introduce el nombre del artista");
+		String nombre = t.nextLine();
+		Artista a = fArtistas.obtenerArtista(nombre);
+		if(a!=null) {
+			ArrayList<Album> albumes = fAlbumes.obtenerAlbumes(a);
+			for(Album al:albumes) {
+				al.mostrar();
+			}
+		}
+		else {
+			System.out.println("Error, no existe el artista");
+		}
 	}
 
 	private static void borrarAlbum() {
