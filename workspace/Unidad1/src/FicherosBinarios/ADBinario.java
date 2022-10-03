@@ -402,31 +402,29 @@ public class ADBinario {
 			while(true) {
 				//Leer id
 				int id = fO.readInt();
-				//Escribir id
-				FTmp.writeInt(id);
-				//Leer y escribir el título
-				for(int i=0;i<50;i++) {
-					FTmp.writeChar(fO.readChar());
-				}
-				//Leer y escribir la fecha publicación
-				FTmp.writeLong(fO.readLong());
-				
-				String nombre="";
-				for(int i=0;i<50;i++) {
-					nombre+=fO.readChar();
-				}
-				//Comprobamos si es el que hay que modificar
 				if(id==al.getId()) {
-					//Escribo el nombre del nuevo artista CON 50 CARACTERES!!!
-					StringBuffer texto = new StringBuffer(ar.getNombre());
-					texto.setLength(50);
-					FTmp.writeChars(texto.toString());
+					//Tengo que borrar. Leo pero no escribo
+					for(int i=0;i<50;i++) {
+						fO.readChar();
+					}
+					fO.readLong();
+					for(int i=0;i<50;i++) {
+						fO.readChar();
+					}
+					fO.readBoolean();
 				}
 				else {
-					FTmp.writeChars(nombre);
+					//Hay que leer y escribir el resto de datos
+					FTmp.writeInt(id);
+					for(int i=0;i<50;i++) {
+						FTmp.writeChar(fO.readChar());
+					}
+					FTmp.writeLong(fO.readLong());;
+					for(int i=0;i<50;i++) {
+						FTmp.writeChar(fO.readChar());
+					}
+					FTmp.writeBoolean(fO.readBoolean());
 				}
-				//Leer y escribir activo
-				FTmp.writeBoolean(fO.readBoolean());
 			}
 			
 		} 
