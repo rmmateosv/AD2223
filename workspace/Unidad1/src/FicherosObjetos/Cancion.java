@@ -5,6 +5,11 @@ import java.io.Serializable;
 import FicherosBinarios.Album;
 
 public class Cancion implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1501307634331149304L;
+	
 	private int id;
 	private String titulo;
 	private Album album;
