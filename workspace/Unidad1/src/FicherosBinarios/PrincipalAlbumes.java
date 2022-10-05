@@ -45,10 +45,37 @@ public class PrincipalAlbumes {
 			case 5:
 				mostrarAlbumArtista();
 				break;
+			case 6:
+				desactivarAlbum();
+				break;
 			}	
 
 		} while (opcion != 0);
 
+	}
+
+	private static void desactivarAlbum() {
+		// TODO Auto-generated method stub
+		mostrarAlbumes();
+		System.out.println("Id de álbum a desactivar");
+		int id = t.nextInt();t.nextLine();
+		Album al = fAlbumes.obtenerAlbum(id);
+		if(al!=null) {
+			if(al.isActivo()) {
+				if(fAlbumes.desactivarAlbum(al)) {
+					System.out.println("Álbum desactivado");
+				}
+				else {
+					System.out.println("Error al desactivar el álbum");
+				}
+			}
+			else {
+				System.out.println("El álbum no está activo");
+			}
+		}
+		else {
+			System.out.println("Error, no existe el álbum");
+		}
 	}
 
 	private static void mostrarAlbumArtista() {
