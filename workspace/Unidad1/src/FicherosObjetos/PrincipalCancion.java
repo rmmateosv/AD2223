@@ -35,10 +35,58 @@ public class PrincipalCancion {
 			case 2:
 				crearCancion();
 				break;
-			}	
+			case 3:
+				modificarBorrarAlbum(false);
+				break;
+			case 4:
+				modificarBorrarAlbum(true);
+				break;
+			}
 
 		} while (opcion != 0);
 
+	}
+
+	private static void modificarBorrarAlbum(boolean borrar) {
+		// TODO Auto-generated method stub
+		mostrarCanciones();
+		System.out.println("Introduce el id de la canción");
+		int id = t.nextInt();  t.nextLine();
+		Cancion c = fCanciones.obtenerCancion(id);
+		if(c!=null) {
+			if(!borrar) {
+				ArrayList<Album> albumes = fAlbumes.obtenerAlbumes();
+				for(Album a:albumes) {
+					a.mostrar();
+				}
+				System.out.println("Introduce el id del nuevo álbum");
+				int idA= t.nextInt();t.nextLine();
+				Album al = fAlbumes.obtenerAlbum(idA);
+				if(al!=null) {
+					c.setAlbum(al);
+					if(fCanciones.modificarBorrarCancion(c,false)) {
+						System.out.println("Canción modificada");
+					}
+					else {
+						System.out.println("Error al modificar la canción");
+					}
+				}
+				else {
+					System.out.println("Error, álbum no existe");
+				}
+			}
+			else {
+				if(fCanciones.modificarBorrarCancion(c,true)) {
+					System.out.println("Canción borrada");
+				}
+				else {
+					System.out.println("Error al borrar la canción");
+				}
+			}
+		}
+		else {
+			System.out.println("Error, no existe canción");
+		}
 	}
 
 	private static void crearCancion() {
