@@ -122,7 +122,10 @@ public class ADObjetos {
 		 catch (EOFException e) {
 			// TODO: handle exception
 			 //obteneos el id
-			 resultado = c.getId();
+			 if(c!=null)
+				 resultado = c.getId();
+			 else
+				 resultado = 0;
 		}
 		 catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
