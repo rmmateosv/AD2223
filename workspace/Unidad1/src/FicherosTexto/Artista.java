@@ -1,9 +1,10 @@
 package FicherosTexto;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Artista {
+public class Artista implements Serializable{
 	private String nombre;
 	private String genero;
 	private long fechaUA; // FEcha Último Álbum

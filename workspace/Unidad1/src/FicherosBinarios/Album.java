@@ -1,11 +1,12 @@
 package FicherosBinarios;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import FicherosTexto.Artista;
 
-public class Album {
+public class Album implements Serializable{
 	//Tamaño de un registro= 213B
 	//4B(id)+100B(titulo)+8B(fecha)+100B(artista)+1B(activo)
 	private int id;

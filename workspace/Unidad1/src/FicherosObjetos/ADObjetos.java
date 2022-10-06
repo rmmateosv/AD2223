@@ -155,6 +155,7 @@ public class ADObjetos {
 		try {
 			f=new ObjectOutputStream(new FileOutputStream(nombreF,true));
 			f.writeObject(c);
+			resultado = true;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
