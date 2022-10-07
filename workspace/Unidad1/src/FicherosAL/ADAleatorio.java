@@ -7,6 +7,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 import FicherosBinarios.Album;
 import FicherosTexto.ADTexto;
 import FicherosTexto.Artista;
@@ -135,7 +136,7 @@ public class ADAleatorio {
 					//Leemos la fecha
 					f.seek(f.getFilePointer()+100);
 					resultado.setFechaP(new Date(f.readLong()));
-					
+					return resultado;
 				}
 				else {
 					//Saltamos el campo activo y lo dejamos 
@@ -154,6 +155,16 @@ public class ADAleatorio {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 		
 		return resultado;
 	}
@@ -161,6 +172,142 @@ public class ADAleatorio {
 
 	public int obtenerUltimoId() {
 		// TODO Auto-generated method stub
-		return 0;
+		int resultado = 0;
+		
+		RandomAccessFile f =null;
+		try {
+			f=new RandomAccessFile(nombreF, "r");
+			//Nos posicionamos al final del fichero
+			f.seek(f.length()-213);
+			resultado = f.readInt();
+		} 
+		catch (EOFException e) {
+			// TODO: handle exception
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("No hay canciones");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return resultado;
+	}
+
+
+	public boolean crearAlbum(Album al) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		
+		RandomAccessFile f = null;
+		try {
+			f= new RandomAccessFile(nombreF, "rw");
+			
+			//¡¡COLOCAR EL APUNTADOR AL FINAL DEL FICHERO!!
+			f.seek(f.length());
+			//Escribo el álbum
+			f.writeInt(al.getId());
+			
+			//Hacemos que el título tenga 50 caracteres
+			StringBuffer texto50 = new StringBuffer(al.getTitulo());
+			texto50.setLength(50);
+			f.writeChars(texto50.toString());
+			
+			f.writeLong(al.getFechaP().getTime());
+			
+			texto50 = new StringBuffer(al.getArtista().getNombre());
+			texto50.setLength(50);
+			f.writeChars(texto50.toString());
+			
+			f.writeBoolean(al.isActivo());
+			resultado = true;
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return resultado;
+	}
+
+
+	public Album obtenerAlbum(int id) {
+		// TODO Auto-generated method stub
+		Album resultado = null;
+		
+		RandomAccessFile f = null;
+		try {
+			f=new RandomAccessFile(nombreF, "r");
+			while(true) {
+				int idFichero = f.readInt();
+				if(idFichero==id) {
+					resultado = new Album();
+					resultado.setId(idFichero);
+					resultado.setTitulo("");
+					for(int i=0;i<50;i++) {
+						resultado.setTitulo(resultado.getTitulo()+
+								f.readChar());
+					}
+					resultado.setFechaP(new Date(f.readLong()));
+					String nombreA="";
+					for(int i=0;i<50;i++) {
+						nombreA+=f.readChar();
+					}
+					resultado.setArtista(fArtistas.obtenerArtista(nombreA.trim()));
+					resultado.setActivo(f.readBoolean());
+					return resultado;
+					
+					
+				}
+				else {
+					//SAltamos al siguiente id
+					f.seek(f.getFilePointer()+209);
+				}
+			}
+		} 
+		catch (EOFException e) {
+			// TODO: handle exception
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return resultado;
 	}
 }
