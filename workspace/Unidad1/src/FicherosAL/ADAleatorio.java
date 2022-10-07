@@ -99,51 +99,55 @@ public class ADAleatorio {
 		RandomAccessFile f =null;
 		try {
 			f=new RandomAccessFile(nombreF, "r");
-			//Saltamos el id, no es necesario leerlo
-			//Para ello posicionamos el apuntador
-			//sumando 4B a la posición actual
-			f.seek(f.getFilePointer()+4);
-			
-			//Leemos el título
-			String tit="";
-			for(int i=0;i<50;i++) {
-				tit+=f.readChar();
-			}
-			
-			//Saltamos la fecha, no es necesario leerla
-			//Para ello posicionamos el apuntador
-			//sumando 8B a la posición actual
-			f.seek(f.getFilePointer()+8);
-			
-			//Leemos el nombre del artista
-			String nombre="";
-			for(int i=0;i<50;i++) {
-				nombre+=f.readChar();
-			}
-			//Compruebo si coincide con el buscado
-			if(tit.trim().equalsIgnoreCase(titulo) && 
-			   nombre.trim().equalsIgnoreCase(nombreA)	) {
-				resultado = new Album();
-				resultado.setTitulo(titulo);
-				resultado.setArtista(fArtistas.obtenerArtista(nombreA));
-				//Leemos activo ¡¡ NO HAY COLOCAR EL APUNTADOR, ESTÁ AHÍ!!!
-				resultado.setActivo(f.readBoolean());
-				//Leemos el id
-				f.seek(f.getFilePointer()-213);
-				resultado.setId(f.readInt());
-				//Leemos la fecha
-				f.seek(f.getFilePointer()+100);
-				resultado.setFechaP(new Date(f.readLong()));
+			while(true) {
+				//Saltamos el id, no es necesario leerlo
+				//Para ello posicionamos el apuntador
+				//sumando 4B a la posición actual
+				f.seek(f.getFilePointer()+4);
 				
+				//Leemos el título
+				String tit="";
+				for(int i=0;i<50;i++) {
+					tit+=f.readChar();
+				}
+				
+				//Saltamos la fecha, no es necesario leerla
+				//Para ello posicionamos el apuntador
+				//sumando 8B a la posición actual
+				f.seek(f.getFilePointer()+8);
+				
+				//Leemos el nombre del artista
+				String nombre="";
+				for(int i=0;i<50;i++) {
+					nombre+=f.readChar();
+				}
+				//Compruebo si coincide con el buscado
+				if(tit.trim().equalsIgnoreCase(titulo) && 
+				   nombre.trim().equalsIgnoreCase(nombreA)	) {
+					resultado = new Album();
+					resultado.setTitulo(titulo);
+					resultado.setArtista(fArtistas.obtenerArtista(nombreA));
+					//Leemos activo ¡¡ NO HAY COLOCAR EL APUNTADOR, ESTÁ AHÍ!!!
+					resultado.setActivo(f.readBoolean());
+					//Leemos el id
+					f.seek(f.getFilePointer()-213);
+					resultado.setId(f.readInt());
+					//Leemos la fecha
+					f.seek(f.getFilePointer()+100);
+					resultado.setFechaP(new Date(f.readLong()));
+					
+				}
+				else {
+					//Saltamos el campo activo y lo dejamos 
+					//posicionado al principio del siguiente registro
+					f.seek(f.getFilePointer()+1);
+				}
 			}
-			else {
-				//Saltamos el campo activo y lo dejamos 
-				//posicionado al principio del siguiente registro
-				f.seek(f.getFilePointer()+1);
-			}
-			
-			
-		} catch (FileNotFoundException e) {
+		} 
+		catch (EOFException e) {
+			// TODO: handle exception
+		}
+		catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -152,5 +156,11 @@ public class ADAleatorio {
 		}
 		
 		return resultado;
+	}
+
+
+	public int obtenerUltimoId() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
