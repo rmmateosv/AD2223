@@ -41,10 +41,33 @@ public class PrincipalCancion {
 			case 4:
 				modificarBorrarAlbum(true);
 				break;
+			case 5:
+				mostrarCancionAlbum();
+				break;
 			}
 
 		} while (opcion != 0);
 
+	}
+
+	private static void mostrarCancionAlbum() {
+		// TODO Auto-generated method stub
+		ArrayList<Album> albumes = fAlbumes.obtenerAlbumes();
+		for(Album a:albumes) {
+			a.mostrar();
+		}
+		System.out.println("Introduce Id album");
+		int id = t.nextInt();t.nextLine();
+		Album al = fAlbumes.obtenerAlbum(id);
+		if (al != null) {
+			ArrayList<Cancion> canciones = 
+					fCanciones.obtenerCanciones(al);
+			for (Cancion c : canciones) {
+				c.mostrar();;
+			}
+		} else {
+			System.out.println("Error, no existe el álbum");
+		}
 	}
 
 	private static void modificarBorrarAlbum(boolean borrar) {
