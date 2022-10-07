@@ -310,4 +310,53 @@ public class ADAleatorio {
 		}
 		return resultado;
 	}
+
+
+	public boolean modificarArtista(Album al, Artista ar) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		RandomAccessFile f = null;
+		try {
+			f=new RandomAccessFile(nombreF, "rw");
+			
+			while(true) {
+				int idFichero = f.readInt();
+				if(idFichero==al.getId()) {
+										
+					//Nos posicionamos después de la fecha
+					f.seek(f.getFilePointer()+108);
+					StringBuffer texto = new StringBuffer(ar.getNombre());
+					texto.setLength(50);
+					f.writeChars(texto.toString());
+					return true;
+				}
+				else {
+					//SAltamos al siguiente id
+					f.seek(f.getFilePointer()+209);
+				}
+			}
+		} 
+		catch (EOFException e) {
+			// TODO: handle exception
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return resultado;
+	}
 }
