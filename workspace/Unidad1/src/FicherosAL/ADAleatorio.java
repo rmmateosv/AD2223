@@ -437,4 +437,49 @@ public class ADAleatorio {
 		
 		return resultado;
 	}
+
+
+	public ArrayList<Album> obtenerAlbumes(Artista a) {
+		// TODO Auto-generated method stub
+		
+		ArrayList<Album> resultado = new ArrayList<>();
+		
+		RandomAccessFile f = null;
+		
+		try {
+			f = new RandomAccessFile(nombreF, "r");
+			while(true) {
+				//Vamos al artista
+				f.seek(f.getFilePointer()+112);
+				String texto="";
+				for(int i=0;i<50;i++) {
+					texto+=f.readChar();
+				}
+				if(a.getNombre().equalsIgnoreCase(texto.trim())) {
+					f.seek(f.getFilePointer()-212);
+					Album al = new Album();
+					al.setId(f.readInt());
+					String texto2="";
+					for(int i=0;i<50;i++) {
+						texto2+=f.readChar();
+					}
+					al.setTitulo(texto2.trim());
+					al.setFechaP(new Date(f.readLong()));					
+					al.setArtista(fArtistas.obtenerArtista(texto.trim()));
+					f.seek(f.getFilePointer()+100);
+					al.setActivo(f.readBoolean());
+					
+				}
+		} 
+		
+		catch (EOFException e) {
+			// TODO: handle exception
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
 }
