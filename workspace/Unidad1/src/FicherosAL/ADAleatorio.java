@@ -1,6 +1,7 @@
 package FicherosAL;
 
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -318,11 +319,11 @@ public class ADAleatorio {
 		RandomAccessFile f = null;
 		try {
 			f=new RandomAccessFile(nombreF, "rw");
+		
 			
 			while(true) {
 				int idFichero = f.readInt();
-				if(idFichero==al.getId()) {
-										
+				if(idFichero==al.getId()) {										
 					//Nos posicionamos después de la fecha
 					f.seek(f.getFilePointer()+108);
 					StringBuffer texto = new StringBuffer(ar.getNombre());
@@ -355,6 +356,83 @@ public class ADAleatorio {
 					e.printStackTrace();
 				}
 			}
+		}
+		
+		return resultado;
+	}
+
+
+	public boolean borrarAlbum(Album al) {
+		// TODO Auto-generated method stub
+		boolean resultado =false;
+		
+		RandomAccessFile fO = null;
+		RandomAccessFile fTmp = null;
+		
+		try {
+			fO = new RandomAccessFile(nombreF, "r");
+			fTmp = new RandomAccessFile(nombreTmp, "rw");
+			
+			while(true) {
+				//Leemos id
+				int id = fO.readInt();
+				
+				if(id==al.getId()) {
+					//Saltamos al siguiente registro
+					fO.seek(fO.getFilePointer()+209);
+				}
+				else {
+					byte[] buffer= new byte[209];
+					fO.read(buffer, 0, 209);
+					//Escribir datos
+					fTmp.writeInt(id);
+					fTmp.write(buffer);					
+				}
+				
+			}
+		} 
+		
+		catch (EOFException e) {
+			// TODO: handle exception
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(fO!=null) {
+				try {
+					fO.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(fTmp!=null) {
+				try {
+					fTmp.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		File FOriginal = new File(nombreF);
+		if(FOriginal.delete()) {
+			File fTempo = new File(nombreTmp);
+			if(fTempo.renameTo(FOriginal)) {
+				resultado = true;
+			}
+			else {
+				System.out.println("Error al renombrar el fichero temporal");
+			}
+		}
+		else {
+			System.out.println("Error al borrar el fichero original");
 		}
 		
 		return resultado;
