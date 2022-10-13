@@ -468,18 +468,40 @@ public class ADAleatorio {
 					al.setArtista(fArtistas.obtenerArtista(texto.trim()));
 					f.seek(f.getFilePointer()+100);
 					al.setActivo(f.readBoolean());
+					resultado.add(al);
 					
+				}
+				else {
+					f.seek(f.getFilePointer()+1);
 				}
 		} 
 		
-		catch (EOFException e) {
+		}catch (EOFException e) {
 			// TODO: handle exception
 		}
 		catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 		return resultado;
+	}
+
+
+	public boolean desactivarAlbum(Album al) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
