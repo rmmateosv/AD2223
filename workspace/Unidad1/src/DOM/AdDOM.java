@@ -1,6 +1,8 @@
 package DOM;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,9 +19,14 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import org.xml.sax.SAXException;
 
 import FicherosBinarios.Album;
 import FicherosTexto.Artista;
@@ -136,8 +143,65 @@ public class AdDOM {
 	}
 
 	public void mostrar(Artista a) {
+		// TODO Auto-generated method stu		
+		try {
+			//Establecemos el nombre del fichero
+			String nombreF = a.getNombre().replace(" ", "")+".xml";
+			//Cargamos el árbol del fichero
+			doc = DocumentBuilderFactory.
+					newInstance().
+					newDocumentBuilder().
+					parse(new File(nombreF));
+			if(doc!=null) {
+				Element raiz = doc.getDocumentElement();
+				pintarElmento(raiz,0);
+			}
+			
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		catch (FileNotFoundException e) {
+			// TODO: handle exception
+			System.out.println("No hay información del artista");
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void pintarElmento(Node elto, int nTab) {
 		// TODO Auto-generated method stub
-		//Cargamos el árbol del fichero
+		
+		//Chequear si es elemento de texto
+		if(elto.getNodeType()==Node.TEXT_NODE) {
+			System.out.println(":"+elto.getNodeValue());
+		}
+		else {
+			//Pinto tabulaciones
+			for(int i=0;i<nTab;i++) {
+				System.out.print("\t");
+			}
+			System.out.print(elto.getNodeName()+" ");
+			
+			//Ver si hay atributos
+			NamedNodeMap atri =  elto.getAttributes();
+			for(int i=0; i<atri.getLength();i++) {
+				Attr atributo = (Attr) atri.item(i);
+				System.out.println(atributo.getName()+"="
+				                   +atributo.getValue());
+			}
+			
+			NodeList hijos =  elto.getChildNodes();
+			for(int i=0; i<hijos.getLength();i++) {
+				System.out.println("\n");
+				pintarElmento(hijos.item(i), nTab+1);
+			}
+		}
 	}
 
 }
