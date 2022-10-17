@@ -31,6 +31,7 @@ import org.xml.sax.SAXException;
 import FicherosBinarios.Album;
 import FicherosTexto.Artista;
 
+
 public class AdDOM {
 	Document doc = null; //Árbol DOM
 	SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
@@ -155,6 +156,7 @@ public class AdDOM {
 			if(doc!=null) {
 				Element raiz = doc.getDocumentElement();
 				pintarElmento(raiz,0);
+				System.out.println("");
 			}
 			
 		} catch (SAXException e) {
@@ -179,29 +181,30 @@ public class AdDOM {
 		
 		//Chequear si es elemento de texto
 		if(elto.getNodeType()==Node.TEXT_NODE) {
-			System.out.println(":"+elto.getNodeValue());
+			System.out.print(":"+elto.getNodeValue());
 		}
 		else {
+			System.out.print("\n");
 			//Pinto tabulaciones
 			for(int i=0;i<nTab;i++) {
 				System.out.print("\t");
 			}
-			System.out.print(elto.getNodeName()+" ");
+			System.out.print(elto.getNodeName());
 			
 			//Ver si hay atributos
 			NamedNodeMap atri =  elto.getAttributes();
 			for(int i=0; i<atri.getLength();i++) {
-				Attr atributo = (Attr) atri.item(i);
-				System.out.println(atributo.getName()+"="
+				Attr atributo = (Attr) atri.item(i);				
+				System.out.print(" " + atributo.getName()+"="
 				                   +atributo.getValue());
 			}
 			
 			NodeList hijos =  elto.getChildNodes();
-			for(int i=0; i<hijos.getLength();i++) {
-				System.out.println("\n");
+			for(int i=0; i<hijos.getLength();i++) {				
 				pintarElmento(hijos.item(i), nTab+1);
 			}
 		}
+		
 	}
 
 }
