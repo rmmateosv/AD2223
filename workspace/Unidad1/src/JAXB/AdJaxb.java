@@ -8,6 +8,7 @@ import java.util.Comparator;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 import FicherosBinarios.Album;
 import FicherosTexto.Artista;
@@ -63,6 +64,27 @@ public class AdJaxb {
 		}
 		
 		return resultado;
+	}
+
+	public void mostrar(Artista a) {
+		// TODO Auto-generated method stub
+		File f = new File(a.getNombre().replace(" ", "")+
+					                "_jaxb.xml");
+		if(f.exists()) {
+			try {
+				Unmarshaller um = JAXBContext.newInstance(ArtistaXML.class)
+						          .createUnmarshaller();
+				ArtistaXML art = (ArtistaXML) um.unmarshal(f);
+				art.mostrar();
+			} catch (JAXBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		else {
+			System.out.println("No se ha generado información del artista");
+		}
 	}
 
 	
