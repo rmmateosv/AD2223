@@ -28,11 +28,11 @@ public class Principal {
 				ejercicio1();
 				break;
 			case 2:
-				
+				ejercicio2();
 				break;
 			
 			case 3:
-				
+				ejercicio3();
 				break;
 			case 4:
 				
@@ -50,6 +50,45 @@ public class Principal {
 
 		} while (opcion != 0);
 
+	}
+
+
+	private static void ejercicio3() {
+		// TODO Auto-generated method stub
+		ejercicio2();
+		System.out.println("Introduce el nº de cuenta");
+		int codigo = t.nextInt(); t.nextLine();
+		Cuenta c = fCuentas.obtenerCuentaBin(codigo);
+		if(c!=null && !c.isCancelada()) {
+			System.out.println("Tipo de movimient (I/R)");
+			String tipo = t.nextLine();
+			System.out.println("Cantidad:");
+			float cantidad = t.nextFloat(); t.nextLine();
+			if(tipo.equalsIgnoreCase("I") || tipo.equalsIgnoreCase("R")) {
+				
+				if(tipo.equalsIgnoreCase("R")) {
+					
+					cantidad = cantidad * -1;
+				}
+				
+			}
+			else {
+				System.out.println("No has seleccionado correctamente el tipo..");
+			}
+			
+		}
+		else {
+			System.out.println("La cuenta no existe o está cancelada");
+		}
+	}
+
+
+	private static void ejercicio2() {
+		// TODO Auto-generated method stub
+		ArrayList<Cuenta> cuentas = fCuentas.obtenerCuentasBin();
+		for(Cuenta c:cuentas) {
+			c.mostrar();
+		}
 	}
 
 

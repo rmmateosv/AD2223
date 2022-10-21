@@ -4,7 +4,7 @@ public class Cuenta {
 	private int codigo;
 	private String apellidos, nombre;
 	private float saldo;
-	private boolean cancelada;
+	private boolean cancelada=false;
 	
 	public Cuenta() {
 		
