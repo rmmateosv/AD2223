@@ -149,10 +149,19 @@ public class AdJaxb {
 					ArtistaXML art = (ArtistaXML) um.unmarshal(f);
 					
 					//Borrar el álbum
+					AlbumXML borrar = null;
 					for(AlbumXML al:art.getAlbumes()) {
 						if(id==al.getId()) {
-							indice
+							borrar=al;
+							break;
 						}
+					}
+					if(borrar!=null) {
+						art.getAlbumes().remove(borrar);
+						//HAcemos el marshall
+						Marshaller m = JAXBContext.newInstance(ArtistaXML.class).createMarshaller();
+						m.marshal(art, new File(nombre.replace(" ", "") + "_jaxb.xml"));
+						resultado = true;
 					}
 							
 				} catch (JAXBException e) {
