@@ -2,19 +2,23 @@ package examen;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.RandomAccess;
+
 
 public class Ad_txt_bin {
 	private String nombreFB="cuentas.bin";
 	private String nombreFT="cuentas.txt";
+	private String nombreFO="cuentas.obj";
 	
 	public Ad_txt_bin() {
 		
@@ -144,6 +148,149 @@ public class Ad_txt_bin {
 		catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.out.println("No hay cuentas");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return resultado;
+	}
+
+	public Cuenta obtenerCuentaBin(int codigo) {
+		// TODO Auto-generated method stub
+		Cuenta resultado = null;
+		
+		RandomAccessFile f = null;
+		try {
+			f= new RandomAccessFile(nombreFB, "r");
+			while(true) {				
+				//Leemos el código
+				int codigoF = f.readInt();
+				
+				//Comprobar si es el buscado
+				if(codigoF==codigo) {
+					resultado = new Cuenta();
+					resultado.setCodigo(codigoF);
+					//Leer Apellidos
+					resultado.setApellidos("");
+					for(int i=0; i<20;i++) {
+						resultado.setApellidos(resultado.getApellidos()+
+								f.readChar());
+					}
+					resultado.setApellidos(resultado.getApellidos().trim());
+					//Leer Nombre
+					resultado.setNombre("");
+					for(int i=0; i<10;i++) {
+						resultado.setNombre(resultado.getNombre()+
+								f.readChar());
+					}
+					resultado.setNombre(resultado.getNombre().trim());
+					
+					//Leer saldo
+					resultado.setSaldo(f.readFloat());
+					//Leer cancelada
+					resultado.setCancelada(f.readBoolean());
+					return resultado;
+					
+				}
+				else {
+					//Desplazomos el apuntado al siguiente código
+					//Desplazamos 65B=> 40(ape)+20(nombre)+4(saldo)+1(cancelado)
+					f.seek(f.getFilePointer()+65);
+				}
+			}
+		} 
+		catch (EOFException e) {
+			// TODO: handle exception
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return resultado;
+	}
+
+	public boolean actualizarSaldo(Cuenta c, float cantidad) {
+		// TODO Auto-generated method stub
+		boolean resultado =false;
+		
+		RandomAccessFile f= null;
+		try {
+			f = new RandomAccessFile(nombreFB, "rw");
+			while(true) {				
+				int codigo = f.readInt();
+				if(codigo==c.getCodigo()) {
+					//Situarnos justo delante del saldo
+					f.seek(f.getFilePointer()+60);
+					//Escribimos el nuevo saldo
+					f.writeFloat(c.getSaldo()+cantidad);
+					return true;
+				}
+				else {
+					f.seek(f.getFilePointer()+65);
+				}				
+			}
+		} 
+		catch (EOFException e) {
+			// TODO: handle exception
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return resultado;
+	}
+
+	public boolean crearCuentasOBJ(ArrayList<Cuenta> cuentas) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		
+		ObjectOutputStream f = null;
+		try {
+			f = new ObjectOutputStream(new FileOutputStream(nombreFO));
+			for(Cuenta c:cuentas) {
+				f.writeObject(c);
+			}
+			resultado=true;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

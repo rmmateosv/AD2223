@@ -35,10 +35,10 @@ public class Principal {
 				ejercicio3();
 				break;
 			case 4:
-				
+				ejercicio4();
 				break;
 			case 5:
-				
+				ejercicio5();
 				break;
 			case 6:
 				
@@ -50,6 +50,26 @@ public class Principal {
 
 		} while (opcion != 0);
 
+	}
+
+
+	private static void ejercicio5() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	private static void ejercicio4() {
+		// TODO Auto-generated method stub
+		ArrayList<Cuenta> cuentas = fCuentas.obtenerCuentasBin();
+		if(cuentas.size()>0) {
+			if(fCuentas.crearCuentasOBJ(cuentas)) {
+				System.out.println("Fichero de objetos creado");
+			}
+			else {
+				System.out.println("Error al generar el fichero de objetos");
+			}
+		}
 	}
 
 
@@ -65,12 +85,22 @@ public class Principal {
 			System.out.println("Cantidad:");
 			float cantidad = t.nextFloat(); t.nextLine();
 			if(tipo.equalsIgnoreCase("I") || tipo.equalsIgnoreCase("R")) {
-				
-				if(tipo.equalsIgnoreCase("R")) {
-					
-					cantidad = cantidad * -1;
+				//Comprobar saldo
+				if(c.getSaldo()<cantidad && tipo.equalsIgnoreCase("R")) {
+					System.out.println("No hay saldo suficiente");
 				}
-				
+				else {
+					if(tipo.equalsIgnoreCase("R")) {					
+						cantidad = cantidad * -1;
+					}
+					if(fCuentas.actualizarSaldo(c,cantidad)) {
+						System.out.println("Saldo actualizado");
+					}
+					else {
+						System.out.println("Error al acutalizar el saldo");
+					}
+				}
+								
 			}
 			else {
 				System.out.println("No has seleccionado correctamente el tipo..");

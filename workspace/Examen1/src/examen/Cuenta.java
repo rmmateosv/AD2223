@@ -1,18 +1,24 @@
 package examen;
 
-public class Cuenta {
-	private int codigo;
-	private String apellidos, nombre;
-	private float saldo;
-	private boolean cancelada=false;
+import java.io.Serializable;
+
+public class Cuenta implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1438094737076772425L;
+	private int codigo;//4 B
+	private String apellidos, nombre;//40 B y 20 B
+	private float saldo;//4 B
+	private boolean cancelada=false; //1 B
 	
 	public Cuenta() {
 		
 	}
 	public Cuenta(int codigo, String apellidos, String nombre, float saldo, boolean cancelada) {
 		super();
-		this.codigo = codigo;
-		this.apellidos = apellidos;
+		this.codigo = codigo; 
+		this.apellidos = apellidos; 
 		this.nombre = nombre;
 		this.saldo = saldo;
 		this.cancelada = cancelada;
