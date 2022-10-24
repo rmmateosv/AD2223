@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -283,7 +284,7 @@ public class Ad_txt_bin {
 		
 		ObjectOutputStream f = null;
 		try {
-			f = new ObjectOutputStream(new FileOutputStream(nombreFO));
+			f = new ObjectOutputStream(new FileOutputStream(nombreFO,false));
 			for(Cuenta c:cuentas) {
 				f.writeObject(c);
 			}
@@ -292,6 +293,44 @@ public class Ad_txt_bin {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return resultado;
+	}
+
+	public ArrayList<Cuenta> obtenerCuentasObj() {
+		// TODO Auto-generated method stub
+		ArrayList<Cuenta> resultado = new ArrayList<>();
+		
+		ObjectInputStream f = null;
+		try {
+			f= new ObjectInputStream(new FileInputStream(nombreFO));
+			while(true) {
+				Cuenta c = (Cuenta) f.readObject();
+				resultado.add(c);
+			}
+		} 
+		catch (EOFException e) {
+			// TODO: handle exception
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -55,7 +55,10 @@ public class Principal {
 
 	private static void ejercicio5() {
 		// TODO Auto-generated method stub
-		
+		ArrayList<Cuenta> cuentas = fCuentas.obtenerCuentasObj();
+		for(Cuenta c:cuentas) {
+			c.mostrar();
+		}
 	}
 
 
