@@ -15,6 +15,11 @@ import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
 
 public class Ad_txt_bin {
 	private String nombreFB="cuentas.bin";
@@ -408,6 +413,38 @@ public class Ad_txt_bin {
 		else {
 			resultado = false;
 		}
+		return resultado;
+	}
+
+	public Movimientos hacerUnmarshal(File f) {
+		// TODO Auto-generated method stub
+		Movimientos resultado = null;
+		
+		try {
+			Unmarshaller um = JAXBContext.newInstance(Movimientos.class)
+					                     .createUnmarshaller();
+			resultado =  (Movimientos) um.unmarshal(f);
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean hacerMarshal(File f, Movimientos movs) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		
+		try {
+			Marshaller m = JAXBContext.newInstance(Movimientos.class)
+					                  .createMarshaller();
+			m.marshal(movs, f);
+			resultado=true;
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return resultado;
 	}
 	

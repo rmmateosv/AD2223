@@ -56,17 +56,59 @@ public class Principal {
 
 	private static void ejercicio7() {
 		// TODO Auto-generated method stub
+		String nombreXML="movimientos.xml";
 		Movimientos movs = null;
 		
 		//Chequear si es la 1ª vez  para pedir la sucursal
-		File f = new File("movimientos.xml");
+		File f = new File(nombreXML);
 		if(f.exists()) {
-			movs = fCuentas.hacerUnmarshal();
+			movs = fCuentas.hacerUnmarshal(f);
 		}
 		else {
 			//Pedir sucursal
 			System.out.println("Sucursal:");
 			String sucursal = t.nextLine();
+			movs = new Movimientos();
+			movs.setSucursal(sucursal);
+		}
+		
+		//Pedir datos de nuevo movimieto
+		ejercicio2();
+		System.out.println("Introduce código de cuenta");
+		int codigo = t.nextInt();t.nextLine();
+		Cuenta c = fCuentas.obtenerCuentaBin(codigo);
+		if(c!=null && !c.isCancelada()) {
+			System.out.println("Tipo de movimieto (I/R)");
+			String tipo=t.nextLine();
+			System.out.println("Cantidad:");
+			float cantidad = t.nextFloat(); t.nextLine();			
+			if(tipo.equalsIgnoreCase("I") || 
+					(tipo.equalsIgnoreCase("R") && c.getSaldo()>=cantidad)) {
+				//Creamos el movimiento
+				Movimiento m = new Movimiento(tipo,c.getCodigo(),
+						c.getNombre(),c.getApellidos(),cantidad);
+				//Actualizar saldo en binario
+				if(tipo.equalsIgnoreCase("R")) {
+					cantidad = cantidad*-1;
+				}
+				fCuentas.actualizarSaldo(c,cantidad);
+				//Añadimos el moviento a movs
+				movs.getMovimientos().add(m);
+				//Hacer marshal
+				if(fCuentas.hacerMarshal(f,movs)) {
+					System.out.println("Fichero XML generado");
+				}
+				else {
+					System.out.println("Error al generar XML");
+				}
+			}
+			else {
+				System.out.println("Error en tipo de movimiento o no hay saldo");
+			}
+			
+		}
+		else {
+			System.out.println("Error, la cuenta no existe o está cancelada");
 		}
 	}
 
