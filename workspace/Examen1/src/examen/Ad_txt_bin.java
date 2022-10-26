@@ -346,6 +346,70 @@ public class Ad_txt_bin {
 		}
 		return resultado;
 	}
+
+	public boolean cancelarCuenta(int codigo) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		
+		ObjectInputStream fO = null;
+		ObjectOutputStream fTmp = null;
+		
+		try {
+			fO = new ObjectInputStream(new FileInputStream(nombreFO));
+			fTmp = new ObjectOutputStream(new FileOutputStream("cuentas.tmp"));
+			while(true) {
+				Cuenta c = (Cuenta) fO.readObject();
+				if(c.getCodigo()==codigo && !c.isCancelada()) {
+					c.setCancelada(true);
+					resultado = true;
+				}
+				fTmp.writeObject(c);
+			}
+		} 
+		catch (EOFException e) {
+			// TODO: handle exception
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(fO!=null) {
+				try {
+					fO.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(fTmp!=null) {
+				try {
+					fTmp.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		File ficheroO = new File(nombreFO);
+		if(ficheroO.delete()) {
+			File ficheroTmp = new File("cuentas.tmp");
+			if(!ficheroTmp.renameTo(ficheroO)) {
+				resultado = false;
+			}
+		}
+		else {
+			resultado = false;
+		}
+		return resultado;
+	}
 	
 	
 	

@@ -41,7 +41,7 @@ public class Principal {
 				ejercicio5();
 				break;
 			case 6:
-				
+				ejercicio6();
 				break;
 			case 7:
 				
@@ -50,6 +50,20 @@ public class Principal {
 
 		} while (opcion != 0);
 
+	}
+
+
+	private static void ejercicio6() {
+		// TODO Auto-generated method stub
+		ejercicio5();
+		System.out.println("Introduce código de cuenta");
+		int codigo = t.nextInt(); t.nextLine();
+		if(fCuentas.cancelarCuenta(codigo)) {
+			System.out.println("Cuenta cancelada");
+		}
+		else {
+			System.out.println("Error al cancelar la cuenta");
+		}
 	}
 
 
