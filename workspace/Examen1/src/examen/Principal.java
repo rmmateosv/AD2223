@@ -1,5 +1,6 @@
 package examen;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -44,12 +45,29 @@ public class Principal {
 				ejercicio6();
 				break;
 			case 7:
-				
+				ejercicio7();
 				break;
 			}	
 
 		} while (opcion != 0);
 
+	}
+
+
+	private static void ejercicio7() {
+		// TODO Auto-generated method stub
+		Movimientos movs = null;
+		
+		//Chequear si es la 1ª vez  para pedir la sucursal
+		File f = new File("movimientos.xml");
+		if(f.exists()) {
+			movs = fCuentas.hacerUnmarshal();
+		}
+		else {
+			//Pedir sucursal
+			System.out.println("Sucursal:");
+			String sucursal = t.nextLine();
+		}
 	}
 
 
