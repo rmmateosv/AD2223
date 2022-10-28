@@ -43,7 +43,7 @@ public class Estadistica {
 	}
 
 	@XmlElementWrapper
-	@XmlElement
+	@XmlElement(name="venta")
 	public ArrayList<Venta> getVentas() {
 		return ventas;
 	}

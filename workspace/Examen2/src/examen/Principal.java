@@ -45,6 +45,7 @@ public class Principal {
 		File fJaxb = new File("estadisticaJaxb.xml");
 		File fDom = new File("estadisticaDom.xml");
 		
+	
 		if(fProductos.generarXML(fJaxb, new Estadistica(new Date(System.currentTimeMillis()), ventas))) {
 			// generado correctamente
 			System.out.println("Archivo XML (JAXB) generado.");
