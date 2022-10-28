@@ -2,6 +2,7 @@ package examen;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Principal {
@@ -13,7 +14,7 @@ public class Principal {
 		// TODO Auto-generated method stub
 		int opcion;
 		do {
-			System.out.println("Introduce opción:");
+			System.out.println("Introduce opci�n:");
 			System.out.println("0-Salir");
 			System.out.println("1-Ejercicio1");
 			System.out.println("2-Ejercicio2");
@@ -39,8 +40,25 @@ public class Principal {
 
 
 	private static void ejercicio3() {
-		// TODO Auto-generated method stub
+		// Tenemos que coger las ventas almacenadas en "ventas.obj"
+		ArrayList<Venta> ventas = fProductos.obtenerVentasObj();
+		File fJaxb = new File("estadisticaJaxb.xml");
+		File fDom = new File("estadisticaDom.xml");
 		
+		if(fProductos.generarXML(fJaxb, new Estadistica(new Date(System.currentTimeMillis()), ventas))) {
+			// generado correctamente
+			System.out.println("Archivo XML (JAXB) generado.");
+		}
+		else {
+			System.out.println("Error al generar el archivo XML (JAXB).");
+		}
+		
+		if(fProductos.generarArbolXMLDom(fDom, ventas)) {
+			System.out.println("Archivo XML (DOM) generado.");
+		}
+		else {
+			System.out.println("Error al generar el archivo XML (DOM)");
+		}
 	}
 
 
@@ -51,22 +69,26 @@ public class Principal {
 			p.mostrar();
 		}
 		
-		System.out.println("Código:");
+		System.out.print("Código: ");
 		int codigo = t.nextInt(); t.nextLine();
 		
 		Producto p = fProductos.obtenerProductoBin(codigo);
 		
 		if(p != null) {
 			// Pedir todos los datos
-			System.out.println("Cantidad: ");
+			System.out.print("Cantidad: ");
 			int cantidad = t.nextInt(); t.nextLine();
 			
 			if(p.getStock()>= cantidad) {
-				Ventas v = new Ventas(codigo, cantidad, p.getPrecio()*cantidad);
+				Venta v = new Venta(codigo, cantidad, p.getPrecio()*cantidad);
 				if(fProductos.generarVenta(v)) {
 					if(fProductos.modificarStock(p, cantidad)) {
 						System.out.println("Stock modificado correctamente");
 						// Falta obtener las ventas
+						ArrayList<Venta> ventas = fProductos.obtenerVentasObj();
+						for(Venta ve: ventas) {
+							ve.mostrar();
+						}
 					}else {
 						System.out.println("Error al modificar el stock");
 					}
@@ -96,6 +118,7 @@ public class Principal {
 			for(Producto p: prodBin) {
 				p.mostrar();
 			}
+			System.out.println();
 		}
 		else {
 			System.out.println("Error al generar el archivo binario.");

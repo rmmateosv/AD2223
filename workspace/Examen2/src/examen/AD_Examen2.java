@@ -3,14 +3,36 @@ package examen;
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.RandomAccess;
+import java.util.Date;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 public class AD_Examen2 {
 
@@ -207,7 +229,7 @@ public class AD_Examen2 {
 		return resultado;
 	}
 
-	public boolean generarVenta(Ventas v) {
+	public boolean generarVenta(Venta v) {
 		boolean resultado = false;
 
 		ObjectOutputStream f = null;
@@ -287,6 +309,156 @@ public class AD_Examen2 {
 		}
 
 		return resultado;
+	}
+
+	public ArrayList<Venta> obtenerVentasObj() {
+		ArrayList<Venta> resultado = new ArrayList<>();
+		
+		// Tenemos que leer el archivo nombreFObj
+		
+		ObjectInputStream f = null;
+		
+		try {
+			f = new ObjectInputStream(new FileInputStream(nombreFObj));
+			
+			while(true) {
+				Venta v = new Venta();
+				v = (Venta) f.readObject();
+				resultado.add(v);
+			}
+			
+		} catch(EOFException e) {
+			
+		} catch (FileNotFoundException e) {
+			System.out.println("El archivo no ha sido generado aún.");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f != null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return resultado;
+	}
+
+	public boolean generarXML(File f, Estadistica e) {
+		boolean resultado = false;
+		
+		Marshaller m = null;
+		
+		try {
+			m = JAXBContext.newInstance(Estadistica.class).createMarshaller();
+			
+			m.marshal(e, f);
+			resultado = true;
+		} catch (JAXBException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+		
+		return resultado;
+	}
+
+	public boolean generarArbolXMLDom(File fDom, ArrayList<Venta> ventas) {
+		boolean resultado = false;
+		
+		Document doc = null;
+		
+		try {
+			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+			doc.setXmlVersion("1.0");
+			
+			Element raiz = doc.createElement("estadistica");
+			doc.appendChild(raiz);
+			
+			Element fecha = doc.createElement("fecha");
+			raiz.appendChild(fecha);
+			
+			// Formateamos la fecha antes de añadirla
+			SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+			Text tFecha = doc.createTextNode(formato.format(new Date(System.currentTimeMillis())));
+			fecha.appendChild(tFecha);
+			
+			Element nodoVentas = doc.createElement("ventas");
+			raiz.appendChild(nodoVentas);
+			
+			float sumaTotal = 0;
+			for(Venta v: ventas) {
+				// Recorrer y meter en ventas
+				Element venta = doc.createElement("venta");
+				nodoVentas.appendChild(venta);
+				venta.setAttribute("producto", Integer.toString(v.getCodigo()));
+				
+					Element cantidad = doc.createElement("cantidad");
+					venta.appendChild(cantidad);
+				
+						Text tCantidad = doc.createTextNode(Integer.toString(v.getCantidad()));
+						cantidad.appendChild(tCantidad);
+				
+					Element precio = doc.createElement("precio");
+					venta.appendChild(precio);
+						
+						float precioPorUnidad = obtenerProductoBin(v.getCodigo()).getPrecio();
+						Text tPrecio = doc.createTextNode(Float.toString(precioPorUnidad));
+						precio.appendChild(tPrecio);
+						
+				// VAMOS CALCULANDO LA SUMA TOTAL
+				sumaTotal += precioPorUnidad * v.getCantidad();
+			}
+			
+			Element total = doc.createElement("total");
+			raiz.appendChild(total);
+			
+			Text tTotal = doc.createTextNode(Float.toString(sumaTotal));
+			total.appendChild(tTotal);
+			
+			// GENERAMOS FINALMENTE EL FICHERO
+			generarFichero(fDom.getName(), doc);
+			resultado =true;
+			
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return resultado;
+	}
+	
+	private void generarFichero(String nombreFichero, Node doc) {
+		// TODO Auto-generated method stub
+		
+		try {
+			//Generamos la fuente que se va a llevar la fichero
+			//Va a ser el árbol
+			Source fuente = new DOMSource(doc);
+			//Creamos el destino
+			Result destino = new StreamResult(new File(nombreFichero));
+			//Transformar el arbol en fichero
+			Transformer t = TransformerFactory.newInstance().newTransformer();
+			t.transform(fuente, destino);
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerFactoryConfigurationError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }
