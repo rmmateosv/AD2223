@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Principal {
 
@@ -54,6 +55,9 @@ public class Principal {
 			}*/
 			
 			//Mostrar datos
+			Statement sentencia = conexion.createStatement();
+			sentencia.executeQuery("select * from alumnos");
+			
 			
 			
 			
