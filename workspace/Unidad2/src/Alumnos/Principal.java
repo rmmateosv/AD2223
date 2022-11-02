@@ -56,7 +56,12 @@ public class Principal {
 			
 			//Mostrar datos
 			Statement sentencia = conexion.createStatement();
-			sentencia.executeQuery("select * from alumnos");
+			ResultSet r = sentencia.executeQuery("select * from alumnos");
+			while(r.next()) {
+				System.out.println("Id:" + r.getInt(1) + 
+					"\tNombre:" + r.getString(2) +
+					"\tFecha:" + r.getString(3)); //¡¡¡ FECHA COMO STRING !!!
+			}
 			
 			
 			
