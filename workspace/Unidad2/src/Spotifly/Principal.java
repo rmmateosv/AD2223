@@ -2,6 +2,7 @@ package Spotifly;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Principal {
@@ -35,10 +36,58 @@ public class Principal {
 				case 1:
 					crearArtista();
 					break;
+				case 2:
+					mostrarArtistas();
+					break;
+				case 3:
+					crearAlbum();
+					break;
 				}
 			} while (opcion != 0);
+			//Cerrar conexión
+			sf.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con SpotiFly");
+		}
+	}
+
+	private static void crearAlbum() {
+		// TODO Auto-generated method stub
+		mostrarArtistas();
+		System.out.println("Introduce el id del artista:");
+		int id = t.nextInt();t.nextLine();
+		Artista a = sf.obtenerArtista(id);
+		if(a!=null) {
+			System.out.println("Título Álbum");
+			String titulo = t.nextLine();
+			Album al = sf.obtenerAlbum(a,titulo);
+			if(al==null) {
+				al = new Album();
+				al.setArtista(a);
+				al.setTitulo(titulo);
+				System.out.println("Año");
+				al.setAnio(t.nextInt()); t.nextLine();
+				if(sf.crearAlbum(al)) {
+					System.out.println("Álbum "+al.getId() + " creado");
+				}
+				else {
+					System.out.println("Error al crear el álbum");
+				}
+			}
+			else {
+				System.out.println("Error, el artista ya tiene un álbum con ese título");
+			}
+		}
+		else {
+			System.out.println("Error, artista no existe");
+		}
+	}
+
+	private static void mostrarArtistas() {
+		// TODO Auto-generated method stub
+		ArrayList<Artista> artistas = sf.obtenerArtistas();
+		for(Artista a: artistas) {
+			a.mostrar();
 		}
 	}
 
