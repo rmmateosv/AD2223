@@ -42,12 +42,23 @@ public class Principal {
 				case 3:
 					crearAlbum();
 					break;
+				case 4:
+					mostrarAlbumes();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			sf.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con SpotiFly");
+		}
+	}
+
+	private static void mostrarAlbumes() {
+		// TODO Auto-generated method stub
+		ArrayList<Album> albumes = sf.obtenerAlbumes();
+		for(Album al: albumes) {
+			al.mostrar();
 		}
 	}
 

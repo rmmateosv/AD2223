@@ -139,4 +139,78 @@ public class AccesoDatos {
 		return resultado;
 	}
 
+	public Album obtenerAlbum(Artista a, String titulo) {
+		// TODO Auto-generated method stub
+		Album resultado = null;
+		
+		try {
+			PreparedStatement sentencia = conexion.prepareStatement(
+					"select * from album where titulo=? and artista=?");
+			sentencia.setString(1, titulo);
+			sentencia.setInt(2, a.getId());
+			
+			ResultSet r = sentencia.executeQuery();
+			if(r.next()) {
+				resultado = new Album(r.getInt(1), titulo, a, r.getInt(4));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean crearAlbum(Album al) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		
+		try {
+			PreparedStatement sentencia = conexion.prepareStatement(
+					"insert into album values (null,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+			sentencia.setString(1, al.getTitulo());
+			sentencia.setInt(2, al.getArtista().getId());
+			sentencia.setInt(3, al.getAnio());
+			
+			int r = sentencia.executeUpdate();
+			if(r==1) {
+				resultado=true;
+				ResultSet idS = sentencia.getGeneratedKeys();
+				if(idS.next()) {
+					//Rellenamos el id del álbum que se acaba de insertar
+					al.setId(idS.getInt(1));
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+
+	public ArrayList<Album> obtenerAlbumes() {
+		// TODO Auto-generated method stub
+		ArrayList<Album> resultado = new ArrayList<>();
+	
+		try {
+			Statement sentencia = conexion.createStatement();
+			ResultSet r = sentencia.executeQuery(
+					"select * from album al inner join artista ar "
+					+ "on al.artista = ar.id");
+			while(r.next()) {
+				Album al = new Album(r.getInt(1), 
+						r.getString(2), 
+						new Artista(r.getInt(3), r.getString(6), r.getString(7), 
+								    r.getDate(8), r.getBoolean(9)), 
+						r.getInt(4));
+				resultado.add(al);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+
 }
