@@ -59,21 +59,46 @@ public class Principal {
 
 	private static void crearCancion() {
 		// TODO Auto-generated method stub
+		Cancion c = new Cancion();
+		System.out.println("Título");
+		c.setTitulo(t.nextLine());				
+		c.setValoracion(0);
+
 		mostrarAlbumes();
-		System.out.println("0-Si es un Single");
+		System.out.println("Id de Álbum(0->Single)");
 		int album = t.nextInt();t.nextLine();
 		if(album==0) {
 			// Se crea canción y álbum
+			Album al = new Album();
+			c.setAlbum(al);
+			al.setTitulo(c.getTitulo());
+			//Pedir artista
+			mostrarArtistas();
+			System.out.println("Introduce id de artista");
+			int idA = t.nextInt();t.nextLine();
+			Artista a = sf.obtenerArtista(idA);
+			if(a!=null) {
+				al.setArtista(a);
+				//Pedir año
+				System.out.println("Año:");
+				al.setAnio(t.nextInt());t.nextLine();
+				if(sf.crearCancionYAlbum(c)) {
+					System.out.println("Album y canción creados");
+				}
+				else {
+					
+				}
+			}
+			else {
+				System.out.println("Error, artista no existe");
+			}
+			
 		}
 		else {
 			//La canción se va a crear en un album existente
 			Album al = sf.obtenerAlbum(album);
-			if(al!=null) {
-				Cancion c = new Cancion();
-				c.setAlbum(al);
-				System.out.println("Título");
-				c.setTitulo(t.nextLine());				
-				c.setValoracion(0);
+			if(al!=null) {				
+				c.setAlbum(al);				
 				if(sf.crearCancion(c)) {
 					System.out.println("Canción creada");
 				}

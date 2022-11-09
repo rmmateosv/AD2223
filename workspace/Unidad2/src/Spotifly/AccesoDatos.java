@@ -221,7 +221,7 @@ public class AccesoDatos {
 			PreparedStatement sentencia = conexion.prepareStatement(
 					"select * from album inner join artista "
 					+ "on album.artista = artista.id "
-					+ "where id=?");
+					+ "where album.id=?");
 			sentencia.setInt(1, album);
 			
 			ResultSet r = sentencia.executeQuery();
@@ -243,7 +243,24 @@ public class AccesoDatos {
 
 	public boolean crearCancion(Cancion c) {
 		// TODO Auto-generated method stub
-		return false;
+		boolean resultado = false;
+		
+		try {
+			PreparedStatement consulta = conexion.prepareStatement(
+					"insert into cancion values (?,?,?)");
+			consulta.setString(1, c.getTitulo());
+			consulta.setInt(2, c.getAlbum().getId());
+			consulta.setFloat(3, c.getValoracion());
+			int filas = consulta.executeUpdate();
+			if(filas==1) {
+				resultado= true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
 	}
 
 }
