@@ -45,12 +45,45 @@ public class Principal {
 				case 4:
 					mostrarAlbumes();
 					break;
+				case 5:
+					crearCancion();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			sf.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con SpotiFly");
+		}
+	}
+
+	private static void crearCancion() {
+		// TODO Auto-generated method stub
+		mostrarAlbumes();
+		System.out.println("0-Si es un Single");
+		int album = t.nextInt();t.nextLine();
+		if(album==0) {
+			// Se crea canción y álbum
+		}
+		else {
+			//La canción se va a crear en un album existente
+			Album al = sf.obtenerAlbum(album);
+			if(al!=null) {
+				Cancion c = new Cancion();
+				c.setAlbum(al);
+				System.out.println("Título");
+				c.setTitulo(t.nextLine());				
+				c.setValoracion(0);
+				if(sf.crearCancion(c)) {
+					System.out.println("Canción creada");
+				}
+				else {
+					System.out.println("Error al crear la canción");
+				}
+			}
+			else {
+				System.out.println("Error, el álbum no existe");
+			}
 		}
 	}
 

@@ -213,4 +213,37 @@ public class AccesoDatos {
 		return resultado;
 	}
 
+	public Album obtenerAlbum(int album) {
+		// TODO Auto-generated method stub
+		Album resultado = null;
+		
+		try {
+			PreparedStatement sentencia = conexion.prepareStatement(
+					"select * from album inner join artista "
+					+ "on album.artista = artista.id "
+					+ "where id=?");
+			sentencia.setInt(1, album);
+			
+			ResultSet r = sentencia.executeQuery();
+			if(r.next()) {
+				resultado = new Album(r.getInt(1), r.getString(2), 
+						new Artista(r.getInt(3), 
+								    r.getString(6), 
+								    r.getString(7), 
+								    r.getDate(8), 
+								    r.getBoolean(9)), 
+						r.getInt(4));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean crearCancion(Cancion c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
