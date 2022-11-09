@@ -48,12 +48,34 @@ public class Principal {
 				case 5:
 					crearCancion();
 					break;
+				case 8:
+					infoArtista();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			sf.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con SpotiFly");
+		}
+	}
+
+	private static void infoArtista() {
+		// TODO Auto-generated method stub
+		mostrarArtistas();
+		System.out.println("Id:");
+		int id = t.nextInt();t.nextLine();
+		Artista a = sf.obtenerArtista(id);
+		if(a!=null) {
+			ArrayList<Object[]> datosArtista = sf.infoArtista(id);
+			for(Object[] o:datosArtista) {
+				System.out.println("Título"+ o[0] + 
+						"\tNºCanciones" + o[1] + 
+						"\tValoración Media:" + o[2]);
+			}
+		}
+		else {
+			System.out.println("Error, artista no existe");
 		}
 	}
 
