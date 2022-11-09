@@ -263,4 +263,64 @@ public class AccesoDatos {
 		return resultado;
 	}
 
+	public boolean crearCancionYAlbum(Cancion c) {
+		// TODO Auto-generated method stub
+		boolean resultado=false;
+		
+		//Tenemos que hacer una transacción porque hay
+		//hacer inserts en dos tablas
+		//Es la forma de asegurar que o se hacen los dos
+		//o no se hace ninguno
+		//Marcar el inicio de la transacción
+		try {
+			conexion.setAutoCommit(false);
+			//Crear álbum
+			PreparedStatement consulta = conexion.prepareStatement(
+					"insert into album values(null,?,?,?)",
+					Statement.RETURN_GENERATED_KEYS);
+			consulta.setString(1, c.getAlbum().getTitulo());
+			consulta.setInt(2, c.getAlbum().getArtista().getId());
+			consulta.setInt(3, c.getAlbum().getAnio());
+			int filas = consulta.executeUpdate();
+			if(filas==1) {
+				//REcuperar el id del album creado
+				ResultSet ids =  consulta.getGeneratedKeys();
+				if(ids.next()) {
+					c.getAlbum().setId(ids.getInt(1));
+					//Insert de la canción
+					consulta = conexion.prepareStatement(
+							"insert into cancion values (?,?,?)");
+					consulta.setString(1, c.getTitulo());
+					consulta.setInt(2, c.getAlbum().getId());
+					consulta.setFloat(3, c.getValoracion());
+					filas = consulta.executeUpdate();
+					if(filas==1) {
+						//Guardamos cambios de forma permanente en la BD
+						conexion.commit();
+						resultado=true;
+					}
+					else {
+						conexion.rollback();
+					}
+				}
+				else {
+					conexion.rollback();
+				}
+				
+			}
+						
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			try {
+				//Si hay algún error deshacemos lo que se ha hecho
+				conexion.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
 }

@@ -86,7 +86,7 @@ public class Principal {
 					System.out.println("Album y canción creados");
 				}
 				else {
-					
+					System.out.println("No se han creado ni el álbum ni la canción");
 				}
 			}
 			else {
