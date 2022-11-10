@@ -39,3 +39,23 @@ create table cancion(
     foreign key (album) references album(id)
 		on update cascade on delete restrict
 )engine innodb;
+
+delimiter //
+-- Devuelve el tipo del usuario si us y pas son correctos
+-- si no, devuleve NE
+create function login(us varchar(10), pas varchar(10)) 
+	returns varchar(2) deterministic
+begin
+	declare vTipo varchar(1);
+    
+	select tipo
+		into vTipo
+        from usuario
+        where usuario = us and ps = sha2(pas,512);
+	if(vtipo is null) then
+		return 'NE';
+    else
+		return vTipo;
+    end if;
+end//    
+delimiter ;
