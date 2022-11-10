@@ -1,4 +1,4 @@
-package Spotifly;
+package SpotiflyPremium;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,53 +16,7 @@ public class Principal {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		if (sf.getConexion() != null) {
-			int opcion;
-			do {
-				System.out.println("Introduce opción:");
-				System.out.println("0-Salir");
-				System.out.println("1-Crear Artista");
-				System.out.println("2-Mostrar Artistas");
-				System.out.println("3-Crear Álbum");
-				System.out.println("4-Mostrar Álbum");
-				System.out.println("5-Crear Canción (¡Single!)");
-				System.out.println("6-Mostrar Canciones");
-				System.out.println("7-Dejar de seguir artista");
-				System.out.println("8-Info Artista");
-				System.out.println("9-Valorar canción");
-				System.out.println("10-Borrar álbum");
-
-				opcion = t.nextInt();
-				t.nextLine();
-				switch (opcion) {
-				case 1:
-					crearArtista();
-					break;
-				case 2:
-					mostrarArtistas();
-					break;
-				case 3:
-					crearAlbum();
-					break;
-				case 4:
-					mostrarAlbumes();
-					break;
-				case 5:
-					crearCancion();
-					break;
-				case 7:
-					dejarDeSeguir();
-					break;
-				case 8:
-					infoArtista();
-					break;
-				case 9:
-					valorarCancion();
-					break;
-				case 10:
-					borrarAlbum();
-					break;
-				}
-			} while (opcion != 0);
+			
 			//Cerrar conexión
 			sf.cerrar();
 		} else {
@@ -296,6 +250,56 @@ public class Principal {
 			// TODO: handle exception
 			System.out.println("Error, fecha incorrecta");
 		}
+	}
+	private static void menuUsuario(){
+		int opcion;
+		do {
+			System.out.println("Introduce opción:");
+			System.out.println("0-Salir");
+			System.out.println("1-Crear Artista");
+			System.out.println("2-Mostrar Artistas");
+			System.out.println("3-Crear Álbum");
+			System.out.println("4-Mostrar Álbum");
+			System.out.println("5-Crear Canción (¡Single!)");
+			System.out.println("6-Mostrar Canciones");
+			System.out.println("7-Dejar de seguir artista");
+			System.out.println("8-Info Artista");
+			System.out.println("9-Valorar canción");
+			System.out.println("10-Borrar álbum");
+
+			opcion = t.nextInt();
+			t.nextLine();
+			switch (opcion) {
+			case 1:
+				crearArtista();
+				break;
+			case 2:
+				mostrarArtistas();
+				break;
+			case 3:
+				crearAlbum();
+				break;
+			case 4:
+				mostrarAlbumes();
+				break;
+			case 5:
+				crearCancion();
+				break;
+			case 7:
+				dejarDeSeguir();
+				break;
+			case 8:
+				infoArtista();
+				break;
+			case 9:
+				valorarCancion();
+				break;
+			case 10:
+				borrarAlbum();
+				break;
+			}
+		} while (opcion != 0);
+		
 	}
 
 }

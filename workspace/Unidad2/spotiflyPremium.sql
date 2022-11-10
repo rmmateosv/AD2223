@@ -1,14 +1,24 @@
-drop database if exists spotifly;
-create database spotifly;
-use spotifly;
+drop database if exists spotiflyP;
+create database spotiflyP;
+use spotiflyP;
 
+create table usuario(
+	usuario varchar(10) primary key,
+    ps blob,
+    tipo enum('A','U')
+)engine innodb;
+
+insert into usuario values ('admin',sha2('admin',512),'A');
 
 create table artista(
 	id int primary key auto_increment,
     nombre varchar(50) unique not null,
     genero enum('POP', 'ROCK','OTROS') not null ,
     fechaL date not null, -- Fecha de lanzamiento
-    seguir boolean default true not null
+    seguir boolean default true not null,
+    usuario varchar(10) not null,
+    foreign key (usuario) references usuario(usuario)
+		on update cascade on delete cascade
 )engine innodb;
 
 create table album(

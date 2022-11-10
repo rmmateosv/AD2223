@@ -1,4 +1,4 @@
-package Spotifly;
+package SpotiflyPremium;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
