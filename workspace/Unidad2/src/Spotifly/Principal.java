@@ -28,7 +28,8 @@ public class Principal {
 				System.out.println("6-Mostrar Canciones");
 				System.out.println("7-Dejar de seguir artista");
 				System.out.println("8-Info Artista");
-				System.out.println("9-Borrar canción");
+				System.out.println("9-Valorar canción");
+				System.out.println("10-Borrar canción");
 
 				opcion = t.nextInt();
 				t.nextLine();
@@ -69,8 +70,8 @@ public class Principal {
 		if(a!=null) {
 			ArrayList<Object[]> datosArtista = sf.infoArtista(id);
 			for(Object[] o:datosArtista) {
-				System.out.println("Título"+ o[0] + 
-						"\tNºCanciones" + o[1] + 
+				System.out.println("Título:"+ o[0] + 
+						"\tNºCanciones:" + o[1] + 
 						"\tValoración Media:" + o[2]);
 			}
 		}

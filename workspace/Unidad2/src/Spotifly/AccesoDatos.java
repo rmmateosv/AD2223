@@ -323,4 +323,32 @@ public class AccesoDatos {
 		return resultado;
 	}
 
+	public ArrayList<Object[]> infoArtista(int id) {
+		// TODO Auto-generated method stub
+		ArrayList<Object[]> resultado = new ArrayList<>();
+		
+		try {
+			//Hacemos left outer join para que saque lo álbumes sin canciones
+			PreparedStatement consulta = conexion.prepareStatement(
+					"select a.titulo, count(c.titulo), avg(c.valoracion) "
+					+ "from album a left outer join cancion c "
+					+ "on a.id = c.album "
+					+ "where a.artista = ? "
+					+ "group by a.id");
+			consulta.setInt(1, id);
+			ResultSet r = consulta.executeQuery();
+			while(r.next()) {
+				//Creo un array de objetos con 3 objetos: Título, count, avg 
+				Object[] o = {r.getString(1), r.getInt(2), r.getFloat(3)};
+				resultado.add(o);
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
 }
