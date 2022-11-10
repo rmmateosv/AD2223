@@ -29,7 +29,7 @@ public class Principal {
 				System.out.println("7-Dejar de seguir artista");
 				System.out.println("8-Info Artista");
 				System.out.println("9-Valorar canción");
-				System.out.println("10-Borrar canción");
+				System.out.println("10-Borrar álbum");
 
 				opcion = t.nextInt();
 				t.nextLine();
@@ -52,12 +52,47 @@ public class Principal {
 				case 8:
 					infoArtista();
 					break;
+				case 10:
+					borrarAlbum();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			sf.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con SpotiFly");
+		}
+	}
+
+	private static void borrarAlbum() {
+		// TODO Auto-generated method stub
+		mostrarAlbumes();
+		System.out.println("Id álbum a borrar:");
+		int id = t.nextInt();t.nextLine();
+		
+		Album al = sf.obtenerAlbum(id);
+		if(al!=null) {
+			//Comprobar si el álbum tiene canciones
+			ArrayList<Cancion> canciones = sf.obtenerCanciones(id);
+			if(canciones.size()>0) {
+				if(sf.borrarAlbumCanciones(al.getId())) {
+					System.out.println("Álbum y canciones borrados");
+				}
+				else {
+					System.out.println("Error al borrar el álbum");
+				}
+			}
+			else {
+				if(sf.borrarAlbum(al.getId())) {
+					System.out.println("Álbum borrado");
+				}
+				else {
+					System.out.println("Error al borrar el álbum");
+				}
+			}
+		}
+		else {
+			System.out.println("Error, no existe el álbum");
 		}
 	}
 

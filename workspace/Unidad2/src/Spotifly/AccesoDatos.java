@@ -351,4 +351,90 @@ public class AccesoDatos {
 		return resultado;
 	}
 
+	public ArrayList<Cancion> obtenerCanciones(int id) {
+		// TODO Auto-generated method stub
+		ArrayList<Cancion> resultado = new ArrayList<>();
+		try {
+			PreparedStatement sentencia = conexion.prepareStatement(
+					"select * from cancion c inner join album al"
+					+ " on c.album = al.id "
+					+ " inner join artista a "
+					+ "   on al.artista = a.id "
+					+ "where al.id = ?");
+			sentencia.setInt(1, id);
+			ResultSet r = sentencia.executeQuery();			
+			while (r.next()) {
+				Cancion c = new Cancion(r.getString(1), 
+						new Album(r.getInt(2), r.getString(5), 
+								new Artista(r.getInt(6), r.getString(9), 
+										    r.getString(10),
+										    r.getDate(11), 
+										    r.getBoolean(12)), 
+								r.getInt(7)), 
+						r.getFloat(3));
+				resultado.add(c);
+			}
+	
+			} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		return resultado;
+	}
+
+	public boolean borrarAlbum(int id) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		
+		try {
+			PreparedStatement consulta = conexion.prepareStatement(
+					"delete from album where id = ?");
+			consulta.setInt(1, id);
+			int filas = consulta.executeUpdate();
+			if(filas==1) {
+				resultado=true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean borrarAlbumCanciones(int id) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		
+		try {
+			conexion.setAutoCommit(false);
+			//Borrar primero canciones
+			PreparedStatement consulta = conexion.prepareStatement(
+					"delete from cancion "
+					+ "where album = ?");
+			consulta.setInt(1, id);
+			int filas = consulta.executeUpdate();
+			if(filas>0) {
+				if(borrarAlbum(id)) {
+					conexion.commit();
+					resultado = true;
+				}
+				else {
+					conexion.rollback();
+				}
+			}
+		} catch (SQLException e) {
+			try {
+				conexion.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
 }
