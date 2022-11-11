@@ -28,7 +28,7 @@ create table album(
     anio int not null,
     unique(titulo, artista),
     foreign key (artista) references artista(id)
-		on update cascade on delete restrict
+		on update cascade on delete cascade
 )engine innodb;
 
 create table cancion(
@@ -37,6 +37,15 @@ create table cancion(
     valoracion float,
     primary key(titulo, album),
     foreign key (album) references album(id)
+		on update cascade on delete cascade
+)engine innodb;
+
+create table tablaLog(
+	id int primary key auto_increment,
+    usuario varchar(10) not null,
+    fecha datetime not null,
+    texto varchar(100),
+    foreign key (usuario) references usuario(usuario)
 		on update cascade on delete restrict
 )engine innodb;
 
@@ -58,4 +67,34 @@ begin
 		return vTipo;
     end if;
 end//    
-delimiter ;
+create procedure borrarUsuario(pUS varchar(10))
+begin
+	declare vTexto varchar(100);
+    declare vNA, vNAl, vNC int;
+	
+    start transaction;
+	-- Calcular datos a borrar
+    -- Nº Artista
+    select count(*)
+		into vNA
+		from artista where usuario = pUS;
+    -- Nº Álbumes
+    select count(*)
+		into vNAl
+		from artista ar inner join album al on ar.id = al.artista
+        where ar.usuario = pUS;
+	-- Nº Canciones
+    select count(*)
+		into vNC
+		from artista ar inner join album al on ar.id = al.artista
+			inner join cancion c on c.album = al.id
+        where ar.usuario = pUS;
+    
+    delete from usuario where usuario = pUS;
+	set vTexto = concat('Se ha borrado ',row_count(),' usuario ',
+    vNA, ' artistas ', vNAl, ' álbumes ', vNC, ' canciones');
+    insert into tablalog values (null,session_user(),now(),vTexto);
+    commit;
+    select vTexto;
+    
+end//

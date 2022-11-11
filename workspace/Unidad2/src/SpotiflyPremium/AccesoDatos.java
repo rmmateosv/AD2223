@@ -500,4 +500,24 @@ public class AccesoDatos {
 		return resultado;
 	}
 
+	public boolean crearUsuario(Usuario u) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			PreparedStatement consulta = conexion.prepareStatement(
+					"insert into usuario values (?,sha2(?,512),?)");
+			consulta.setString(1, u.getUsuario());
+			consulta.setString(2, u.getUsuario());
+			consulta.setString(3, u.getTipo());
+			int filas = consulta.executeUpdate();
+			if(filas==1) {
+				resultado=true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
 }
