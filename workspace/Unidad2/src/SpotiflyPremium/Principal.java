@@ -17,6 +17,27 @@ public class Principal {
 		// TODO Auto-generated method stub
 		if (sf.getConexion() != null) {
 			
+			//Pedir usuario y ps
+			System.out.println("Usuario:");
+			String us = t.nextLine();
+			System.out.println("Contraseña:");
+			String ps = t.nextLine();
+			
+			//Lamar a la función de login
+			String tipo = sf.login(us,ps);
+			if(tipo.equalsIgnoreCase("NE")) {
+				System.out.println("Error, datos incorrectos");
+			}
+			else {
+				if(tipo.equalsIgnoreCase("A")) {
+					menuAdmin();
+				}
+				else {
+					menuUsuario();
+				}
+			}
+			
+			
 			//Cerrar conexión
 			sf.cerrar();
 		} else {
