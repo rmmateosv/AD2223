@@ -12,11 +12,12 @@ insert into usuario values ('admin',sha2('admin',512),'A');
 
 create table artista(
 	id int primary key auto_increment,
-    nombre varchar(50) unique not null,
+    nombre varchar(50)  not null,
     genero enum('POP', 'ROCK','OTROS') not null ,
     fechaL date not null, -- Fecha de lanzamiento
     seguir boolean default true not null,
     usuario varchar(10) not null,
+    unique (nombre, usuario),
     foreign key (usuario) references usuario(usuario)
 		on update cascade on delete cascade
 )engine innodb;
@@ -93,8 +94,10 @@ begin
     delete from usuario where usuario = pUS;
 	set vTexto = concat('Se ha borrado ',row_count(),' usuario ',
     vNA, ' artistas ', vNAl, ' álbumes ', vNC, ' canciones');
-    insert into tablalog values (null,session_user(),now(),vTexto);
+    insert into tablalog values (null,substr(session_user(),1,10),
+    now(),vTexto);
     commit;
     select vTexto;
     
 end//
+call borrarUsuario('rosa')//
