@@ -1,16 +1,18 @@
 package SpotiflyPremium;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 
 public class AccesoDatos {
 	private Connection conexion = null;
-	private String bd = "spotifly", puerto = "3306", servidor = "localhost";
+	private String bd = "spotiflyp", puerto = "3306", servidor = "localhost";
 	private String url = "jdbc:mysql://" + servidor + ":" + puerto + "/" + bd;
 	private String us = "root";
 	private String ps = "root";
@@ -449,6 +451,48 @@ public class AccesoDatos {
 			if(filas==1) {
 				resultado = true;
 			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public String login(String usuario, String psw) {
+		// TODO Auto-generated method stub
+		String resultado="NE";
+		
+		try {
+			CallableStatement funcion = 
+					conexion.prepareCall("{? = call login(?,?)}");
+			funcion.setString(2, usuario);
+			funcion.setString(3, psw);
+			//¡¡¡RELLENAR PARÁMETRO DE SALIDA!!!
+			funcion.registerOutParameter(1, Types.VARCHAR);
+			funcion.executeUpdate();
+			//Retornamos lo que devuelve la función
+			return funcion.getString(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public Usuario obtenerUsuario(String usuario) {
+		// TODO Auto-generated method stub
+		Usuario resultado = null;
+		try {
+			PreparedStatement consulta = conexion.prepareStatement(
+					"select * from usuario where usuario = ?");
+			consulta.setString(1, usuario);
+			ResultSet r = consulta.executeQuery();
+			if(r.next()) {
+				resultado = new  Usuario();
+				resultado.setUsuario(r.getString(1));
+				resultado.setTipo(r.getString(3));
+			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

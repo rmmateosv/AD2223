@@ -45,6 +45,55 @@ public class Principal {
 		}
 	}
 
+	private static void menuAdmin() {
+		// TODO Auto-generated method stub
+		int opcion;
+		do {
+			System.out.println("Introduce opción:");
+			System.out.println("0-Salir");
+			System.out.println("1-Crear usuarios");
+			System.out.println("2-Borrar usuarios");
+			System.out.println("3-Mostrar Usuarios");			
+			opcion = t.nextInt();
+			t.nextLine();
+			switch (opcion) {
+			case 1:
+				crearUsuarios();
+				break;
+			case 2:
+				
+				break;
+			case 3:
+				
+				break;
+			
+			}
+		} while (opcion != 0);
+		
+	}
+
+	private static void crearUsuarios() {
+		// TODO Auto-generated method stub
+		System.out.println("Introduce usuario");
+		String usuario = t.nextLine();
+		
+		Usuario u = sf.obtenerUsuario(usuario);
+		if(u==null) {
+			u = new Usuario();
+			u.setUsuario(usuario);
+			u.setTipo("U");
+			if(sf.crearUsuario(u)) {
+				System.out.println("Usuario creado");
+			}
+			else {
+				System.out.println("Error al crear el usuario");
+			}
+		}
+		else {
+			System.out.println("Error, ya existe ese usuario");
+		}
+	}
+
 	private static void dejarDeSeguir() {
 		// TODO Auto-generated method stub
 		mostrarArtistas();
