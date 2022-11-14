@@ -72,6 +72,7 @@ create table tablaLog(
     usuario varchar(10) not null,
     fecha datetime not null,
     texto varchar(100),
+    usBorrado varchar(10) not null,
     foreign key (usuario) references usuario(usuario)
 		on update cascade on delete restrict
 )engine innodb;
@@ -94,7 +95,7 @@ begin
 		return vTipo;
     end if;
 end//    
-create procedure borrarUsuario(pUS varchar(10))
+create procedure borrarUsuario(usAdmin varchar(10), usBorrar varchar(10))
 begin
 	declare vTexto varchar(100);
     declare vNA, vNAl, vNC int;
@@ -104,25 +105,36 @@ begin
     -- Nº Artista
     select count(*)
 		into vNA
-		from artista where usuario = pUS;
+		from artista where usuario = usBorrar;
     -- Nº Álbumes
     select count(*)
 		into vNAl
 		from artista ar inner join album al on ar.id = al.artista
-        where ar.usuario = pUS;
+        where ar.usuario = usBorrar;
 	-- Nº Canciones
     select count(*)
 		into vNC
 		from artista ar inner join album al on ar.id = al.artista
 			inner join cancion c on c.album = al.id
-        where ar.usuario = pUS;
+        where ar.usuario = usBorrar;
     
-    delete from usuario where usuario = pUS;
-	set vTexto = concat('Se ha borrado ',row_count(),' usuario ',
-    vNA, ' artistas ', vNAl, ' álbumes ', vNC, ' canciones');
-    insert into tablalog values (null,substr(session_user(),1,10),
-    now(),vTexto);
-    commit;
+    delete from usuario where usuario = usBorrar;
+    
+    if (row_count()=1) then 
+		set vTexto = concat('Se ha borrado ',row_count(),' usuario ',
+		vNA, ' artistas ', vNAl, ' álbumes ', vNC, ' canciones');
+		insert into tablalog values (null,usAdmin,
+		now(),vTexto, usBorrar);
+        if(row_count()=1) then 
+			commit;
+		else
+			rollback;
+			set resultado = "Error al borrar el usuario";
+        end if;
+	else
+		rollback;
+        set resultado = "Error al borrar el usuario";
+    end if;
     select vTexto;
     
 end//
