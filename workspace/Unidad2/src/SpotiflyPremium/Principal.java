@@ -9,6 +9,8 @@ public class Principal {
 
 	static Scanner t = new Scanner(System.in);
 	static AccesoDatos sf = new AccesoDatos();
+	static Usuario usLogeado;
+	
 	// Definimos el formato con el que vamos
 	// a pintar/pedir fechas
 	static SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
@@ -29,6 +31,9 @@ public class Principal {
 				System.out.println("Error, datos incorrectos");
 			}
 			else {
+				usLogeado = new Usuario();
+				usLogeado.setUsuario(us);
+				usLogeado.setTipo(tipo);
 				if(tipo.equalsIgnoreCase("A")) {
 					menuAdmin();
 				}
@@ -61,7 +66,7 @@ public class Principal {
 				crearUsuarios();
 				break;
 			case 2:
-				
+				borrarUsuario();
 				break;
 			case 3:
 				
@@ -70,6 +75,29 @@ public class Principal {
 			}
 		} while (opcion != 0);
 		
+	}
+
+	private static void borrarUsuario() {
+		// TODO Auto-generated method stub
+		mostrarUsuarios();
+		System.out.println("Introduce usuario a borrar:");
+		String us = t.nextLine();
+		
+		Usuario u = sf.obtenerUsuario(us);
+		if(u!=null && u.getTipo().equalsIgnoreCase("U")) {
+			System.out.println(sf.borrarUsuario(usLogeado,u));
+		}
+		else {
+			System.out.println("Error, no existe el usuario");
+		}
+	}
+
+	private static void mostrarUsuarios() {
+		// TODO Auto-generated method stub
+		ArrayList<Usuario> usuarios = sf.obtenerUsuarios("U");
+		for(Usuario u: usuarios) {
+			System.out.println("US:" + u.getUsuario());
+		}		
 	}
 
 	private static void crearUsuarios() {

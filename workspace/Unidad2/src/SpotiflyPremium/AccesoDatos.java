@@ -520,4 +520,41 @@ public class AccesoDatos {
 		return resultado;
 	}
 
+	public ArrayList<Usuario> obtenerUsuarios(String tipo) {
+		// TODO Auto-generated method stub
+		ArrayList<Usuario> resultado = new ArrayList<>();
+		
+		try {
+			PreparedStatement consulta = 
+					conexion.prepareStatement("select * from usuario "
+							+ "where tipo = ?");
+			consulta.setString(1, tipo);
+			ResultSet r = consulta.executeQuery();
+			while(r.next()) {
+				Usuario u = new Usuario();
+				u.setUsuario(r.getString(1));
+				u.setTipo(r.getString(3));
+				resultado.add(u);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public String borrarUsuario(Usuario usLogeado, Usuario u) {
+		// TODO Auto-generated method stub
+		String resultado = "Error, al borrar el usuario";
+		
+		try {
+			CallableStatement rutina = conexion.prepareCall(
+					"{call borrarUsuario(?,?)}");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
 }
