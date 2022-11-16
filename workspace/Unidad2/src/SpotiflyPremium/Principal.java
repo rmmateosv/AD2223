@@ -69,7 +69,7 @@ public class Principal {
 				borrarUsuario();
 				break;
 			case 3:
-				
+				mostrarUsuarios();
 				break;
 			
 			}
@@ -127,7 +127,7 @@ public class Principal {
 		mostrarArtistas();
 		System.out.println("Introduce id:");
 		int id = t.nextInt(); t.nextLine();
-		Artista a = sf.obtenerArtista(id);
+		Artista a = sf.obtenerArtista(id,usLogeado.getUsuario());
 		if(a!=null) {
 			if(a.isSeguir()) {
 				if(sf.dejarSeguir(id)) {
@@ -157,10 +157,10 @@ public class Principal {
 		System.out.println("Id álbum a borrar:");
 		int id = t.nextInt();t.nextLine();
 		
-		Album al = sf.obtenerAlbum(id);
+		Album al = sf.obtenerAlbum(id, usLogeado.getUsuario());
 		if(al!=null) {
 			//Comprobar si el álbum tiene canciones
-			ArrayList<Cancion> canciones = sf.obtenerCanciones(id);
+			ArrayList<Cancion> canciones = sf.obtenerCanciones(id,usLogeado.getUsuario());
 			if(canciones.size()>0) {
 				if(sf.borrarAlbumCanciones(al.getId())) {
 					System.out.println("Álbum y canciones borrados");
@@ -188,7 +188,7 @@ public class Principal {
 		mostrarArtistas();
 		System.out.println("Id:");
 		int id = t.nextInt();t.nextLine();
-		Artista a = sf.obtenerArtista(id);
+		Artista a = sf.obtenerArtista(id,usLogeado.getUsuario());
 		if(a!=null) {
 			ArrayList<Object[]> datosArtista = sf.infoArtista(id);
 			for(Object[] o:datosArtista) {
@@ -221,7 +221,7 @@ public class Principal {
 			mostrarArtistas();
 			System.out.println("Introduce id de artista");
 			int idA = t.nextInt();t.nextLine();
-			Artista a = sf.obtenerArtista(idA);
+			Artista a = sf.obtenerArtista(idA,usLogeado.getUsuario());
 			if(a!=null) {
 				al.setArtista(a);
 				//Pedir año
@@ -241,7 +241,7 @@ public class Principal {
 		}
 		else {
 			//La canción se va a crear en un album existente
-			Album al = sf.obtenerAlbum(album);
+			Album al = sf.obtenerAlbum(album, usLogeado.getUsuario());
 			if(al!=null) {				
 				c.setAlbum(al);				
 				if(sf.crearCancion(c)) {
@@ -259,7 +259,7 @@ public class Principal {
 
 	private static void mostrarAlbumes() {
 		// TODO Auto-generated method stub
-		ArrayList<Album> albumes = sf.obtenerAlbumes();
+		ArrayList<Album> albumes = sf.obtenerAlbumes(usLogeado.getUsuario());
 		for(Album al: albumes) {
 			al.mostrar();
 		}
@@ -270,7 +270,7 @@ public class Principal {
 		mostrarArtistas();
 		System.out.println("Introduce el id del artista:");
 		int id = t.nextInt();t.nextLine();
-		Artista a = sf.obtenerArtista(id);
+		Artista a = sf.obtenerArtista(id, usLogeado.getUsuario());
 		if(a!=null) {
 			System.out.println("Título Álbum");
 			String titulo = t.nextLine();
@@ -299,7 +299,7 @@ public class Principal {
 
 	private static void mostrarArtistas() {
 		// TODO Auto-generated method stub
-		ArrayList<Artista> artistas = sf.obtenerArtistas();
+		ArrayList<Artista> artistas = sf.obtenerArtistas(usLogeado.getUsuario());
 		for(Artista a: artistas) {
 			a.mostrar();
 		}
@@ -313,7 +313,7 @@ public class Principal {
 			String nombre = t.nextLine();
 
 			// Comprobar si existe
-			Artista a = sf.obtenerArtista(nombre);
+			Artista a = sf.obtenerArtista(nombre,usLogeado.getUsuario());
 			if (a == null) {
 				a = new Artista();
 				a.setNombre(nombre);
@@ -335,7 +335,7 @@ public class Principal {
 				System.out.println("Fecha Lanzamiento (dd/MM/yyyy):");
 				a.setFechaL(formato.parse(t.nextLine()));
 				
-				if(sf.crearArtista(a)) {
+				if(sf.crearArtista(a,usLogeado.getUsuario())) {
 					System.out.println("Artista Creado con éxito");
 				}
 				else {

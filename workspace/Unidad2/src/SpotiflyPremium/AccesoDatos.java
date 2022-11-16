@@ -47,15 +47,17 @@ public class AccesoDatos {
 		return conexion;
 	}
 
-	public Artista obtenerArtista(String nombre) {
+	public Artista obtenerArtista(String nombre, String us) {
 		// TODO Auto-generated method stub
 		Artista resultado = null;
 
 		try {
 			// Creo una consulta con parámetros
-			PreparedStatement consulta = conexion.prepareStatement("select * from artista where nombre = ?");
+			PreparedStatement consulta = conexion.prepareStatement(
+					"select * from artista where nombre = ? and usuario = ?");
 			// Relleno los parámetros
 			consulta.setString(1, nombre);
+			consulta.setString(2, us);
 			// Ejecuto consulta
 			ResultSet r = consulta.executeQuery();
 			// Compruebo si se devuelve algo
@@ -73,15 +75,17 @@ public class AccesoDatos {
 		return resultado;
 	}
 
-	public boolean crearArtista(Artista a) {
+	public boolean crearArtista(Artista a, String us) {
 		// TODO Auto-generated method stub
 		boolean resultado = false;
 
 		try {
-			PreparedStatement consulta = conexion.prepareStatement("insert into artista values (null,?,?,?,true)");
+			PreparedStatement consulta = conexion.prepareStatement(
+					"insert into artista values (null,?,?,?,true,?)");
 			consulta.setString(1, a.getNombre());
 			consulta.setString(2, a.getGenero());
 			consulta.setDate(3, new java.sql.Date(a.getFechaL().getTime()));
+			consulta.setString(4, us);
 			int filas = consulta.executeUpdate();
 			if (filas == 1) {
 				resultado = true;
@@ -94,14 +98,17 @@ public class AccesoDatos {
 		return resultado;
 	}
 
-	public ArrayList<Artista> obtenerArtistas() {
+	public ArrayList<Artista> obtenerArtistas(String us) {
 		// TODO Auto-generated method stub
 		ArrayList<Artista> resultado = new ArrayList<>();
 
 		Statement consulta;
 		try {
 			consulta = conexion.createStatement();
-			ResultSet r = consulta.executeQuery("select * from artista");
+			//Ejemplo de lo que no se debe hacer
+			//Mejor PreparedStatement
+			ResultSet r = consulta.executeQuery("select * from artista "
+					+ "where usuario = '"+us+"'");
 			while (r.next()) {
 				resultado.add(new Artista(r.getInt(1), r.getString(2), r.getString(3),
 						// new java.util.Date(r.getDate(4).getTime()),
@@ -115,15 +122,17 @@ public class AccesoDatos {
 		return resultado;
 	}
 
-	public Artista obtenerArtista(int id) {
+	public Artista obtenerArtista(int id,String us) {
 		// TODO Auto-generated method stub
 		Artista resultado = null;
 
 		try {
 			// Creo una consulta con parámetros
-			PreparedStatement consulta = conexion.prepareStatement("select * from artista where id = ?");
+			PreparedStatement consulta = conexion.prepareStatement(
+					"select * from artista where id = ? and usuario = ?");
 			// Relleno los parámetros
 			consulta.setInt(1, id);
+			consulta.setString(2, us);
 			// Ejecuto consulta
 			ResultSet r = consulta.executeQuery();
 			// Compruebo si se devuelve algo
@@ -190,15 +199,17 @@ public class AccesoDatos {
 		return resultado;
 	}
 
-	public ArrayList<Album> obtenerAlbumes() {
+	public ArrayList<Album> obtenerAlbumes(String us) {
 		// TODO Auto-generated method stub
 		ArrayList<Album> resultado = new ArrayList<>();
 	
 		try {
 			Statement sentencia = conexion.createStatement();
+			//Otro ejemplo de lo que no se debe hacer
 			ResultSet r = sentencia.executeQuery(
 					"select * from album al inner join artista ar "
-					+ "on al.artista = ar.id");
+					+ "on al.artista = ar.id "
+					+ "where ar.usuario = '"+us+"'");
 			while(r.next()) {
 				Album al = new Album(r.getInt(1), 
 						r.getString(2), 
@@ -215,7 +226,7 @@ public class AccesoDatos {
 		return resultado;
 	}
 
-	public Album obtenerAlbum(int album) {
+	public Album obtenerAlbum(int album,String us) {
 		// TODO Auto-generated method stub
 		Album resultado = null;
 		
@@ -223,9 +234,9 @@ public class AccesoDatos {
 			PreparedStatement sentencia = conexion.prepareStatement(
 					"select * from album inner join artista "
 					+ "on album.artista = artista.id "
-					+ "where album.id=?");
+					+ "where album.id=? and artista.usuario = ?");
 			sentencia.setInt(1, album);
-			
+			sentencia.setString(2, us);
 			ResultSet r = sentencia.executeQuery();
 			if(r.next()) {
 				resultado = new Album(r.getInt(1), r.getString(2), 
@@ -353,7 +364,7 @@ public class AccesoDatos {
 		return resultado;
 	}
 
-	public ArrayList<Cancion> obtenerCanciones(int id) {
+	public ArrayList<Cancion> obtenerCanciones(int id, String us) {
 		// TODO Auto-generated method stub
 		ArrayList<Cancion> resultado = new ArrayList<>();
 		try {
@@ -362,8 +373,9 @@ public class AccesoDatos {
 					+ " on c.album = al.id "
 					+ " inner join artista a "
 					+ "   on al.artista = a.id "
-					+ "where al.id = ?");
+					+ "where al.id = ? and ar.usuario = ?");
 			sentencia.setInt(1, id);
+			sentencia.setString(2, us);
 			ResultSet r = sentencia.executeQuery();			
 			while (r.next()) {
 				Cancion c = new Cancion(r.getString(1), 
