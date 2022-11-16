@@ -129,13 +129,12 @@ begin
 			commit;
 		else
 			rollback;
-			set resultado = "Error al borrar el usuario";
+			set vTexto = "Error al insertar en log";
         end if;
 	else
 		rollback;
-        set resultado = "Error al borrar el usuario";
+        set vTexto = "Error al borrar el usuario";
     end if;
     select vTexto;
     
 end//
--- call borrarUsuario('rosa')//

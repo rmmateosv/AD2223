@@ -550,6 +550,14 @@ public class AccesoDatos {
 		try {
 			CallableStatement rutina = conexion.prepareCall(
 					"{call borrarUsuario(?,?)}");
+			rutina.setString(1, usLogeado.getUsuario());
+			rutina.setString(2, u.getUsuario());
+			
+			ResultSet r = rutina.executeQuery();
+			if(r.next()) {
+				return r.getString(1);
+			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
