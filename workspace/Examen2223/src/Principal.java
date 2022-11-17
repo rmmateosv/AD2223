@@ -24,7 +24,7 @@ public class Principal {
 						ejer1();
 						break;
 					case 2:
-						
+						ejer2();
 						break;
 					case 3:
 						
@@ -35,6 +35,13 @@ public class Principal {
 					}
 					
 				} while (opcion != 0);
+	}
+	private static void ejer2() {
+		// TODO Auto-generated method stub
+		ArrayList<Venta> ventas = ad.obtenerVentasOBJ();
+		for(Venta v: ventas) {
+			
+		}
 	}
 	private static void ejer1() {
 		// TODO Auto-generated method stub
