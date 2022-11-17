@@ -1,11 +1,12 @@
+import java.io.Serializable;
 
-public class Venta {
+public class Venta implements Serializable{
 	private int idProducto;
 	private int cantidadV;
 	private float importeR;
 	
 	
-	public Venta() {
+	public Venta(){
 		
 	}
 	public Venta(int idProducto, int cantidadV, float importeR) {

@@ -47,13 +47,36 @@ public class Principal {
 			Venta vOBJ = ad.obtenerVentaObj(v);
 			if(vOBJ==null) {
 				//No existe=> se añade al fOBJ
+				if(ad.addVentaOBJ(v)) {
+					System.out.println("Venta añadida para producto "+ v.getIdProducto());
+				}
+				else {
+					System.out.println("Error al añadir venta del producto "+ v.getIdProducto());
+				}
 			}
 			else {
 				//Existe=> se modifica
+				//Nueva cantidad
+				vOBJ.setCantidadV(vOBJ.getCantidadV()+v.getCantidadV());
+				//Nuevo Importe 
+				vOBJ.setImporteR(vOBJ.getImporteR()+v.getImporteR());
+				if(ad.modificarVentaOBJ(vOBJ)) {
+					System.out.println("Venta modificada para producto "+ v.getIdProducto());
+				}
+				else {
+					System.out.println("Error al modificar venta del producto "+ v.getIdProducto());
+				}
 			}
 		}
 		//Mostrar ventas obj
 		mostrarVentasOBJ();
+	}
+	private static void mostrarVentasOBJ() {
+		// TODO Auto-generated method stub
+		ArrayList<Venta> ventas = ad.obtenerVentasOBJ();
+		for(Venta v:ventas) {
+			v.mostrar();
+		}
 	}
 
 }
