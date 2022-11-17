@@ -27,20 +27,81 @@ public class Principal {
 						ejer2();
 						break;
 					case 3:
-						
+						ejer3();
 						break;
 					case 4:
-						
+						ejer4();
 						break;
 					}
 					
 				} while (opcion != 0);
 	}
+	private static void ejer4() {
+		// TODO Auto-generated method stub
+		mostrarProductos();
+		System.out.println("Producto:");
+		Producto p = ad.obtenerProducto(t.nextInt());
+		if(p!=null) {
+			Venta v = ad.obtenerVentaObj(p.getId());
+			if(v!=null){
+				Info i = new Info(p.getId(), 
+						p.getStock(), v.getCantidadV(), 
+						p.getNombre(), v.getImporteR());
+				ad.marshal(i);
+			}
+			else {
+				System.out.println("Error, no hay ventas");
+			}
+		}
+		else {
+			System.out.println("Error, no existe el producto");
+		}
+	}
+	private static void ejer3() {
+		// TODO Auto-generated method stub
+		mostrarProductos();
+		System.out.println("Id:");
+		Producto p = ad.obtenerProducto(t.nextInt());
+		t.nextLine();
+		if(p!=null) {
+			System.out.println("Nuevo stock:");
+			p.setStock(t.nextInt());t.nextLine();
+			if(!ad.modificarProducto(p)) {
+				System.out.println("Error al modificar");
+			}
+			else {
+				mostrarProductos();
+			}
+		}
+		else {
+			System.out.println("Error no existe producto");
+		}
+	}
 	private static void ejer2() {
 		// TODO Auto-generated method stub
 		ArrayList<Venta> ventas = ad.obtenerVentasOBJ();
 		for(Venta v: ventas) {
+			Producto p = new Producto();
+			p.setId(v.getIdProducto());
+			System.out.println("Nombre producto " + v.getIdProducto());
+			p.setNombre(t.nextLine());
+			System.out.println("Stock para " + v.getIdProducto());
+			p.setStock(t.nextInt()); t.nextLine();
+			if(ad.addBinario(p)) {
+				System.out.println("Producto añadido:" + p.getId());
+			}
+			else {
+				System.out.println("Error al añadir " + p.getId());
+			}
 			
+			mostrarProductos();
+		}
+	}
+	private static void mostrarProductos() {
+		// TODO Auto-generated method stub
+		ArrayList<Producto> prods = ad.obtenerProductos();
+		for(Producto p:prods) {
+			p.mostrar();
 		}
 	}
 	private static void ejer1() {
@@ -51,7 +112,7 @@ public class Principal {
 		//Procesar ventas de txt
 		for(Venta v: ventas) {
 			//Comprobar si existe la venta en el fOBJ
-			Venta vOBJ = ad.obtenerVentaObj(v);
+			Venta vOBJ = ad.obtenerVentaObj(v.getIdProducto());
 			if(vOBJ==null) {
 				//No existe=> se añade al fOBJ
 				if(ad.addVentaOBJ(v)) {
