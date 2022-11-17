@@ -1,5 +1,9 @@
 package SpotiflyPremium;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -28,7 +32,65 @@ public class AccesoDatos {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			if(e.getErrorCode()==1049) {
+				System.out.println("Aún no existe la bd, se crea a continuación");
+				//No existe la BD, abro en modo
+				//ejecutar script
+				try {
+					conexion = DriverManager.getConnection(
+		"jdbc:mysql://localhost:3306/?allowMultiQueries=true", 
+							us, ps);
+					ejecutarScript("spotiflyPremium2.sql");
+					// Crear la conexión
+					conexion = DriverManager.getConnection(url, us, ps);
+					
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			else {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void ejecutarScript(String fichero) {
+		// TODO Auto-generated method stub
+		//Cargar el fichero en una variable
+		BufferedReader f = null;
+		String script="";
+		try {
+			f = new BufferedReader(new FileReader(fichero));
+			String linea;
+			while((linea=f.readLine())!=null) {
+				
+					script+=linea;
+				
+			}
+		
+			Statement consulta = conexion.createStatement();
+			consulta.executeUpdate(script);			
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(f!=null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
