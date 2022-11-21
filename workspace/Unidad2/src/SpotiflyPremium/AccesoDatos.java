@@ -32,26 +32,7 @@ public class AccesoDatos {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			if(e.getErrorCode()==1049) {
-				System.out.println("Aún no existe la bd, se crea a continuación");
-				//No existe la BD, abro en modo
-				//ejecutar script
-				try {
-					conexion = DriverManager.getConnection(
-		"jdbc:mysql://localhost:3306/?allowMultiQueries=true", 
-							us, ps);
-					ejecutarScript("spotiflyPremium2.sql");
-					// Crear la conexión
-					conexion = DriverManager.getConnection(url, us, ps);
-					
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-			else {
-				e.printStackTrace();
-			}
+			e.printStackTrace();
 		}
 	}
 
