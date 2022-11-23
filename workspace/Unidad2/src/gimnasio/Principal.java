@@ -60,6 +60,26 @@ public class Principal {
 		} while (opcion != 0);
 	}
 
+	private static void verRecibos() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void borrarseActividad() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void inscribirseActividad() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void verActividades() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private static void menuAdmin() {
 		int opcion;
 		do {
@@ -74,16 +94,56 @@ public class Principal {
 			sc.nextLine();
 			switch (opcion) {
 			case 1:
-				crearUsuarios();
+				gestionarCliente();
 				break;
 			case 2:
-				borrarUsuario();
+				
 				break;
 			case 3:
-				mostrarUsuarios();
+				
 				break;
 
 			}
 		} while (opcion != 0);
 	}
+
+	private static void gestionarCliente()
+	{
+		System.out.print("Introduce nick de usuario: ");
+		String nick = sc.nextLine();
+
+		if (cnx.obtenerCliente(nick, "N") == null)
+		{
+			Cliente c = new Cliente();
+			
+			System.out.print("Introduce dni de usuario: ");
+			c.setDni(sc.nextLine());
+			
+			if (cnx.obtenerCliente(c.getDni(), "D") == null)
+			{
+				System.out.print("Introduce nombre de usuario: ");
+				c.setNombre(sc.nextLine());
+				
+				System.out.print("Introduce apellidos de usuario: ");
+				c.setApellidos(sc.nextLine());
+				
+				System.out.print("Introduce teléfono de usuario: ");
+				c.setTelefono(sc.nextLine());
+				
+				if (cnx.crearCliente(c))
+				{
+					System.out.println("\nEl cliente se ha registrado correctamente.");
+					mostrarClientes();
+				}
+				else
+					System.out.println("\nNo se ha podido registrar el cliente.");
+			}
+			else
+				System.out.println("\nYa existe un cliente con este DNI.");
+		}
+		else 
+			System.out.println("\nYa existe este usuario.");
+	}
+
+	
 }
