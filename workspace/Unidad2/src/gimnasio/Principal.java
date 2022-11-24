@@ -145,5 +145,11 @@ public class Principal {
 			System.out.println("\nYa existe este usuario.");
 	}
 
+	private static void mostrarClientes()
+	{
+		for (Cliente c : cnx.obtenerClientes())
+			System.out.println(c.toString());
+	}
+
 	
 }

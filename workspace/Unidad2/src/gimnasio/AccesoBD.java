@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 public class AccesoBD {
 	private String url = "jdbc:mysql://localhost:3306/gimnasio";
@@ -37,7 +39,6 @@ public class AccesoBD {
 
 	public Cliente obtenerCliente(String identificador, String tipo)
 	{
-		
 		try 
 		{
 			PreparedStatement consulta;
@@ -78,6 +79,20 @@ public class AccesoBD {
 			{
 				consulta = cnx.prepareStatement(
 						"insert into cliente values (null, ?, ?, ?, ?, ?, false)");
+				
+				consulta.setString(1, c.getUsuario());
+				consulta.setString(2, c.getDni());
+				consulta.setString(3, c.getApellidos());
+				consulta.setString(4, c.getNombre());
+				consulta.setString(5, c.getTelefono());
+				
+				if (consulta.executeUpdate() == 1)
+				{
+					cnx.commit();
+					return true;
+				}
+				else
+					cnx.rollback();
 			}
 		} 
 		catch (SQLException e)
@@ -95,6 +110,33 @@ public class AccesoBD {
 		
 		
 		return false;
+	}
+
+	public ArrayList<Cliente> obtenerClientes()
+	{
+		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
+		
+		try
+		{
+			Statement consulta = cnx.createStatement();
+			
+			ResultSet rs = consulta.executeQuery("select * from cliente");
+			
+			while (rs.next())
+				clientes.add(new Cliente(rs.getString(2),
+										rs.getString(3),
+										rs.getString(4),
+										rs.getString(5),
+										rs.getString(6),
+										rs.getBoolean(7),
+										rs.getInt(1)));
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return clientes;
 	}
 
 }
