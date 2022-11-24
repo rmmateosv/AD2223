@@ -1,10 +1,10 @@
 package gimnasio;
 
 public class Usuario {
-	private int id;
+	private String id;
 	private String tipo;
 
-	public Usuario(int id, String tipo) {
+	public Usuario(String id, String tipo) {
 		this.id = id;
 		this.tipo = tipo;
 	}
@@ -12,11 +12,11 @@ public class Usuario {
 	public Usuario() {
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

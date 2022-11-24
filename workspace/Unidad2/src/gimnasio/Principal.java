@@ -115,6 +115,7 @@ public class Principal {
 		if (cnx.obtenerCliente(nick, "N") == null)
 		{
 			Cliente c = new Cliente();
+			c.setUsuario(nick);
 			
 			System.out.print("Introduce dni de usuario: ");
 			c.setDni(sc.nextLine());

@@ -34,7 +34,28 @@ public class AccesoBD {
 	}
 
 	public Usuario obtenerUsuario(String user, String password) {
-		return null;
+		Usuario resultado = null;
+		
+		try {
+			PreparedStatement consulta = cnx.prepareStatement(
+					"select * from usuarios u left outer join cliente c "
+					+ "on u.usuario = c.usuario "
+					+ "where u.usuario=? and u.clave=sha2(?,0) "
+					+ "and (baja is null or baja = false)");
+			consulta.setString(1, user);
+			consulta.setString(2, password);
+			
+			ResultSet rs = consulta.executeQuery();
+			if(rs.next()) {
+				resultado = new Usuario(rs.getString(1), rs.getString(3));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
 	}
 
 	public Cliente obtenerCliente(String identificador, String tipo)
@@ -70,7 +91,7 @@ public class AccesoBD {
 			cnx.setAutoCommit(false);
 			
 			PreparedStatement consulta = cnx.prepareStatement(
-					"insert into usuario values (?, sha2(?, 0), 'C')");
+					"insert into usuarios values (?, sha2(?, 0), 'C')");
 			
 			consulta.setString(1, c.getUsuario());
 			consulta.setString(2, c.getUsuario());
