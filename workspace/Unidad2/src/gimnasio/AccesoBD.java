@@ -160,4 +160,62 @@ public class AccesoBD {
 		return clientes;
 	}
 
+	public Actividad obtenerActividad(String nombre) {
+		String cadena = "select * from actividad where nombre=?";
+		try {
+			PreparedStatement s = cnx.prepareStatement(cadena);
+			s.setString(1, nombre);
+			ResultSet res = s.executeQuery();
+			while(res.next()) {
+				Actividad a = new Actividad(res.getInt(1),
+											res.getString(2),
+											res.getFloat(3),
+											res.getString(4));
+				return a;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public boolean crearActividad(Actividad a) {
+		String cadena = "insert into actividad values(null, ?,?,default)";
+		try {
+			PreparedStatement s = cnx.prepareStatement(cadena);
+			s.setString(1, a.getNombre());
+			s.setFloat(2, a.getCoste());
+			int control = s.executeUpdate();
+			if(control>0) {
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public ArrayList<Actividad> obtenerActividades() {
+		ArrayList<Actividad> res = new ArrayList<>();
+		String cadena = "select * from actividad";
+		try {
+			Statement s = cnx.createStatement();
+			ResultSet r = s.executeQuery(cadena);
+			while(r.next()) {
+				res.add(new Actividad( r.getInt(1),
+										r.getString(2),
+										r.getFloat(3),
+										r.getString(4)));
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return res;
+	}
+
 }

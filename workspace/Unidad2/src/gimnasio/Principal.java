@@ -1,5 +1,6 @@
 package gimnasio;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Principal {
@@ -97,7 +98,7 @@ public class Principal {
 				gestionarCliente();
 				break;
 			case 2:
-				
+				gestionarActividades();
 				break;
 			case 3:
 				
@@ -105,6 +106,47 @@ public class Principal {
 
 			}
 		} while (opcion != 0);
+	}
+
+	private static void gestionarActividades() {
+		// TODO Auto-generated method stub
+		crearActividad();
+		mostrarActividades();
+		
+	}
+
+	private static void mostrarActividades() {
+		ArrayList<Actividad> actividades= cnx.obtenerActividades();
+		if(!actividades.isEmpty()) {
+			for(Actividad a : actividades) {
+				a.mostrar();
+			}
+		}
+		
+	}
+
+	private static void crearActividad() {
+		System.out.print("\nNombre: ");
+		String nombre = sc.nextLine();
+		Actividad a = cnx.obtenerActividad(nombre);
+		if(a==null) {
+			a = new Actividad();
+			a.setNombre(nombre);
+			System.out.print("\nCoste mensual: ");
+			a.setCoste(sc.nextFloat());
+			sc.nextLine();
+			
+			if(cnx.crearActividad(a)) {
+				System.out.println("Actividad creada");
+			}
+			else {
+				System.out.println("Error al crear");
+			}
+		}
+		else {
+			System.out.println("Error, actividad repetida");
+		}
+		
 	}
 
 	private static void gestionarCliente()
