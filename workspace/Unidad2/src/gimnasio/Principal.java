@@ -51,7 +51,7 @@ public class Principal {
 				inscribirseActividad();
 				break;
 			case 3:
-				borrarseActividad();
+				borrarActividad();
 				break;
 			case 4:
 				verRecibos();
@@ -66,14 +66,39 @@ public class Principal {
 		
 	}
 
-	private static void borrarseActividad() {
+	private static void borrarActividad() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	private static void inscribirseActividad() {
 		// TODO Auto-generated method stub
-		
+		ArrayList<Actividad> actividad = cnx.obtenerActividades();
+		for(Actividad a: actividad) {
+			if(a.getActiva().equalsIgnoreCase("Activa")) {
+				a.mostrar();
+			}
+		}
+		System.out.println("Id actividad a inscribir: ");
+		int idA = sc.nextInt();sc.nextLine();
+		Actividad a = cnx.obtenerActividad(idA);
+		if(a != null && a.getActiva().equalsIgnoreCase("Activa")) {
+			ArrayList<Actividad>act = cnx.obtenerActividades(uLogeado);
+			if(act.contains(a)) {
+				System.out.println("Error ya estás inscrito.");
+			}
+			else {
+				if(cnx.inscribirActividad(uLogeado,a)) {
+					System.out.println("Actividad registrada.");
+				}
+				else {
+					System.out.println("Error al inscribirte.");
+				}
+			}
+		}
+		else {
+			System.out.println("La actividad no se encuentra activa o no existe");
+		}
 		
 	}
 

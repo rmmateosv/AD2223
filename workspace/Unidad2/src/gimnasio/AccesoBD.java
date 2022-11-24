@@ -245,4 +245,37 @@ public class AccesoBD {
 		return resultado;
 	}
 
+	public Actividad obtenerActividad(int idA) {
+		// TODO Auto-generated method stub
+		Actividad resultado = null;
+		
+		
+		
+		return resultado;
+	}
+
+	public boolean inscribirActividad(Usuario uLogeado, Actividad a) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		
+		try {
+			PreparedStatement consulta = cnx.prepareStatement(
+					"insert into actividad values(?, "
+					+ "select id from cliente where usuario = ?)");
+			consulta.setInt(1, a.getId());
+			consulta.setString(2, uLogeado.getId());
+			
+			int filas = consulta.executeUpdate();
+			if(filas == 1) {
+				resultado = true;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+
 }
