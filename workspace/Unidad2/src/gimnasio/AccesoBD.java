@@ -218,4 +218,31 @@ public class AccesoBD {
 		return res;
 	}
 
+	public ArrayList<Actividad> obtenerActividades(Usuario uLogeado) {
+		// TODO Auto-generated method stub
+		ArrayList<Actividad> resultado = new ArrayList<>();
+		
+		try {
+			PreparedStatement sentencia = cnx.prepareStatement("select * from "
+					+ "participa p inner join actividad a on p.actividad_id = a.id "
+					+ "inner join cliente c on c.id = p.cliente_id "
+					+ "where c.usuario = ?");
+			
+			sentencia.setString(1, uLogeado.getId());
+			
+			ResultSet rs = sentencia.executeQuery();
+			while(rs.next()) {
+				resultado.add(new Actividad(rs.getInt(3), rs.getString(4),
+						rs.getFloat(5), rs.getString(6)));
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+
 }

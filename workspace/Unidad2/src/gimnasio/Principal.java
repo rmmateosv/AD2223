@@ -74,11 +74,16 @@ public class Principal {
 	private static void inscribirseActividad() {
 		// TODO Auto-generated method stub
 		
+		
 	}
 
 	private static void verActividades() {
 		// TODO Auto-generated method stub
+		ArrayList<Actividad> actividades = cnx.obtenerActividades(uLogeado);
 		
+		for(Actividad a: actividades) {
+			a.mostrar();
+		}
 	}
 
 	private static void menuAdmin() {
