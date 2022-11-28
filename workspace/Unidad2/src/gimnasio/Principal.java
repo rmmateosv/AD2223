@@ -138,9 +138,25 @@ public class Principal {
 			case 3:
 				generarRecibos();
 				break;
+			case 4:
+				pagarRecibos();
+				break;
 
 			}
 		} while (opcion != 0);
+	}
+
+	private static void pagarRecibos() {
+		// TODO Auto-generated method stub
+		mostrarClientes();
+		System.out.println("Introduce id del cliente");
+		int id=sc.nextInt();
+		Cliente c=cnx.obtenerCliente(id);
+		if(c!=null) {
+			
+		}else {
+			System.out.println("Error cliente no existe");
+		}
 	}
 
 	private static void generarRecibos() {
