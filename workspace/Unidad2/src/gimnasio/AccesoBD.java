@@ -1,11 +1,13 @@
 package gimnasio;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 
 public class AccesoBD {
@@ -249,7 +251,20 @@ public class AccesoBD {
 		// TODO Auto-generated method stub
 		Actividad resultado = null;
 		
-		
+		try {
+			PreparedStatement consulta = cnx.prepareStatement(
+					"select * from actividad where id = ?");
+			consulta.setInt(1, idA);
+			ResultSet rs = consulta.executeQuery();
+			if(rs.next()) {
+				resultado = new Actividad(
+						rs.getInt(1),rs.getString(2),
+						rs.getFloat(3),rs.getString(4));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return resultado;
 	}
@@ -260,8 +275,8 @@ public class AccesoBD {
 		
 		try {
 			PreparedStatement consulta = cnx.prepareStatement(
-					"insert into actividad values(?, "
-					+ "select id from cliente where usuario = ?)");
+					"insert into participa values(?,("
+					+ "select id from cliente where usuario = ?))");
 			consulta.setInt(1, a.getId());
 			consulta.setString(2, uLogeado.getId());
 			
@@ -275,7 +290,25 @@ public class AccesoBD {
 			e.printStackTrace();
 		}
 		
-		return false;
+		return resultado;
+	}
+
+	public int generarRecibos(int mes, int anio) {
+		int resultado=0;
+		try {
+			CallableStatement sentencia = cnx.prepareCall(
+					"{?= call generar_recibos(?, ?)}");
+			sentencia.setInt(2, mes);
+			sentencia.setInt(3, anio);
+			sentencia.registerOutParameter(1, Types.INTEGER);
+			sentencia.executeUpdate();
+			resultado = sentencia.getInt(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
 	}
 
 }

@@ -1,6 +1,7 @@
 package gimnasio;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Principal {
@@ -84,7 +85,11 @@ public class Principal {
 		Actividad a = cnx.obtenerActividad(idA);
 		if(a != null && a.getActiva().equalsIgnoreCase("Activa")) {
 			ArrayList<Actividad>act = cnx.obtenerActividades(uLogeado);
-			if(act.contains(a)) {
+			
+			Optional<Actividad> temp = act.stream()
+					.filter(value -> value.getId()==a.getId())
+					.findFirst();
+			if(!temp.isEmpty()) {
 				System.out.println("Error ya estás inscrito.");
 			}
 			else {
@@ -131,11 +136,26 @@ public class Principal {
 				gestionarActividades();
 				break;
 			case 3:
-				
+				generarRecibos();
 				break;
 
 			}
 		} while (opcion != 0);
+	}
+
+	private static void generarRecibos() {
+		System.out.println("Introduce mes: ");
+		int mes= sc.nextInt(); sc.nextLine();
+		System.out.println("Introduce año: ");
+		int anio = sc.nextInt(); sc.nextLine();
+		
+		if(cnx.generarRecibos(mes, anio)==0) {
+			System.out.println("Los recibos ya están generados");
+		}else {
+			System.out.println("Los recibos se han generado correctamente");
+		}
+		
+		
 	}
 
 	private static void gestionarActividades() {
