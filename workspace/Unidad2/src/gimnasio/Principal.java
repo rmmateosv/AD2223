@@ -65,8 +65,10 @@ public class Principal {
 		} while (opcion != 0);
 	}
 
+	//Rosa te quiero
 	private static void verRecibos()
 	{
+		//El mejor método
 		for(Recibo r : cnx.obtenerRecibos(cnx.obtenerCliente(uLogeado.getId(), "N")))
 			System.out.println(r.toString());
 	}
