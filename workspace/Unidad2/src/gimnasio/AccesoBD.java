@@ -355,4 +355,31 @@ public class AccesoBD {
 		return resultado;
 	}
 
+	public boolean borrarActividad(int idA, Usuario uLogeado) {
+		boolean resultado = false;
+
+		try {
+			PreparedStatement consulta = cnx.prepareStatement("delete from participa" +
+			// esto ta feo
+					" where actividad_id=? and cliente_id ="
+					+ " (select id from cliente " + 
+			"where usuario = ?) ");
+			consulta.setInt(1, idA);
+			consulta.setString(2, uLogeado.getId());
+			int fila = consulta.executeUpdate();
+			
+			if(fila==1) {
+				resultado=true;
+			}
+			
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return resultado;
+
+	}
+
 }
