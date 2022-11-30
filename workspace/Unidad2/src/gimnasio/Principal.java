@@ -1,11 +1,14 @@
 package gimnasio;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
 import java.util.Scanner;
 
 public class Principal {
-
+	static SimpleDateFormat s=new SimpleDateFormat("dd/MM/yyyy");
 	static Scanner sc = new Scanner(System.in);
 	static AccesoBD cnx = new AccesoBD();
 	static Usuario uLogeado = null;
@@ -141,21 +144,60 @@ public class Principal {
 			case 4:
 				pagarRecibos();
 				break;
+			case 5:
+				mostrarRecibos();
+				break;
 
 			}
 		} while (opcion != 0);
 	}
 
+	private static void mostrarRecibos() {
+		// TODO Auto-generated method stub
+		System.out.println("Introduce el año");
+		int anio=sc.nextInt();
+		ArrayList<Object []>estadistica=cnx.obtenerEstadistica(anio);
+		float suma=0;
+		for(Object [] o:estadistica) {
+			suma+=(float) o[2];
+			System.out.println("Id_cliente: "+o[0]+
+					"\t Dni: "+o[1]+ "\t Facturado: "+o[2]);
+		}
+		System.out.println("Total: "+suma);
+	}
+
 	private static void pagarRecibos() {
 		// TODO Auto-generated method stub
+		try {
 		mostrarClientes();
 		System.out.println("Introduce id del cliente");
-		int id=sc.nextInt();
+		int id=sc.nextInt();sc.nextLine();
 		Cliente c=cnx.obtenerCliente(id);
 		if(c!=null) {
+			ArrayList<Recibo>recibos=cnx.obtenerRecibos(c);
+			for(Recibo r:recibos) {
+				if(!r.isPagado()) {
+					System.out.println(r.toString());
+
+				}
+			}
+			System.out.println("Introduce fecha del recibo a pagar");
+			Date fecha;
+			
+				fecha = s.parse(sc.nextLine());
+			
+			if(cnx.pagarRecibo(c,fecha)) {
+				System.out.println("Recibo pagado");
+			}else {
+				System.out.println("Error recibo no pagado");
+			}
 			
 		}else {
 			System.out.println("Error cliente no existe");
+		}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Error fecha incorrecta");
 		}
 	}
 
