@@ -1,6 +1,7 @@
 package Spotifly;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Principal {
@@ -43,6 +44,37 @@ public class Principal {
 	private static void crearArtista() {
 		// TODO Auto-generated method stub
 		
+		System.out.println("Nombre Artístico:");		
+		String nombre = t.nextLine();
+		
+		Artista a = sf.obtenerArtista(nombre);
+		if(a==null) {			
+			a= new Artista();
+			a.setNombre(nombre);
+			a.setFechaC(new Date());
+			a.setSeguir(true);
+			//Pedir géneros
+			String g;
+			do {
+				System.out.println("Introduce Género");
+				g=t.nextLine();
+				if(!a.getGenero().contains(g)) {
+					a.getGenero().add(g);
+				}
+				else {
+					System.out.println("Ya existe el género");
+				}
+			}while(!g.equals("0"));
+			if(sf.crearArtista(a)) {
+				System.out.println("Artista creado");
+			}
+			else {
+				System.out.println("Error al crear el artista");
+			}
+		}
+		else {
+			System.out.println("Error, ya existe el artista");
+		}
 	}
 
 }

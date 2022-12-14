@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class Artista{	
 	private String nombre;
-	private ArrayList<String> genero;
+	private ArrayList<String> genero=new ArrayList();
 	private Date fechaC; // FEcha Creación
 	private boolean seguir=true;
 

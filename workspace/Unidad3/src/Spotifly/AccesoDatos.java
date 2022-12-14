@@ -41,6 +41,23 @@ public class AccesoDatos {
 			System.out.println(e.getMessage());
 		}
 	}
+
+	public Artista obtenerArtista(String nombre) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean crearArtista(Artista a) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+		}
+		return resultado;
+	}
 	
 
 }
