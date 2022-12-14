@@ -1,10 +1,17 @@
 package Spotifly;
 
+import java.util.ArrayList;
+
+import org.bson.Document;
+
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.result.InsertOneResult;
 
 public class AccesoDatos {
 	private MongoClient cluster = null;
@@ -44,13 +51,42 @@ public class AccesoDatos {
 
 	public Artista obtenerArtista(String nombre) {
 		// TODO Auto-generated method stub
-		return null;
+		Artista resultado = null;
+		try {
+			MongoCollection<Document> c = bd.getCollection("artista");			
+			Document d = c.find(Filters.eq("nombre",nombre)).first();
+			if(d!=null) {
+				System.out.println(d.toJson());
+				resultado = new Artista(
+						d.getString("nombre"),
+						(ArrayList<String>)d.get("genero"),
+						d.getDate("fechaC"),
+						d.getBoolean("seguir"));
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
 	}
 
 	public boolean crearArtista(Artista a) {
 		// TODO Auto-generated method stub
 		boolean resultado = false;
 		try {
+			//Recuperar la colección en la que vamos a insertar el artista
+			MongoCollection<Document> coleccion = 
+					bd.getCollection("artista");
+			
+			InsertOneResult r = coleccion.insertOne(
+					new Document().append("nombre", a.getNombre())
+					.append("genero", a.getGenero())
+					.append("fechaC", a.getFechaC())
+					.append("seguir", a.isSeguir()));
+			if(r.getInsertedId()!=null) {
+				resultado = true;
+			}
 			
 		} catch (Exception e) {
 			// TODO: handle exception

@@ -59,7 +59,9 @@ public class Principal {
 				System.out.println("Introduce Género");
 				g=t.nextLine();
 				if(!a.getGenero().contains(g)) {
-					a.getGenero().add(g);
+					if(!g.equals("0")){
+						a.getGenero().add(g);
+					}
 				}
 				else {
 					System.out.println("Ya existe el género");
