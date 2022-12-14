@@ -9,11 +9,19 @@ import com.mongodb.client.MongoDatabase;
 public class AccesoDatos {
 	private MongoClient cluster = null;
 	private MongoDatabase bd = null;
-	private String cadenaCNX = "mongodb+srv://<username>:<password>@accesodatos.c38r0xl.mongodb.net/?retryWrites=true&w=majority";
+	private String cadenaCNX = "mongodb+srv://root:root@accesodatos.c38r0xl.mongodb.net/?retryWrites=true&w=majority";
 	public AccesoDatos() {
-		//Conectar con el cluster AccesoDatos de MongoAtlas
-		cluster = MongoClients.create(
-				new ConnectionString(cadenaCNX));
+		try {
+			//Conectar con el cluster AccesoDatos de MongoAtlas
+			cluster = MongoClients.create(
+					new ConnectionString(cadenaCNX));
+			//Obtenemos la base de datos, si no existe se crea
+			bd = cluster.getDatabase("spotifly");
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+		}
 	}
 
 	public MongoDatabase getBd() {
