@@ -1,6 +1,7 @@
 package Spotifly;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -39,7 +40,10 @@ public class Principal {
 	}
 	private static void mostrarArtistas() {
 		// TODO Auto-generated method stub
-		
+		ArrayList<Artista> artistas =  sf.obtenerArtistas();
+		for(Artista a:artistas) {
+			a.mostrar();
+		}
 	}
 	private static void crearArtista() {
 		// TODO Auto-generated method stub

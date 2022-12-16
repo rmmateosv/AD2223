@@ -9,8 +9,10 @@ import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.InsertOneResult;
 
 public class AccesoDatos {
@@ -56,10 +58,10 @@ public class AccesoDatos {
 			MongoCollection<Document> c = bd.getCollection("artista");			
 			Document d = c.find(Filters.eq("nombre",nombre)).first();
 			if(d!=null) {
-				System.out.println(d.toJson());
+				System.out.println(d.toJson());				
 				resultado = new Artista(
 						d.getString("nombre"),
-						(ArrayList<String>)d.get("genero"),
+						(ArrayList<String>)d.getList("genero",String.class),
 						d.getDate("fechaC"),
 						d.getBoolean("seguir"));
 			}
@@ -91,6 +93,33 @@ public class AccesoDatos {
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println(e.getMessage());
+		}
+		return resultado;
+	}
+
+	public ArrayList<Artista> obtenerArtistas() {
+		// TODO Auto-generated method stub
+		ArrayList<Artista> resultado = new ArrayList();
+		try {
+			MongoCollection<Document> col = bd.getCollection("artista");
+			
+			MongoCursor<Document> cursor = 
+					col.find().sort(Sorts.ascending("nombre")).cursor();
+			//Recorremos el cursor para generar el resultado
+			while(cursor.hasNext()) {
+				Document d = cursor.next();
+				
+				resultado.add(new Artista(
+						d.getString("nombre"),
+						(ArrayList<String>)d.getList("genero",String.class),
+						d.getDate("fechaC"),
+						d.getBoolean("seguir")));
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return resultado;
 	}
