@@ -19,7 +19,8 @@ public class Principal {
 				System.out.println("Introduce opción:");
 				System.out.println("0-Salir");
 				System.out.println("1-Crear Artista");
-				System.out.println("2-Mostrar Artistas");				
+				System.out.println("2-Mostrar Artistas");
+				System.out.println("3-Mostrar Nombres Artistas por genero");
 				opcion = t.nextInt();
 				t.nextLine();
 				switch (opcion) {
