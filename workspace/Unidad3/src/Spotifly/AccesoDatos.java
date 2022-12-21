@@ -15,7 +15,10 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
+
 
 public class AccesoDatos {
 	private MongoClient cluster = null;
@@ -150,6 +153,27 @@ public class AccesoDatos {
 				resultado.add(d.getString("nombre"));
 			}
 			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean modicarNombreArtista(Artista a, String nombre) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			
+			MongoCollection<Document> col = bd.getCollection("artista");
+			
+			Bson filtro = Filters.eq("nombre",a.getNombre());
+			Bson modificaciones = Updates.combine(Updates.set("nombre", nombre));
+			UpdateResult r = col.updateOne(filtro, modificaciones);			
+			if(r.getModifiedCount()==1) {				
+				resultado=true;
+			}
 			
 		} catch (Exception e) {
 			// TODO: handle exception

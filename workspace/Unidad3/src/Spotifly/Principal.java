@@ -21,7 +21,8 @@ public class Principal {
 				System.out.println("1-Crear Artista");
 				System.out.println("2-Mostrar Artistas");
 				System.out.println("3-Mostrar Nombres Artistas por genero");
-				//System.out.println("3-Mostrar Nombres Artistas por genero");
+				System.out.println("4-Modificar Nombre Artista");
+				System.out.println("5-Dejar de seguir un género");
 				opcion = t.nextInt();
 				t.nextLine();
 				switch (opcion) {
@@ -34,13 +35,65 @@ public class Principal {
 				case 3:
 					mostrarArtistasGenero();
 					break;
-				
+				case 4:
+					modificarNombreArtista();
+					break;
+				case 5:
+					dejarSeguirGenero();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			sf.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con SpotiFly");
+		}
+	}
+	private static void dejarSeguirGenero() {
+		// TODO Auto-generated method stub
+		System.out.println("Introduce el género");
+		String genero = t.nextLine();		
+		ArrayList<String> artistas = sf.obtenerArtistas(genero);
+		System.out.println("Dejas de seguir a los siguientes artistas:");
+		for(String nombre:artistas) {
+			System.out.println(nombre);
+		}
+		System.out.println("¿Estás seguro (0(No)/1(Sí))?");
+		int confirma = t.nextInt();t.nextLine();
+		if(confirma==1) {
+			if(sf.dejarSeguir(genero)) {
+				System.out.println("Artitas modificados");
+			}
+			else {
+				System.out.println("Error al modificar los artistas");
+			}
+		}
+	}
+	private static void modificarNombreArtista() {
+		// TODO Auto-generated method stub
+		mostrarArtistas();
+		System.out.println("Introduce nombre");
+		String nombre = t.nextLine();
+		Artista a = sf.obtenerArtista(nombre);
+		if(a!=null) {
+			System.out.println("Nuevo nombre");
+			nombre=t.nextLine();
+			//Comprobar que no existe artista con el nuevo nombre
+			Artista a2 = sf.obtenerArtista(nombre);
+			if(a2==null) {				
+				if(sf.modicarNombreArtista(a,nombre)) {
+					System.out.println("Artista Modificado");
+				}
+				else {
+					System.out.println("Error al modifcar el nombre del artista");
+				}
+			}
+			else {
+				System.out.println("Error, ya existe un artista con el nuevo nombre");
+			}
+		}
+		else {
+			System.out.println("Error, no existe el artista");
 		}
 	}
 	private static void mostrarArtistasGenero() {
