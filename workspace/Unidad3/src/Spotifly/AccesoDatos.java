@@ -3,6 +3,7 @@ package Spotifly;
 import java.util.ArrayList;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoException;
@@ -12,6 +13,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.InsertOneResult;
 
@@ -114,6 +116,38 @@ public class AccesoDatos {
 						(ArrayList<String>)d.getList("genero",String.class),
 						d.getDate("fechaC"),
 						d.getBoolean("seguir")));
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public ArrayList<String> obtenerArtistas(String genero) {
+		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
+		ArrayList<String> resultado = new ArrayList();
+		try {
+			MongoCollection<Document> col = bd.getCollection("artista");
+			
+			//Establecer los campos que queremos recuperar
+			Bson campos = Projections.fields(Projections.include("nombre"),
+					Projections.exclude("_id"));
+			Bson filtro = Filters.and(
+					Filters.eq("seguir",true),Filters.in("genero", genero));
+					
+			MongoCursor<Document> cursor = 
+					col.find(filtro)
+					.projection(campos)
+					.sort(Sorts.ascending("nombre")).cursor();
+			//Recorremos el cursor para generar el resultado
+			while(cursor.hasNext()) {
+				Document d = cursor.next();
+				
+				resultado.add(d.getString("nombre"));
 			}
 			
 			

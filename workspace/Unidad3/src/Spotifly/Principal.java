@@ -21,6 +21,7 @@ public class Principal {
 				System.out.println("1-Crear Artista");
 				System.out.println("2-Mostrar Artistas");
 				System.out.println("3-Mostrar Nombres Artistas por genero");
+				//System.out.println("3-Mostrar Nombres Artistas por genero");
 				opcion = t.nextInt();
 				t.nextLine();
 				switch (opcion) {
@@ -30,6 +31,9 @@ public class Principal {
 				case 2:
 					mostrarArtistas();
 					break;
+				case 3:
+					mostrarArtistasGenero();
+					break;
 				
 				}
 			} while (opcion != 0);
@@ -37,6 +41,15 @@ public class Principal {
 			sf.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con SpotiFly");
+		}
+	}
+	private static void mostrarArtistasGenero() {
+		// TODO Auto-generated method stub
+		System.out.println("Introduce género");
+		String genero = t.nextLine();
+		ArrayList<String> artistas =  sf.obtenerArtistas(genero);
+		for(String n:artistas) {
+			System.out.println(n);
 		}
 	}
 	private static void mostrarArtistas() {
