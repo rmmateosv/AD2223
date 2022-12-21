@@ -23,6 +23,7 @@ public class Principal {
 				System.out.println("3-Mostrar Nombres Artistas por genero");
 				System.out.println("4-Modificar Nombre Artista");
 				System.out.println("5-Dejar de seguir un género");
+				System.out.println("6-Borrar artistas no seguidos");
 				opcion = t.nextInt();
 				t.nextLine();
 				switch (opcion) {
@@ -41,12 +42,29 @@ public class Principal {
 				case 5:
 					dejarSeguirGenero();
 					break;
+				case 6:
+					borrarArtistasNoSeguidos();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			sf.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con SpotiFly");
+		}
+	}
+	private static void borrarArtistasNoSeguidos() {
+		// TODO Auto-generated method stub
+		System.out.println("¿Deseas borrar los artistas no seguidos?(0(No)/1(Sí)");
+		int confirma = t.nextInt();t.nextLine();
+		if(confirma==1) {
+			long borrados  = sf.borrarArtistasNoSeguidos();
+			if(borrados>=0) {
+				System.out.println("Se han borrado "+borrados+"artistas");
+			}
+			else {
+				System.out.println("Error al borrar los artistas");
+			}
 		}
 	}
 	private static void dejarSeguirGenero() {

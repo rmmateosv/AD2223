@@ -16,6 +16,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 
@@ -198,6 +199,23 @@ public class AccesoDatos {
 			if(r.getModifiedCount()>0) {
 				resultado=true;
 			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public long borrarArtistasNoSeguidos() {
+		// TODO Auto-generated method stub
+		long resultado = -1;
+		try {		
+			MongoCollection<Document> col = bd.getCollection("artista");
+			
+			Bson filtro = Filters.eq("seguir",false);
+			DeleteResult r =col.deleteMany(filtro);
+			resultado = r.getDeletedCount();
 			
 		} catch (Exception e) {
 			// TODO: handle exception
