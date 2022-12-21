@@ -3,6 +3,14 @@ package Spotifly;
 import java.util.ArrayList;
 
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecProvider;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
+import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
+
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
 
 import com.mongodb.ConnectionString;
@@ -30,6 +38,13 @@ public class AccesoDatos {
 			//Conectar con el cluster AccesoDatos de MongoAtlas
 			cluster = MongoClients.create(
 					new ConnectionString(cadenaCNX));
+			
+			//Registrar las clase para poder trabajar
+			//con objetos (POJO). 
+			//SOLAMENTE PARA INSERTAR Y RECUPERAR
+			CodecProvider proveedor = PojoCodecProvider.builder().automatic(true).build();
+			CodecRegistry registro = 
+					fromRegistries(getDefaultCodecRegistry(),fromProviders(proveedor));
 			//Obtenemos la base de datos, si no existe se crea
 			bd = cluster.getDatabase("spotifly");
 			
