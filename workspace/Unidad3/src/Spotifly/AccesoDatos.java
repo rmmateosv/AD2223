@@ -181,6 +181,30 @@ public class AccesoDatos {
 		}
 		return resultado;
 	}
+
+	public boolean dejarSeguir(String genero) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			
+			MongoCollection<Document> col = bd.getCollection("artista");
+			
+			// where seguir= true and genero in arraygenero
+			Bson filtro = Filters.and(Filters.eq("seguir",true),
+					Filters.in("genero",genero));
+			Bson modificaciones = 
+					Updates.combine(Updates.set("seguir",false));
+			UpdateResult r = col.updateMany(filtro, modificaciones);
+			if(r.getModifiedCount()>0) {
+				resultado=true;
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
 	
 
 }

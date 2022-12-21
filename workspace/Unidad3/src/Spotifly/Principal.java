@@ -54,19 +54,24 @@ public class Principal {
 		System.out.println("Introduce el género");
 		String genero = t.nextLine();		
 		ArrayList<String> artistas = sf.obtenerArtistas(genero);
-		System.out.println("Dejas de seguir a los siguientes artistas:");
-		for(String nombre:artistas) {
-			System.out.println(nombre);
+		if(!artistas.isEmpty()) {
+			System.out.println("Dejas de seguir a los siguientes artistas:");
+			for(String nombre:artistas) {
+				System.out.println(nombre);
+			}
+			System.out.println("¿Estás seguro (0(No)/1(Sí))?");
+			int confirma = t.nextInt();t.nextLine();
+			if(confirma==1) {
+				if(sf.dejarSeguir(genero)) {
+					System.out.println("Artitas modificados");
+				}
+				else {
+					System.out.println("Error al modificar los artistas");
+				}
+			}
 		}
-		System.out.println("¿Estás seguro (0(No)/1(Sí))?");
-		int confirma = t.nextInt();t.nextLine();
-		if(confirma==1) {
-			if(sf.dejarSeguir(genero)) {
-				System.out.println("Artitas modificados");
-			}
-			else {
-				System.out.println("Error al modificar los artistas");
-			}
+		else {
+			System.out.println("No hay artista de género:"+genero);
 		}
 	}
 	private static void modificarNombreArtista() {
