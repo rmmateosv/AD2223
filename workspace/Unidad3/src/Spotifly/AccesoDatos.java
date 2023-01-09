@@ -44,7 +44,8 @@ public class AccesoDatos {
 			//SOLAMENTE PARA INSERTAR Y RECUPERAR
 			CodecProvider proveedor = PojoCodecProvider.builder().automatic(true).build();
 			CodecRegistry registro = 
-					fromRegistries(getDefaultCodecRegistry(),fromProviders(proveedor));
+					fromRegistries(getDefaultCodecRegistry(),
+							fromProviders(proveedor));
 			//Obtenemos la base de datos, si no existe se crea
 			bd = cluster.getDatabase("spotifly");
 			
@@ -76,8 +77,10 @@ public class AccesoDatos {
 		// TODO Auto-generated method stub
 		Artista resultado = null;
 		try {
-			MongoCollection<Document> c = bd.getCollection("artista");			
+			MongoCollection<Document> c = bd.getCollection("artista");	
+			
 			Document d = c.find(Filters.eq("nombre",nombre)).first();
+			
 			if(d!=null) {
 				System.out.println(d.toJson());				
 				resultado = new Artista(
@@ -156,7 +159,8 @@ public class AccesoDatos {
 			Bson campos = Projections.fields(Projections.include("nombre"),
 					Projections.exclude("_id"));
 			Bson filtro = Filters.and(
-					Filters.eq("seguir",true),Filters.in("genero", genero));
+					Filters.eq("seguir",true),Filters.in("genero", genero),
+					Filters.eq("nombre","sss"));
 					
 			MongoCursor<Document> cursor = 
 					col.find(filtro)
@@ -231,6 +235,20 @@ public class AccesoDatos {
 			Bson filtro = Filters.eq("seguir",false);
 			DeleteResult r =col.deleteMany(filtro);
 			resultado = r.getDeletedCount();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public Album obtenerAlbum(String nombre, String titulo) {
+		// TODO Auto-generated method stub
+		Album resultado = null;
+		try {
+			//Nos conectamos a la colección con POJO
+			MongoCollection<Document> col = bd.getCollection("artista");
 			
 		} catch (Exception e) {
 			// TODO: handle exception

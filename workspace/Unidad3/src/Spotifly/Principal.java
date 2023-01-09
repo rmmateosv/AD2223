@@ -45,12 +45,66 @@ public class Principal {
 				case 6:
 					borrarArtistasNoSeguidos();
 					break;
+				case 7:
+					crearAlbum();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			sf.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con SpotiFly");
+		}
+	}
+	private static void crearAlbum() {
+		// TODO Auto-generated method stub
+		mostrarArtistas();
+		System.out.println("Introduce nombre artista");
+		String nombre = t.nextLine();
+		Artista a = sf.obtenerArtista(nombre);
+		if(a!=null) {
+			System.out.println("Título del álbum");
+			String titulo = t.nextLine();
+			Album al = sf.obtenerAlbum(a.getNombre(),titulo);
+			if(al==null) {
+				al = new Album();
+				al.setTitulo(titulo);
+				al.setArtista(nombre);
+				System.out.println("Año de publicación");
+				al.setAnio(t.nextInt());t.nextLine();
+				int mas = 0;
+				do {
+					System.out.println("Título Canción");
+					String titC =t.nextLine();
+					//Compobar si ya se ha metido la canción en
+					//la lista de canciones que estoy creando 
+					//en este bucle
+					if(!al.getCanciones().stream().filter(
+							o->o.getTitulo().equals(titC))
+							.findAny()
+							.isPresent()) {
+						Cancion c = new Cancion(titC, 0);
+						al.getCanciones().add(c);
+					}
+					else {
+						System.out.println("Error, ya existe la canción");
+					}
+					System.out.println("Más canciones (0-No/1-Si)");
+					mas = t.nextInt(); t.nextLine();
+				}while(mas==1);
+				if(sf.crearAlbum(al)) {
+					System.out.println("Album creado");
+				}
+				else {
+					System.out.println("Error al crear el álbum");
+				}
+			}
+			else {
+				System.out.println("Error, ya existe el álbum");
+			}
+		}
+		else {
+			System.out.println("Error, no existe el artista");
 		}
 	}
 	private static void borrarArtistasNoSeguidos() {
