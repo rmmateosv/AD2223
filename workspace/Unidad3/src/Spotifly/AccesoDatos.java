@@ -47,7 +47,7 @@ public class AccesoDatos {
 					fromRegistries(getDefaultCodecRegistry(),
 							fromProviders(proveedor));
 			//Obtenemos la base de datos, si no existe se crea
-			bd = cluster.getDatabase("spotifly");
+			bd = cluster.getDatabase("spotifly").withCodecRegistry(registro);
 			
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -248,7 +248,55 @@ public class AccesoDatos {
 		Album resultado = null;
 		try {
 			//Nos conectamos a la colección con POJO
-			MongoCollection<Document> col = bd.getCollection("artista");
+			MongoCollection<Album> col = bd.getCollection("album",Album.class);
+			
+			ArrayList<Album> albumes =new ArrayList();
+			
+			Bson filtro = Filters.and(Filters.eq("artista",nombre),
+					                  Filters.eq("titulo",titulo));
+			
+			col.find(filtro).into(albumes);
+			//Obtenemos el álbum si es que existe
+			if(!albumes.isEmpty()) {
+				resultado = albumes.get(0);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean crearAlbum(Album al) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			//Nos conectamos a la colección con POJO
+			MongoCollection<Album> col = bd.getCollection("album",Album.class);
+			
+			InsertOneResult r =col.insertOne(al);
+			
+			if(r.getInsertedId()!=null) {
+				resultado=true;
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public ArrayList<Album> obtenerAlbumes() {
+		// TODO Auto-generated method stub
+		ArrayList<Album> resultado = new ArrayList();
+		try {
+			//Nos conectamos a la colección con POJO
+			MongoCollection<Album> col = bd.getCollection("album",Album.class);
+			
+			col.find().into(resultado);
+			
 			
 		} catch (Exception e) {
 			// TODO: handle exception

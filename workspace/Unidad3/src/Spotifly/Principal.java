@@ -24,6 +24,8 @@ public class Principal {
 				System.out.println("4-Modificar Nombre Artista");
 				System.out.println("5-Dejar de seguir un género");
 				System.out.println("6-Borrar artistas no seguidos");
+				System.out.println("7-Crear Álbum");
+				System.out.println("8-Mostrar Albumes");
 				opcion = t.nextInt();
 				t.nextLine();
 				switch (opcion) {
@@ -48,12 +50,22 @@ public class Principal {
 				case 7:
 					crearAlbum();
 					break;
+				case 8:
+					mostrarAlbumes();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			sf.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con SpotiFly");
+		}
+	}
+	private static void mostrarAlbumes() {
+		// TODO Auto-generated method stub
+		ArrayList<Album> als = sf.obtenerAlbumes();
+		for(Album al:als) {
+			al.mostrar(false);
 		}
 	}
 	private static void crearAlbum() {
