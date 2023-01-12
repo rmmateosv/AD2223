@@ -29,6 +29,7 @@ public class Principal {
 				System.out.println("9-Crear Canción");
 				System.out.println("10-Borrar Canción");
 				System.out.println("11-Valorar Canción");
+				System.out.println("12-Ver canciones por valoración");
 				opcion = t.nextInt();
 				t.nextLine();
 				switch (opcion) {
@@ -63,6 +64,9 @@ public class Principal {
 					borrarCancion();
 					break;
 				case 11:
+					valorarCancion();
+					break;
+				case 12:
 					valorarCancion();
 					break;
 				}

@@ -1,6 +1,7 @@
 package Spotifly;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecProvider;
@@ -23,6 +24,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
@@ -449,15 +451,14 @@ public class AccesoDatos {
 					Filters.in("canciones.titulo", c.getTitulo()));			
 			//Modificar un atributo de un objeto del array
 			Bson camposModif = Updates.set("canciones.$[elem].valoracion", c.getValoracion());
-			
-			UpdateResult r = col.updateOne(filtro, camposModif);
+			UpdateOptions objetosAModificar = new UpdateOptions().arrayFilters(
+					Arrays.asList(Filters.eq("elem.titulo",c.getTitulo())));
+					 
+			UpdateResult r = col.updateOne(filtro, camposModif,objetosAModificar);
 			if(r.getModifiedCount()==1) {
 				resultado=true;
 			}
-			
-			
-			
-			
+						
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
