@@ -21,6 +21,9 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Field;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
@@ -464,5 +467,56 @@ public class AccesoDatos {
 			e.printStackTrace();
 		}
 		return resultado;
+	}
+
+	public ArrayList<Object[]> obtenerCancionesPorValoracion(double val) {
+		// TODO Auto-generated method stub
+		ArrayList<Object[]> resultado = new ArrayList();
+		try {
+			//Nos conectamos a la colección con POJO
+			MongoCollection<Document> col = bd.getCollection("album");
+			
+			MongoCursor<Document> cursor = col.aggregate(Arrays.asList(
+					Aggregates.unwind("$canciones"),
+					Aggregates.match(Filters.eq("canciones.valoracion",val)),
+					Aggregates.project(Projections.fields(Projections.exclude("_id"),
+							Projections.include("artista","titulo","canciones"))))).cursor();
+			
+			while(cursor.hasNext()) {
+				Document album = cursor.next();
+				Document cancion = (Document) album.get("canciones");
+				Object[] o = {album.getString("artista"),album.getString("titulo"),
+						cancion.getString("titulo"),cancion.getDouble("valoracion")};
+				resultado.add(o);
+				
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public void infoAlbumes() {
+		// TODO Auto-generated method stub
+		try {
+			//Nos conectamos a la colección con POJO
+			MongoCollection<Document> col = bd.getCollection("album");
+			
+			col.aggregate(Arrays.asList(
+					Aggregates.group("$artista", Accumulators.sum("albumes", 1)),
+					Aggregates.addFields(new Field("artista","$_id")),
+					Aggregates.project(Projections.fields(
+							Projections.exclude("_id"),
+							Projections.include("artista","albumes"))),
+					Aggregates.sort(Sorts.ascending("artista"))
+					))
+			.forEach(doc->System.out.println(doc.toJson()));
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 }

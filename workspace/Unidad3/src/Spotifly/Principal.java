@@ -30,6 +30,7 @@ public class Principal {
 				System.out.println("10-Borrar Canción");
 				System.out.println("11-Valorar Canción");
 				System.out.println("12-Ver canciones por valoración");
+				System.out.println("13-Mostrar Nº de albumes por artista");
 				opcion = t.nextInt();
 				t.nextLine();
 				switch (opcion) {
@@ -67,7 +68,10 @@ public class Principal {
 					valorarCancion();
 					break;
 				case 12:
-					valorarCancion();
+					mostrarCancionPorValoracion();
+					break;
+				case 13:
+					InfoAlbumes();
 					break;
 				}
 			} while (opcion != 0);
@@ -75,6 +79,22 @@ public class Principal {
 			sf.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con SpotiFly");
+		}
+	}
+	private static void InfoAlbumes() {
+		// TODO Auto-generated method stub
+		sf.infoAlbumes();
+	}
+	private static void mostrarCancionPorValoracion() {
+		// TODO Auto-generated method stub
+		System.out.println("Valoración:");
+		double val = t.nextDouble();
+		ArrayList<Object[]> canciones = sf.obtenerCancionesPorValoracion(val);
+		for(Object[] o:canciones) {
+			System.out.println("Artista:"+o[0]+
+					"\tÁlbum:"+o[1]+
+					"\tCanción:"+o[2]+
+					"\tValoración:"+o[3]);
 		}
 	}
 	private static void valorarCancion() {
