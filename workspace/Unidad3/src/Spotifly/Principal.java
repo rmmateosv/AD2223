@@ -26,6 +26,9 @@ public class Principal {
 				System.out.println("6-Borrar artistas no seguidos");
 				System.out.println("7-Crear Álbum");
 				System.out.println("8-Mostrar Albumes");
+				System.out.println("9-Crear Canción");
+				System.out.println("10-Borrar Canción");
+				System.out.println("11-Valorar Canción");
 				opcion = t.nextInt();
 				t.nextLine();
 				switch (opcion) {
@@ -53,12 +56,73 @@ public class Principal {
 				case 8:
 					mostrarAlbumes();
 					break;
+				case 9:
+					crearCancion();
+					break;
+				case 10:
+					borrarCancion();
+					break;
+				case 11:
+					valorarCancion();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			sf.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con SpotiFly");
+		}
+	}
+	private static void valorarCancion() {
+		// TODO Auto-generated method stub
+		
+	}
+	private static void borrarCancion() {
+		// TODO Auto-generated method stub
+		
+	}
+	private static void crearCancion() {
+		// TODO Auto-generated method stub
+		mostrarArtistas();
+		System.out.println("Introduce artista");
+		String nombre = t.nextLine();
+		Artista  a = sf.obtenerArtista(nombre);
+		if(a!=null) {
+			mostrarAlbumes(a);
+			System.out.println("Introduce álbum");
+			String tituloA = t.nextLine();
+			Album al = sf.obtenerAlbum(nombre, tituloA);
+			if(al!=null) {
+				System.out.println("Título de la canción:");
+				String tituloC = t.nextLine();				
+				if(!sf.existeCancion(al, tituloC)) {
+					Cancion c =new Cancion();
+					c.setTitulo(tituloC);
+					c.setValoracion(0);
+					if(sf.addCancion(al,c)) {
+						System.out.println("Canción añadida");
+					}
+					else {
+						System.out.println("Error al añadir canción");
+					}
+				}
+				else {
+					System.out.println("Error, canción ya existe");
+				}
+			}
+			else {
+				System.out.println("Error, album no existe");
+			}
+		}
+		else {
+			System.out.println("Error, no existe el artista");
+		}
+	}
+	private static void mostrarAlbumes(Artista a) {
+		// TODO Auto-generated method stub
+		ArrayList<Album> als = sf.obtenerAlbumes(a.getNombre());
+		for(Album al:als) {
+			al.mostrar(true);
 		}
 	}
 	private static void mostrarAlbumes() {

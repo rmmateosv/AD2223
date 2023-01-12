@@ -304,6 +304,106 @@ public class AccesoDatos {
 		}
 		return resultado;
 	}
-	
 
+	public ArrayList<Album> obtenerAlbumes(String nombre) {
+		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
+		ArrayList<Album> resultado = new ArrayList();
+		try {
+			//Nos conectamos a la colección con POJO
+			MongoCollection<Album> col = bd.getCollection("album",Album.class);
+			
+			Bson filtro = Filters.eq("artista",nombre);
+			
+			col.find(filtro).into(resultado);
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public Cancion obtenerCancion(Album al, String tituloC) {
+		// TODO Auto-generated method stub
+		Cancion resultado = null;
+		try {
+			//Nos conectamos a la colección con POJO
+			MongoCollection<Document> col = bd.getCollection("album");
+			
+			Bson filtro = Filters.and(Filters.eq("artista",al.getArtista()),
+					Filters.eq("titulo",al.getTitulo()),
+					Filters.in("canciones.titulo", tituloC));
+			Bson campos = Projections.fields(Projections.exclude("_id"),
+					Projections.include("canciones"));
+			
+			Document doc = col.find(filtro).projection(campos).first();			
+			if(doc!=null) {
+				System.out.println(doc.toJson());
+				System.out.println(doc.getString("titulo"));
+				resultado = new Cancion(doc.getString("titulo"),
+						     0);
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean addCancion(Album al, Cancion c) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			MongoCollection<Document> col = bd.getCollection("album");
+			
+			Bson filtro = Filters.and(Filters.eq("artista",al.getArtista()),
+									  Filters.eq("titulo",al.getTitulo()));
+			
+			Document cMongo = new Document().append("titulo", c.getTitulo())
+					.append("valoracion", c.getValoracion());
+			
+			Bson camposModif = Updates.combine(
+					Updates.addToSet("canciones", cMongo));
+			
+			UpdateResult r = col.updateOne(filtro, camposModif);
+			if(r.getModifiedCount()==1) {
+				resultado=true;
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	
+	public boolean existeCancion(Album al, String tituloC) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			//Nos conectamos a la colección con POJO
+			MongoCollection<Document> col = bd.getCollection("album");
+			
+			Bson filtro = Filters.and(Filters.eq("artista",al.getArtista()),
+					Filters.eq("titulo",al.getTitulo()),
+					Filters.in("canciones.titulo", tituloC));
+			Bson campos = Projections.fields(Projections.exclude("_id"),
+					Projections.include("canciones"));
+			
+			Document doc = col.find(filtro).projection(campos).first();			
+			if(doc!=null) {
+				return true;
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
 }
