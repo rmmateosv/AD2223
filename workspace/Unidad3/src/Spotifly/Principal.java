@@ -75,7 +75,40 @@ public class Principal {
 	}
 	private static void valorarCancion() {
 		// TODO Auto-generated method stub
-		
+		mostrarArtistas();
+		System.out.println("Introduce artista");
+		String nombre = t.nextLine();
+		Artista  a = sf.obtenerArtista(nombre);
+		if(a!=null) {
+			mostrarAlbumes(a);
+			System.out.println("Introduce álbum");
+			String tituloA = t.nextLine();
+			Album al = sf.obtenerAlbum(nombre, tituloA);
+			if(al!=null) {
+				System.out.println("Título de la canción:");
+				String tituloC = t.nextLine();				
+				Cancion c = sf.obtenerCancion(al, tituloC);
+				if(c!=null) {
+					System.out.println("Valoración");
+					c.setValoracion(t.nextDouble());t.nextLine();
+					if(sf.valorarCancion(al,c)) {
+						System.out.println("Valoración modificada");
+					}
+					else {
+						System.out.println("Error al modificar canción");
+					}
+				}
+				else {
+					System.out.println("Error, canción no existe");
+				}
+			}
+			else {
+				System.out.println("Error, album no existe");
+			}
+		}
+		else {
+			System.out.println("Error, no existe el artista");
+		}
 	}
 	private static void borrarCancion() {
 		// TODO Auto-generated method stub

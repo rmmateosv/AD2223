@@ -436,4 +436,32 @@ public class AccesoDatos {
 		}
 		return resultado;
 	}
+
+	public boolean valorarCancion(Album al, Cancion c) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			//Nos conectamos a la colección con POJO
+			MongoCollection<Document> col = bd.getCollection("album");
+			
+			Bson filtro = Filters.and(Filters.eq("artista",al.getArtista()),
+					Filters.eq("titulo",al.getTitulo()),
+					Filters.in("canciones.titulo", c.getTitulo()));			
+			//Modificar un atributo de un objeto del array
+			Bson camposModif = Updates.set("canciones.$[elem].valoracion", c.getValoracion());
+			
+			UpdateResult r = col.updateOne(filtro, camposModif);
+			if(r.getModifiedCount()==1) {
+				resultado=true;
+			}
+			
+			
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
 }
