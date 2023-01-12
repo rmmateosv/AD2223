@@ -336,14 +336,14 @@ public class AccesoDatos {
 					Filters.eq("titulo",al.getTitulo()),
 					Filters.in("canciones.titulo", tituloC));
 			Bson campos = Projections.fields(Projections.exclude("_id"),
-					Projections.include("canciones"));
+					Projections.elemMatch("canciones",Filters.eq("titulo", tituloC)));
 			
 			Document doc = col.find(filtro).projection(campos).first();			
 			if(doc!=null) {
 				System.out.println(doc.toJson());
-				System.out.println(doc.getString("titulo"));
-				resultado = new Cancion(doc.getString("titulo"),
-						     0);
+				ArrayList<Document> reg = (ArrayList<Document>) doc.get("canciones");
+				resultado = new Cancion(reg.get(0).getString("titulo"),
+						reg.get(0).getDouble("valoracion"));
 			}
 			
 			
@@ -398,6 +398,36 @@ public class AccesoDatos {
 			if(doc!=null) {
 				return true;
 			}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean borrarCancion(Album al, Cancion c) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			//Nos conectamos a la colección con POJO
+			MongoCollection<Document> col = bd.getCollection("album");
+			
+			Bson filtro = Filters.and(Filters.eq("artista",al.getArtista()),
+					Filters.eq("titulo",al.getTitulo()),
+					Filters.in("canciones.titulo", c.getTitulo()));
+			//Creamos el objeto a borrar
+			Document cBorrar = new Document().append("titulo",c.getTitulo());
+			
+			Bson camposModif = Updates.pull("canciones", cBorrar);
+			
+			UpdateResult r = col.updateOne(filtro, camposModif);
+			if(r.getModifiedCount()==1) {
+				resultado=true;
+			}
+			
+			
 			
 			
 		} catch (Exception e) {
