@@ -84,6 +84,7 @@ public class Principal {
 	private static void InfoAlbumes() {
 		// TODO Auto-generated method stub
 		sf.infoAlbumes();
+		sf.totalArtistaSeguidos();
 	}
 	private static void mostrarCancionPorValoracion() {
 		// TODO Auto-generated method stub

@@ -504,12 +504,38 @@ public class AccesoDatos {
 			MongoCollection<Document> col = bd.getCollection("album");
 			
 			col.aggregate(Arrays.asList(
-					Aggregates.group("$artista", Accumulators.sum("albumes", 1)),
-					Aggregates.addFields(new Field("artista","$_id")),
+					Aggregates.group("$artista", 
+							Accumulators.sum("numAlbumes", 1),
+							Accumulators.sum("numCanciones", new Document("$size","$canciones")),
+							Accumulators.min("AñoPrimerAlbum", "$anio"),
+							Accumulators.max("AñoUltimoAlbum", "$anio"),
+							Accumulators.avg("MediaValoracion", new Document("$avg","$canciones.valoracion"))  
+					),
+					Aggregates.addFields(new Field("artista","$_id"),new Field("val2",  new Document("$round","$MediaValoracion"))),
 					Aggregates.project(Projections.fields(
-							Projections.exclude("_id"),
-							Projections.include("artista","albumes"))),
+							Projections.exclude("_id")
+							)),
 					Aggregates.sort(Sorts.ascending("artista"))
+					))
+			.forEach(doc->System.out.println(doc.toJson()));
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+
+	public void totalArtistaSeguidos() {
+		// TODO Auto-generated method stub
+		try {
+			//Nos conectamos a la colección con POJO
+			MongoCollection<Document> col = bd.getCollection("artista");
+			
+			col.aggregate(Arrays.asList(
+					Aggregates.match(Filters.eq("seguir",true)),
+					Aggregates.count("ArtistasSeguidos"),
+					Aggregates.project(Projections.exclude("_id"))
 					))
 			.forEach(doc->System.out.println(doc.toJson()));
 			
