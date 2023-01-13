@@ -30,7 +30,8 @@ public class Principal {
 				System.out.println("10-Borrar Canción");
 				System.out.println("11-Valorar Canción");
 				System.out.println("12-Ver canciones por valoración");
-				System.out.println("13-Mostrar Nº de albumes por artista");
+				System.out.println("13-Info Artista");
+				System.out.println("14-Info Albumes");
 				opcion = t.nextInt();
 				t.nextLine();
 				switch (opcion) {
@@ -71,6 +72,9 @@ public class Principal {
 					mostrarCancionPorValoracion();
 					break;
 				case 13:
+					InfoArtista();
+					break;
+				case 14:
 					InfoAlbumes();
 					break;
 				}
@@ -84,6 +88,10 @@ public class Principal {
 	private static void InfoAlbumes() {
 		// TODO Auto-generated method stub
 		sf.infoAlbumes();
+	}
+	private static void InfoArtista() {
+		// TODO Auto-generated method stub
+		sf.infoArtistas();
 		sf.totalArtistaSeguidos();
 	}
 	private static void mostrarCancionPorValoracion() {

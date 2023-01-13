@@ -497,7 +497,7 @@ public class AccesoDatos {
 		return resultado;
 	}
 
-	public void infoAlbumes() {
+	public void infoArtistas() {
 		// TODO Auto-generated method stub
 		try {
 			//Nos conectamos a la colección con POJO
@@ -536,6 +536,28 @@ public class AccesoDatos {
 					Aggregates.match(Filters.eq("seguir",true)),
 					Aggregates.count("ArtistasSeguidos"),
 					Aggregates.project(Projections.exclude("_id"))
+					))
+			.forEach(doc->System.out.println(doc.toJson()));
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+
+	public void infoAlbumes() {
+		// TODO Auto-generated method stub
+		try {
+			//Nos conectamos a la colección con POJO
+			MongoCollection<Document> col = bd.getCollection("album");
+			
+			col.aggregate(Arrays.asList(
+					Aggregates.lookup("artista", "artista", "nombre","datosArtista"),
+					Aggregates.project(Projections.fields(
+							Projections.exclude("_id"),
+							Projections.include("titulo","anio",
+									             "artista","datosArtista.genero")))
 					))
 			.forEach(doc->System.out.println(doc.toJson()));
 			
