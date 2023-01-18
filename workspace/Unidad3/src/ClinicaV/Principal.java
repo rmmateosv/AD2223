@@ -1,6 +1,7 @@
 package ClinicaV;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -29,13 +30,49 @@ public class Principal {
 				case 1:
 					crearCliente();
 					break;
-				
+				case 2:
+					crearMascota();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			ad.cerrar();
 		} else {
-			System.out.println("Error, no hay conexión con SpotiFly");
+			System.out.println("Error, no hay conexión con Clínica");
+		}
+	}
+	private static void crearMascota() {
+		// TODO Auto-generated method stub
+		mostrarClientes();
+		System.out.println("Código de cliente:");
+		int codigo = t.nextInt();t.nextLine();
+		Cliente c = ad.obtenerCliente(codigo);
+		if(c != null) {
+			Mascota m = new Mascota();
+			m.setCliente(codigo);
+			System.out.println("Nombre mascota:");
+			m.setNombre(t.nextLine());
+			System.out.println("Tipo:");
+			m.setTipo(t.nextLine());
+			m.setCodigo(ad.obtenerCodigo("mascotas"));
+			if(ad.crearMascota(m)) {
+				System.out.println("Mascota añadida con código "+m.getCodigo());
+			}
+			else {
+				System.out.println("Error al añadir la mascota");
+			}
+			
+		}
+		else {
+			System.out.println("Cliente no existe");
+		}
+		
+	}
+	private static void mostrarClientes() {
+		// TODO Auto-generated method stub
+		ArrayList<Cliente> clientes = ad.obtenerClientes();
+		for(Cliente c: clientes) {
+			c.mostrar();
 		}
 	}
 	private static void crearCliente() {
@@ -48,7 +85,7 @@ public class Principal {
 			c.setEmail(email);
 			System.out.println("Nombre");
 			c.setNombre(t.nextLine());
-			c.setCodigo(ad.obtenerCodigoCliente());
+			c.setCodigo(ad.obtenerCodigo("clientes"));
 			if(ad.crearCliente(c)) {
 				System.out.println("Cliente creado con código:"+c.getCodigo());
 			}

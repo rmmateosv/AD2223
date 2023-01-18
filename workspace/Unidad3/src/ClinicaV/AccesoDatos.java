@@ -4,6 +4,7 @@ import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.bson.Document;
@@ -81,15 +82,16 @@ public class AccesoDatos {
 		}
 		return resultado;
 	}
-	public int obtenerCodigoCliente() {
+	public int obtenerCodigo(String coleccion) {
 		// TODO Auto-generated method stub
 		int resultado = 0;
-		try {
-			MongoCollection<Document> col = bd.getCollection("clientes");
+		try {			
+			MongoCollection<Document> col = bd.getCollection(coleccion);
 			
 			MongoCursor<Document> cursor = col.aggregate(
 					Arrays.asList(
-					 Accumulators.max("codigo", "$codigo").getValue()
+							Aggregates.group(null, Accumulators.max("codigo", "$codigo"))
+					 
 					)).cursor();
 			if(cursor.hasNext()) {
 				Document d = cursor.next();
@@ -118,6 +120,50 @@ public class AccesoDatos {
 			
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	public ArrayList<Cliente> obtenerClientes() {
+		// TODO Auto-generated method stub
+		ArrayList<Cliente> resultado = new ArrayList<>();
+		try {
+			MongoCollection<Cliente> col = bd.getCollection("clientes",Cliente.class);			
+			col.find().into(resultado);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	public Cliente obtenerCliente(int codigo) {
+		// TODO Auto-generated method stub
+		Cliente resultado = null;
+		try {
+			MongoCollection<Cliente> col = bd.getCollection("clientes",Cliente.class);
+			
+			Bson filtro = Filters.eq("codigo",codigo);
+			
+			resultado = col.find(filtro).first();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	public boolean crearMascota(Mascota m) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			MongoCollection<Mascota> col = bd.getCollection("mascotas",Mascota.class);
+			
+			InsertOneResult r = col.insertOne(m);
+			if(r.getInsertedId()!=null) {
+				resultado = true;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return resultado;
 	}
