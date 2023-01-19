@@ -2,6 +2,7 @@ package ClinicaV;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 
@@ -33,12 +34,45 @@ public class Principal {
 				case 2:
 					crearMascota();
 					break;
+				case 3:
+					crearTratamiento();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			ad.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con Clínica");
+		}
+	}
+	private static void crearTratamiento() {
+		// TODO Auto-generated method stub
+		mostrarMascotas();
+		System.out.println("Código Mascota:");
+		int codigo = t.nextInt();t.nextLine();
+		Mascota m = ad.obtenerMascota(codigo);
+		if(m!=null) {
+			Tratamiento tr = new Tratamiento();
+			tr.setCodigo(ad.obtenerCodigoTratamiento());
+			System.out.println("Descrpción del tratamiento:");
+			tr.setDescripcion(t.nextLine());			
+			tr.setFecha(new Date());
+			if(ad.crearTratamiento(m,tr)) {
+				System.out.println("Tratamiento añadido con código "+tr.getCodigo());
+			}
+			else {
+				System.out.println("Error al crear el tratamiento");
+			}
+		}
+		else {
+			System.out.println("Error, mascota no existe");
+		}
+	}
+	private static void mostrarMascotas() {
+		// TODO Auto-generated method stub
+		ArrayList<Mascota> mascotas = ad.obtenerMascotas();
+		for(Mascota m: mascotas) {
+			m.mostrar(false);
 		}
 	}
 	private static void crearMascota() {

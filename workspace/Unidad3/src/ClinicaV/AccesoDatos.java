@@ -23,7 +23,9 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
 
 public class AccesoDatos {
 	private MongoClient cluster = null;
@@ -160,6 +162,73 @@ public class AccesoDatos {
 			InsertOneResult r = col.insertOne(m);
 			if(r.getInsertedId()!=null) {
 				resultado = true;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	public ArrayList<Mascota> obtenerMascotas() {
+		// TODO Auto-generated method stub
+		ArrayList<Mascota> resultado = new ArrayList<>() ;
+		try {
+			MongoCollection<Mascota> col = bd.getCollection("mascotas",Mascota.class);
+			
+			col.find().into(resultado);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	public Mascota obtenerMascota(int codigo) {
+		// TODO Auto-generated method stub
+		Mascota resultado = null;
+		try {
+			MongoCollection<Mascota> col = bd.getCollection("mascotas",Mascota.class);
+			
+			Bson filtro = Filters.eq("codigo",codigo);
+			
+			resultado = col.find(filtro).first();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	public int obtenerCodigoTratamiento() {
+		// TODO Auto-generated method stub
+		int resultado=0;
+		try {
+			
+			MongoCollection<Document> col = bd.getCollection("mascotas");
+			Document d = col.aggregate(Arrays.asList(
+					Aggregates.group(null, 
+							Accumulators.max("codigo", 
+									new Document("$max","$tratamientos.codigo"))))).first();
+			if(d.get("codigo")!=null)
+				resultado = d.getInteger("codigo");
+						
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado +1;
+				
+	}
+	public boolean crearTratamiento(Mascota m, Tratamiento tr) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			MongoCollection<Mascota> col = bd.getCollection("mascotas",Mascota.class);
+			
+			Bson filtro = Filters.eq("codigo",m.getCodigo());
+			Bson modif = Updates.combine(Updates.addToSet("tratamientos", tr));
+			UpdateResult r = col.updateOne(filtro, modif);
+			if(r.getModifiedCount()==1) {
+				resultado =true;
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
