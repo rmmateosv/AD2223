@@ -6,6 +6,9 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import javax.print.Doc;
 
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecProvider;
@@ -23,6 +26,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
@@ -230,6 +234,59 @@ public class AccesoDatos {
 			if(r.getModifiedCount()==1) {
 				resultado =true;
 			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	public ArrayList<Object[]> obtenerTratamientos() {
+		// TODO Auto-generated method stub
+		ArrayList<Object[]> resultado = new ArrayList<>();
+		try {
+			MongoCollection<Document> col = bd.getCollection("mascotas");
+			Bson campos = Projections.fields(
+					Projections.exclude("_id"),
+					Projections.include("tratamientos.codigo","nombre",
+							"tratamientos.fecha"));
+			
+			MongoCursor<Document> cursor = col.find().projection(campos).cursor();
+			while(cursor.hasNext()) {				
+				Document d = cursor.next();
+				//System.out.println(d.toJson());
+				ArrayList<Document> tratamientos= (ArrayList<Document>) d.get("tratamientos");
+				for (Document tr : tratamientos) {
+					resultado.add(new Object[] {tr.getInteger("codigo"),
+							d.getString("nombre"),tr.getDate("fecha")});
+				}
+								
+			}			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	public Object[] obtenerInfoTratamiento(int codigo) {
+		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
+		Object[] resultado = null;
+		try {
+			MongoCollection<Document> col = bd.getCollection("mascotas");
+			Bson filtro = Filters.eq("tratamientos.codigo",codigo);
+			Bson salida = Projections.fields(
+					Projections.exclude("_id","datosCliente._id"),
+					Projections.include("nombre","codigo","tipo","datosClientes"),
+					Projections.elemMatch("tratamientos",Filters.eq("codigo",codigo)));
+			Document d = col.aggregate(Arrays.asList(
+					Aggregates.match(filtro),
+					//ColeccionPrincipal, clave externa, clave primaria, alias
+					Aggregates.lookup("clientes", "cliente", "codigo","datosCliente"),
+					Aggregates.project(salida)
+					)).first();
+			System.out.println(d.toJson());
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

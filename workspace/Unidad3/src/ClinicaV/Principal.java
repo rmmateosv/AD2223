@@ -37,12 +37,46 @@ public class Principal {
 				case 3:
 					crearTratamiento();
 					break;
+				case 4:
+					mostrarTratamiento();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			ad.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con Clínica");
+		}
+	}
+	private static void mostrarTratamiento() {
+		// TODO Auto-generated method stub
+		mostrarTratamientos();//Solamente código, mascota y fecha
+		System.out.println("Código de tratamiento");
+		int codigo = t.nextInt();t.nextLine();
+		Object[] datos=ad.obtenerInfoTratamiento(codigo);
+		if(datos!=null) {
+			Cliente c = (Cliente) datos[0];
+			Mascota m = (Mascota) datos[1];
+			Tratamiento tr = (Tratamiento) datos[2];
+			System.out.print("-- CLIENTE --:");
+			c.mostrar();
+			System.out.print("-- MASCOTAS --:");
+			m.mostrar(false);
+			System.out.print("-- TRATAMIENTO --:");
+			tr.mostrar();
+		}
+		else {
+			System.out.println("Error, no existe el tratamiento");
+		}
+	}
+	private static void mostrarTratamientos() {
+		// TODO Auto-generated method stub
+		SimpleDateFormat formato=new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+		ArrayList<Object[]> tratamientos = ad.obtenerTratamientos();
+		for(Object[] o:tratamientos) {
+			System.out.println("Código:"+o[0]+
+					"\tMascota:"+o[1]+
+					"\tFecha"+formato.format(o[2]));
 		}
 	}
 	private static void crearTratamiento() {
