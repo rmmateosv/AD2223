@@ -22,7 +22,7 @@ public class Tratamiento {
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
 		System.out.println("Codigo:"+codigo + 
 			
-				"\tFecha:" + fecha +
+				"\tFecha:" + formato.format(fecha) +
 				"\tDescripción:"+descripcion);
 	}
 	public int getCodigo() {

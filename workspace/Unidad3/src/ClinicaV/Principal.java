@@ -40,12 +40,56 @@ public class Principal {
 				case 4:
 					mostrarTratamiento();
 					break;
+				case 5:
+					borrarTratamiento();
+					break;
+				case 6:
+					modificarTratamiento();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			ad.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con Clínica");
+		}
+	}
+	private static void modificarTratamiento() {
+		// TODO Auto-generated method stub
+		mostrarTratamientos();
+		System.out.println("Código de tratamiento");
+		int codigo = t.nextInt();t.nextLine();
+		Tratamiento tr = ad.obtenerTratamiento(codigo);
+		if(tr!=null) {
+			System.out.println("Nueva descripción:");
+			tr.setDescripcion(t.nextLine());
+			if(!ad.modificarTratamiento(tr)) {
+				System.out.println("Error al modifcar el tratamiento");
+			}
+			else {
+				System.out.println("Tratamiento modificar");
+			}
+		}
+		else {
+			System.out.println("Error, Tratamiento no existe");
+		}
+	}
+	private static void borrarTratamiento() {
+		// TODO Auto-generated method stub
+		mostrarTratamientos();
+		System.out.println("Código de tratamiento");
+		int codigo = t.nextInt();t.nextLine();
+		Tratamiento tr = ad.obtenerTratamiento(codigo);
+		if(tr!=null) {
+			if(!ad.borrarTratamiento(tr)) {
+				System.out.println("Error al borrar el tratamiento");
+			}
+			else {
+				System.out.println("Tratamiento borrado");
+			}
+		}
+		else {
+			System.out.println("Error, Tratamiento no existe");
 		}
 	}
 	private static void mostrarTratamiento() {

@@ -6,6 +6,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.print.Doc;
@@ -27,6 +28,7 @@ import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
@@ -276,16 +278,101 @@ public class AccesoDatos {
 			MongoCollection<Document> col = bd.getCollection("mascotas");
 			Bson filtro = Filters.eq("tratamientos.codigo",codigo);
 			Bson salida = Projections.fields(
-					Projections.exclude("_id","datosCliente._id"),
-					Projections.include("nombre","codigo","tipo","datosClientes"),
-					Projections.elemMatch("tratamientos",Filters.eq("codigo",codigo)));
+					Projections.exclude("_id"),
+					Projections.include("nombre","codigo","tipo","tratamientos","datosCliente"));
 			Document d = col.aggregate(Arrays.asList(
+					Aggregates.match(filtro),
+					Aggregates.unwind("$tratamientos"),
 					Aggregates.match(filtro),
 					//ColeccionPrincipal, clave externa, clave primaria, alias
 					Aggregates.lookup("clientes", "cliente", "codigo","datosCliente"),
 					Aggregates.project(salida)
 					)).first();
-			System.out.println(d.toJson());
+			//System.out.println(d.toJson());
+			ArrayList<Document> clientes = (ArrayList<Document>) d.get("datosCliente");
+			Cliente c = new Cliente(clientes.get(0).getInteger("codigo"), 
+					clientes.get(0).getString("nombre"), clientes.get(0).getString("email"));
+			Mascota m = new Mascota(d.getInteger("codigo"),c.getCodigo(), 
+					d.getString("nombre"), d.getString("tipo"), new ArrayList<>());
+			Document dTratamiento = (Document) d.get("tratamientos");
+			Tratamiento tr =  new Tratamiento(dTratamiento.getInteger("codigo"), 
+					dTratamiento.getDate("fecha"), dTratamiento.getString("descripcion"));
+			
+			resultado = new Object[] {c,m,tr};
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	public Tratamiento obtenerTratamiento(int codigo) {
+		// TODO Auto-generated method stub
+		Tratamiento resultado = null;
+		try {
+			MongoCollection<Document> col = bd.getCollection("mascotas");
+			
+			Bson filtro = Filters.in("tratamientos.codigo",codigo);
+			Bson campos = Projections.fields(
+					Projections.excludeId(),
+					Projections.elemMatch("tratamientos",Filters.eq("codigo",codigo)));
+			Document d = col.find(filtro).projection(campos).first();
+			
+			if(d!=null) {
+				System.out.println(d.toJson());
+				ArrayList<Document> dTrat = (ArrayList<Document>) d.get("tratamientos");
+				resultado = new Tratamiento(dTrat.get(0).getInteger("codigo"), 
+						dTrat.get(0).getDate("fecha"), dTrat.get(0).getString("descripcion"));
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	public boolean borrarTratamiento(Tratamiento tr) {
+		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			MongoCollection<Document> col = bd.getCollection("mascotas");
+			
+			Bson filtro = Filters.in("tratamientos.codigo",tr.getCodigo());
+			
+			Bson camposModif = Updates.combine(
+					Updates.pull("tratamientos", new Document("codigo",tr.getCodigo())));
+			
+			UpdateResult r = col.updateOne(filtro, camposModif);
+			if(r.getModifiedCount()==1) {
+				resultado = true;
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	public boolean modificarTratamiento(Tratamiento tr) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			MongoCollection<Document> col = bd.getCollection("mascotas");
+			
+			Bson filtro = Filters.in("tratamientos.codigo",tr.getCodigo());
+			
+			Bson camposModif = Updates.combine(
+					Updates.set("tratamientos.$[elem].descripcion", tr.getDescripcion()),
+					Updates.set("tratamientos.$[elem].fecha", new Date())
+					);
+			 
+			UpdateOptions opcionesModif = new UpdateOptions().arrayFilters(
+					Arrays.asList(Filters.eq("elem.codigo",tr.getCodigo())));
+			UpdateResult r = col.updateOne(filtro, camposModif,opcionesModif);
+			if(r.getModifiedCount()==1) {
+				resultado = true;
+			}
 			
 		} catch (Exception e) {
 			// TODO: handle exception
