@@ -3,9 +3,9 @@ package clinicaV;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 
 @Entity
 public class Consulta {
