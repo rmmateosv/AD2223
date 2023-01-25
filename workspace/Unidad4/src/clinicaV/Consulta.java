@@ -4,14 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 
 @Entity
 public class Consulta {
-	
-	
-	private ConsultaClave idConsulta;
-	
+	@EmbeddedId	
+	private ConsultaClave idConsulta;	
 	@Column(nullable = false)
 	private String motivo;
 	@Column(nullable = true)
@@ -32,7 +31,7 @@ public class Consulta {
 	
 	public void mostrar() {
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
-		System.out.println("Codigo:"+idConsulta.getMascota().getNombre() + 			
+		System.out.println("Mascota:"+idConsulta.getMascota().getNombre() + 			
 				"\tFecha:" + formato.format(idConsulta.getFecha()) +
 				"\tMotivo:"+motivo+
 				"\tDiagnostico:"+diagnostico+
