@@ -3,20 +3,28 @@ package clinicaV;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+
+@Entity
 public class Consulta {
-	private int codigo;
-	private Date fecha;
+	
+	
+	private ConsultaClave idConsulta;
+	
+	@Column(nullable = false)
 	private String motivo;
+	@Column(nullable = true)
 	private String diagnostico;
+	@Column(nullable = true)
 	private String receta;
 	
 	public Consulta() {
 	}
 	
-	public Consulta(int codigo,  Date fecha, String motivo,  String diagnostico,
+	public Consulta(ConsultaClave id, String motivo,  String diagnostico,
 			String receta) {
-		this.codigo = codigo;	
-		this.fecha = fecha;
+		this.idConsulta = id;
 		this.motivo = motivo;
 		this.diagnostico = diagnostico;
 		this.receta = receta;
@@ -24,28 +32,22 @@ public class Consulta {
 	
 	public void mostrar() {
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
-		System.out.println("Codigo:"+codigo + 			
-				"\tFecha:" + formato.format(fecha) +
+		System.out.println("Codigo:"+idConsulta.getMascota().getNombre() + 			
+				"\tFecha:" + formato.format(idConsulta.getFecha()) +
 				"\tMotivo:"+motivo+
 				"\tDiagnostico:"+diagnostico+
 				"\tReceta:"+receta);
 	}
-	public int getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(int codigo) {
-		this.codigo = codigo;
-	}
-
 	
 
-	public Date getFecha() {
-		return fecha;
+
+
+	public ConsultaClave getIdConsulta() {
+		return idConsulta;
 	}
 
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
+	public void setIdConsulta(ConsultaClave idConsulta) {
+		this.idConsulta = idConsulta;
 	}
 
 	public String getMotivo() {

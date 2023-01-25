@@ -2,11 +2,24 @@ package clinicaV;
 
 import java.util.ArrayList;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Mascota {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int codigo;
+	!!!!!
 	private Cliente cliente;
+	@Column(name = "nombre", nullable = false)
 	private String nombre;
+	@Column(nullable = false)
 	private String tipo;
+	!!!
 	private ArrayList<Consulta> consultas=new ArrayList();
 	
 	public Mascota() {
