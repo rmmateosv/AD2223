@@ -13,17 +13,18 @@ public class Consulta {
 	public Consulta() {
 	}
 	
-	public Consulta(int codigo,  Date fecha, String descripcion) {
-		this.codigo = codigo;
-	
+	public Consulta(int codigo,  Date fecha, String motivo,  String diagnostico,
+			String receta) {
+		this.codigo = codigo;	
 		this.fecha = fecha;
-		this.motivo = descripcion;
+		this.motivo = motivo;
+		this.diagnostico = diagnostico;
+		this.receta = receta;
 	}
 	
 	public void mostrar() {
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
-		System.out.println("Codigo:"+codigo + 
-			
+		System.out.println("Codigo:"+codigo + 			
 				"\tFecha:" + formato.format(fecha) +
 				"\tMotivo:"+motivo+
 				"\tDiagnostico:"+diagnostico+
@@ -47,13 +48,31 @@ public class Consulta {
 		this.fecha = fecha;
 	}
 
-	public String getDescripcion() {
+	public String getMotivo() {
 		return motivo;
 	}
 
-	public void setDescripcion(String descripcion) {
-		this.motivo = descripcion;
+	public void setMotivo(String motivo) {
+		this.motivo = motivo;
 	}
+
+	public String getDiagnostico() {
+		return diagnostico;
+	}
+
+	public void setDiagnostico(String diagnostico) {
+		this.diagnostico = diagnostico;
+	}
+
+	public String getReceta() {
+		return receta;
+	}
+
+	public void setReceta(String receta) {
+		this.receta = receta;
+	}
+
+	
 	
 	
 	
