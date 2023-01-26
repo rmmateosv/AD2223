@@ -18,7 +18,7 @@ public class Mascota {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int codigo;
 	@ManyToOne
-	@JoinColumn(referencedColumnName = "codigo")
+	@JoinColumn(name="cliente", referencedColumnName = "codigo")
 	private Cliente cliente;
 	@Column(name = "nombre", nullable = false)
 	private String nombre;

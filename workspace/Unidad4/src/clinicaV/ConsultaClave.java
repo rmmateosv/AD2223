@@ -10,7 +10,7 @@ import jakarta.persistence.TemporalType;
 
 public class ConsultaClave {
 	@ManyToOne
-	@JoinColumn(referencedColumnName = "codigo")
+	@JoinColumn(name="mascota", referencedColumnName = "codigo")
 	//referencedColumnName contiene el nombre del campo
 	// de la clase Mascota que hace de pk
 	private Mascota mascota;
