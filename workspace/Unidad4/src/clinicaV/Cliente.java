@@ -1,6 +1,8 @@
 package clinicaV;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -10,10 +12,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
-@Entity(name="cliente")
+@Entity
 //Atributo name es para indicar el nombre de la tabla
 //Si es el mismo se puede obviar
-public class Cliente {
+public class Cliente implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	//Cliente es pk autonumérica
@@ -25,18 +27,43 @@ public class Cliente {
 	private String email;
 	@Column(nullable = false)
 	private String telefono;
-	public ArrayList<Mascota> getMascotas() {
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente" )
+	private List<Mascota> mascotas = new  ArrayList();
+	
+	
+	public Cliente(int codigo, String nombre, String email, String telefono, 
+			List<Mascota> mascotas) {
+		this.codigo = codigo;
+		this.nombre = nombre;
+		this.email = email;
+		this.telefono = telefono;
+		this.mascotas = mascotas;
+	}
+
+	public void mostrar(boolean mostrarMascotas) {
+		System.out.println("Codigo:"+codigo + 
+				"\tNombre:"+ nombre + 
+				"\tDireccion:" + email + 
+				"\tTeléfono:"+telefono);
+		if(mostrarMascotas) {
+			for(Mascota m : mascotas) {
+				System.out.println("\n--- MASCOTAS ---");
+				m.mostrar(false);
+				System.out.println("--- -------- ---\n");
+			}
+		}
+	}
+	public List<Mascota> getMascotas() {
 		return mascotas;
 	}
 
 
-	public void setMascotas(ArrayList<Mascota> mascotas) {
+	public void setMascotas(List<Mascota> mascotas) {
 		this.mascotas = mascotas;
 	}
 
 
-	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "cliente" )
-	private ArrayList<Mascota> mascotas = new  ArrayList();
+	
 	
 	
 	public String getTelefono() {
@@ -53,24 +80,7 @@ public class Cliente {
 	}
 
 
-	public Cliente(int codigo, String nombre, String email, String telefono) {
-		this.codigo = codigo;
-		this.nombre = nombre;
-		this.email = email;
-		this.telefono = telefono;
-	}
-
-	public void mostrar(boolean mostrarMascotas) {
-		System.out.println("Codigo:"+codigo + 
-				"\tNombre:"+ nombre + 
-				"\tDireccion:" + email + 
-				"\tTeléfono:"+telefono);
-		if(mostrarMascotas) {
-			for(Mascota m : mascotas) {
-				m.mostrar(false);
-			}
-		}
-	}
+	
 	public int getCodigo() {
 		return codigo;
 	}

@@ -1,6 +1,8 @@
 package clinicaV;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -13,7 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Mascota {
+public class Mascota  implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int codigo;
@@ -25,11 +27,11 @@ public class Mascota {
 	@Column(nullable = false)
 	private String tipo;	
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "idConsulta.mascota" )
-	private ArrayList<Consulta> consultas=new ArrayList();
+	private List<Consulta> consultas=new ArrayList();
 	
 	public Mascota() {
 	}
-	public Mascota(int codigo, Cliente cliente, String nombre, String tipo, ArrayList<Consulta> tratamientos) {
+	public Mascota(int codigo, Cliente cliente, String nombre, String tipo, List<Consulta> tratamientos) {
 		this.codigo = codigo;
 		this.cliente = cliente;
 		this.nombre = nombre;
@@ -72,10 +74,10 @@ public class Mascota {
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
-	public ArrayList<Consulta> getConsultas() {
+	public List<Consulta> getConsultas() {
 		return consultas;
 	}
-	public void setConsultas(ArrayList<Consulta> consultas) {
+	public void setConsultas(List<Consulta> consultas) {
 		this.consultas = consultas;
 	}
 	

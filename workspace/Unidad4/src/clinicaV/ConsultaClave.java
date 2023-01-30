@@ -1,5 +1,6 @@
 package clinicaV;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -8,7 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
-public class ConsultaClave {
+public class ConsultaClave  implements Serializable{
 	@ManyToOne
 	@JoinColumn(name="mascota", referencedColumnName = "codigo")
 	//referencedColumnName contiene el nombre del campo

@@ -1,5 +1,6 @@
 package clinicaV;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -8,7 +9,7 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 
 @Entity
-public class Consulta {
+public class Consulta  implements Serializable{
 	@EmbeddedId	
 	private ConsultaClave idConsulta;	
 	@Column(nullable = false)
