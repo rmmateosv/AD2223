@@ -24,6 +24,10 @@ public class Principal {
 				System.out.println("2-Mostrar Clientes");
 				System.out.println("3-Modificar Cliente");
 				System.out.println("4-Borrar Cliente");
+				System.out.println("5-Crear Mascota");
+				System.out.println("6-Crear Tratamiento");
+				System.out.println("7-Modificar Tratamiento");
+				System.out.println("8-Mostrar Tratamientos");
 				
 				opcion = t.nextInt();
 				t.nextLine();
@@ -40,6 +44,9 @@ public class Principal {
 				case 4:
 					borrarCliente();
 					break;
+				case 5:
+					crearMascota();
+					break;
 				
 				}
 			} while (opcion != 0);
@@ -47,6 +54,30 @@ public class Principal {
 			ad.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con Clínica");
+		}
+	}
+	private static void crearMascota() {
+		// TODO Auto-generated method stub
+		mostrarClientes();
+		System.out.println("Código de cliente");
+		int codigo = t.nextInt();t.nextLine();
+		Cliente c = ad.obtenerCliente(codigo);
+		if(c!=null) {
+			Mascota m = new Mascota();
+			m.setCliente(c);
+			System.out.println("Nombre mascota");
+			m.setNombre(t.nextLine());
+			System.out.println("Tipo mascota");
+			m.setTipo(t.nextLine());
+			if(ad.crearMascota(m)) {
+				System.out.println("Mascota creada con código:"+m.getCodigo());
+			}
+			else {
+				System.out.println("Error al crear la mascota");
+			}
+		}
+		else {
+			System.out.println("Error, no existe cliente");
 		}
 	}
 	private static void borrarCliente() {

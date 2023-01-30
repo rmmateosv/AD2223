@@ -131,13 +131,33 @@ public class AccesoDatos {
 
 	public boolean borrarCliente(Cliente c) {
 		// TODO Auto-generated method stub
-boolean resultado =false;
+		boolean resultado =false;
 		
 		EntityTransaction t  = null;
 		try {
 			t = em.getTransaction();
 			t.begin();
 			em.remove(c);
+			t.commit();
+			resultado=true;
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			t.rollback();
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean crearMascota(Mascota m) {
+		// TODO Auto-generated method stub
+		boolean resultado =false;
+		
+		EntityTransaction t  = null;
+		try {
+			t = em.getTransaction();
+			t.begin();
+			em.persist(m);
 			t.commit();
 			resultado=true;
 			
