@@ -1,5 +1,6 @@
 package clinicaV;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +13,8 @@ public class Principal {
 	static AccesoDatos ad = new AccesoDatos();
 	// Definimos el formato con el que vamos
 	// a pintar/pedir fechas
-	static SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+	static SimpleDateFormat formato = new SimpleDateFormat("ddMMyyhhmm");
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		if (ad.getEm() != null) {
@@ -24,10 +26,10 @@ public class Principal {
 				System.out.println("2-Mostrar Clientes");
 				System.out.println("3-Modificar Cliente");
 				System.out.println("4-Borrar Cliente");
-				System.out.println("5-Crear Mascota");
-				System.out.println("6-Crear Tratamiento");
-				System.out.println("7-Modificar Tratamiento");
-				System.out.println("8-Mostrar Tratamientos");
+				System.out.println("5-Crear Consulta");
+				System.out.println("6-Crear Consulta");
+				System.out.println("7-Modificar Consulta");
+				System.out.println("8-Mostrar Consulta");
 				
 				opcion = t.nextInt();
 				t.nextLine();
@@ -47,13 +49,61 @@ public class Principal {
 				case 5:
 					crearMascota();
 					break;
-				
+				case 6:
+					crearConsulta();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			ad.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con Clínica");
+		}
+	}
+	private static void crearConsulta() {
+		// TODO Auto-generated method stub
+		try {
+			mostrarClientes();
+			System.out.println("Código de cliente");
+			int codigo = t.nextInt();t.nextLine();
+			Cliente c = ad.obtenerCliente(codigo);
+			if(c!=null) {
+				//Mostrar mascotas (NO HACE FALTA OBTENERLAS)
+				//HIBERNATE LAS RECUPERA CUANDO OBTIENE EL CLIENTE
+				for(Mascota m:c.getMascotas()) {
+					m.mostrar(false);
+				}
+				System.out.println("Código de mascota:");
+				int codigoC = t.nextInt(); t.nextLine();
+				Mascota m = ad.obtenerMascota(codigoC);
+				//Chequear que mascota existe para el cliente
+				if(m!=null && m.getCliente()==c) {
+					Consulta consulta = new Consulta();
+					System.out.println("Fecha consulta:(ddMMyyhhmm)");
+					consulta.setIdConsulta(new ConsultaClave(m, 
+							formato.parse(t.nextLine())));
+					System.out.println("Motivo de la consulta");
+					consulta.setMotivo(t.nextLine());
+					if(ad.crearConsulta(consulta)) {
+						System.out.println("Consulta creada");
+						consulta.mostrar();
+					}
+					else {
+						System.out.println("Error, al crear la consulta");
+					}
+					
+				}
+				else {
+					System.out.println("Error, la mascota no existe para el cliente");
+				}
+			}
+			else {
+				System.out.println("Error, no existe cliente");
+			}
+		}
+		catch (ParseException e) {
+			// TODO: handle exception
+			System.out.println("Error, fecha con formato incorrecto");
 		}
 	}
 	private static void crearMascota() {

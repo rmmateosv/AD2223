@@ -168,6 +168,39 @@ public class AccesoDatos {
 		}
 		return resultado;
 	}
+
+	public Mascota obtenerMascota(int codigoC) {
+		// TODO Auto-generated method stub
+		Mascota resultado =null;		
+		try {
+			return em.find(Mascota.class, codigoC);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean crearConsulta(Consulta consulta) {
+		// TODO Auto-generated method stub
+		boolean resultado =false;
+		
+		EntityTransaction t  = null;
+		try {
+			t = em.getTransaction();
+			t.begin();
+			em.persist(consulta);
+			t.commit();
+			resultado=true;
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			t.rollback();
+			e.printStackTrace();
+		}
+		return resultado;
+	}
 	
 	
 }
