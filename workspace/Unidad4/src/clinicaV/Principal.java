@@ -30,6 +30,8 @@ public class Principal {
 				System.out.println("6-Crear Consulta");
 				System.out.println("7-Modificar Consulta");
 				System.out.println("8-Mostrar Consulta");
+				System.out.println("9-Mostrar Rankig Buenos Clientes");
+				System.out.println("10-% Consultas no asistidas Clientes");
 				
 				opcion = t.nextInt();
 				t.nextLine();
@@ -55,12 +57,26 @@ public class Principal {
 				case 7:
 					modificarConsulta();
 					break;
+				case 8:
+					mostrarConsultas();
+					break;
+				case 9:
+					mostrarBuenosClientes();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
 			ad.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con Clínica");
+		}
+	}
+	private static void mostrarBuenosClientes() {
+		// TODO Auto-generated method stub
+		List<Object[]> datos = ad.obtenerBuenosClientes();
+		for(Object[] o:datos) {
+			System.out.println("Clinente:"+o[0]+
+					"Nº Consultas:"+o[1]);
 		}
 	}
 	private static void modificarConsulta() {

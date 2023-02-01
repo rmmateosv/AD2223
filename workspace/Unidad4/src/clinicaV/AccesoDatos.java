@@ -283,6 +283,27 @@ public class AccesoDatos {
 		}
 		return resultado;
 	}
+
+	public List<Object[]> obtenerBuenosClientes() {
+		// TODO Auto-generated method stub
+		List<Object[]> resultado = new ArrayList<>();
+		try {
+			Query c = em.createQuery("select "
+					+ "c.idConsulta.mascota.cliente.nombre, count(*) as numero "
+					+ "from Consulta as c "
+					+ "where diagnostico != null and c.idConsulta.fecha<?1 "
+					+ "group by c.idConsulta.mascota.cliente.codigo "
+					+ "order by numero desc");
+			c.setParameter(1, new Date());
+			resultado = c.getResultList();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		
+			e.printStackTrace();
+		}
+		return resultado;
+	}
 	
 	
 }
