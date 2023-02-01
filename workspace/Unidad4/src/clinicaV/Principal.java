@@ -52,6 +52,9 @@ public class Principal {
 				case 6:
 					crearConsulta();
 					break;
+				case 7:
+					modificarConsulta();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
@@ -59,6 +62,10 @@ public class Principal {
 		} else {
 			System.out.println("Error, no hay conexión con Clínica");
 		}
+	}
+	private static void modificarConsulta() {
+		// TODO Auto-generated method stub
+		
 	}
 	private static void crearConsulta() {
 		// TODO Auto-generated method stub
