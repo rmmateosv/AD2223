@@ -31,8 +31,9 @@ public class Consulta  implements Serializable{
 	}
 	
 	public void mostrar() {
-		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
-		System.out.println("Mascota:"+idConsulta.getMascota().getNombre() + 			
+		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+		System.out.println("Mascota:"+idConsulta.getMascota().getCodigo()+ "-"+
+		idConsulta.getMascota().getNombre() + 			
 				"\tFecha:" + formato.format(idConsulta.getFecha()) +
 				"\tMotivo:"+motivo+
 				"\tDiagnostico:"+diagnostico+

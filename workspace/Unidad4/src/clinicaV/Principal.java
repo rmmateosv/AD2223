@@ -13,7 +13,7 @@ public class Principal {
 	static AccesoDatos ad = new AccesoDatos();
 	// Definimos el formato con el que vamos
 	// a pintar/pedir fechas
-	static SimpleDateFormat formato = new SimpleDateFormat("ddMMyyhhmm");
+	static SimpleDateFormat formato = new SimpleDateFormat("ddMMyyHHmm");
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -65,7 +65,45 @@ public class Principal {
 	}
 	private static void modificarConsulta() {
 		// TODO Auto-generated method stub
-		
+		mostrarConsultas();
+		try {
+			System.out.println("Código Mascota");
+			int codigo = t.nextInt(); t.nextLine();
+			System.out.println("FEcha(ddmmyyhhmm)");		
+			Date fecha = formato.parse(t.nextLine());
+			
+			//Consulta c = ad.obtenerConsulta(codigo,fecha);
+			Consulta c = ad.obtenerConsulta(
+					new ConsultaClave(ad.obtenerMascota(codigo),fecha));
+			if(c!=null) {
+				System.out.println("Modificar consulta:");
+				c.mostrar();
+				System.out.println("Diagnóstico");
+				c.setDiagnostico(t.nextLine());
+				System.out.println("Receta");
+				c.setReceta(t.nextLine());
+				if(ad.modificarConsulta(c)) {
+					System.out.println("Consulta modificada");
+				}
+				else {
+					System.out.println("Error al modificar la consulta");
+				}
+				
+			}
+			else {
+				System.out.println("Error, consulta no existe");
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	private static void mostrarConsultas() {
+		// TODO Auto-generated method stub
+		List<Consulta> consultas = ad.obtenerConsultas();
+		for(Consulta c:consultas) {
+			c.mostrar();
+		}
 	}
 	private static void crearConsulta() {
 		// TODO Auto-generated method stub

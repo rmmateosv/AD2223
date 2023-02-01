@@ -1,6 +1,7 @@
 package clinicaV;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.EntityManager;
@@ -197,6 +198,87 @@ public class AccesoDatos {
 		} catch (Exception e) {
 			// TODO: handle exception
 			t.rollback();
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public List<Consulta> obtenerConsultas() {
+		// TODO Auto-generated method stub
+		List<Consulta> resultado = new ArrayList<>();
+		try {
+			Query c = em.createQuery("from Consulta "
+					+ "order by idConsulta.fecha desc");
+			resultado = c.getResultList();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public Consulta obtenerConsulta(int codigo, Date fecha) {
+		// TODO Auto-generated method stub
+		Consulta resultado = null;
+		try {
+			Query c = em.createQuery("from Consulta "
+					+ "where idConsulta.mascota.codigo = ?1 and "
+					+ "idConsulta.fecha = ?2");
+			c.setParameter(1, codigo);
+			c.setParameter(2, fecha);
+			
+			List<Consulta> r = c.getResultList();
+			if(r.size()==1) {
+				resultado = r.get(0);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean modificarConsulta(Consulta consulta) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		EntityTransaction t = null;
+		try {
+			t=em.getTransaction();
+			t.begin();
+			Query c = em.createQuery("update Consulta set "
+					+ "diagnostico = ?1, receta = ?2 "
+					+ "where idConsulta=?3");
+			c.setParameter(1, consulta.getDiagnostico());
+			c.setParameter(2, consulta.getReceta());
+			c.setParameter(3, consulta.getIdConsulta());
+			int r = c.executeUpdate();
+			if(r==1) {
+				resultado = true;
+				t.commit();
+				//Refrescar caché
+				em.clear();
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			t.rollback();
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public Consulta obtenerConsulta(ConsultaClave consultaClave) {
+		// TODO Auto-generated method stub
+		Consulta resultado = null;
+		try {
+			resultado = em.find(Consulta.class, consultaClave);			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		
 			e.printStackTrace();
 		}
 		return resultado;
