@@ -63,6 +63,9 @@ public class Principal {
 				case 9:
 					mostrarBuenosClientes();
 					break;
+				case 10:
+					infoMalosClientes();
+					break;
 				}
 			} while (opcion != 0);
 			//Cerrar conexión
@@ -71,11 +74,15 @@ public class Principal {
 			System.out.println("Error, no hay conexión con Clínica");
 		}
 	}
+	private static void infoMalosClientes() {
+		// TODO Auto-generated method stub
+		List<Cliente> clientes = ad.obtenerClientes();
+	}
 	private static void mostrarBuenosClientes() {
 		// TODO Auto-generated method stub
 		List<Object[]> datos = ad.obtenerBuenosClientes();
 		for(Object[] o:datos) {
-			System.out.println("Clinente:"+o[0]+
+			System.out.println("Cliente:"+o[0]+
 					"Nº Consultas:"+o[1]);
 		}
 	}
