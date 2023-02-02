@@ -74,6 +74,7 @@ public class AccesoDatos {
 			//Hacemos el insert
 			em.persist(c);
 			t.commit();
+			em.clear();
 			resultado = true;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -120,6 +121,7 @@ public class AccesoDatos {
 			t.begin();
 			em.persist(c);
 			t.commit();
+			em.clear();
 			resultado=true;
 			
 		} catch (Exception e) {
@@ -140,6 +142,7 @@ public class AccesoDatos {
 			t.begin();
 			em.remove(c);
 			t.commit();
+			em.clear();
 			resultado=true;
 			
 		} catch (Exception e) {
@@ -160,6 +163,7 @@ public class AccesoDatos {
 			t.begin();
 			em.persist(m);
 			t.commit();
+			em.clear();
 			resultado=true;
 			
 		} catch (Exception e) {
@@ -193,6 +197,7 @@ public class AccesoDatos {
 			t.begin();
 			em.persist(consulta);
 			t.commit();
+			em.clear();
 			resultado=true;
 			
 		} catch (Exception e) {
@@ -300,6 +305,53 @@ public class AccesoDatos {
 		} catch (Exception e) {
 			// TODO: handle exception
 		
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean borradoPeligroso(Cliente c) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		EntityTransaction t = null;
+		try {
+			t=em.getTransaction();
+			t.begin();
+			//Borrar conultas
+			Query consulta = em.createQuery("delete from Consulta "
+					+ "where idConsulta.mascota.cliente.codigo = ?1");
+			consulta.setParameter(1, c.getCodigo());
+			int r = consulta.executeUpdate();
+			if(r>0) {
+				//Borrar mascotas
+				consulta = em.createQuery("delete from Mascota "
+						+ "where cliente = ?1");
+				consulta.setParameter(1, c);
+				r = consulta.executeUpdate();
+				if(r>=1) {
+					consulta = em.createQuery("delete from Cliente "
+							+ "where codigo = ?1");
+					consulta.setParameter(1, c.getCodigo());
+					r = consulta.executeUpdate();
+					if(r==1) {
+						t.commit();
+						em.clear();
+						resultado=true;
+					}
+					else {
+						t.rollback();
+					}
+				}
+				else {
+					t.rollback();
+				}
+			}
+			
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			t.rollback();
 			e.printStackTrace();
 		}
 		return resultado;

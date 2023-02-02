@@ -77,6 +77,29 @@ public class Principal {
 	private static void infoMalosClientes() {
 		// TODO Auto-generated method stub
 		List<Cliente> clientes = ad.obtenerClientes();
+		for(Cliente c:clientes) {
+			float numConsultasPedidas=0;
+			float numConsultasFaltas=0;
+			for(Mascota m:c.getMascotas()) {				
+				for(Consulta cons:m.getConsultas()) {
+					if(cons.getIdConsulta().getFecha().before(new Date())) {
+						//Acumular las consultas de cada mascota
+						numConsultasPedidas+=1;
+						if(cons.getDiagnostico()==null) {
+							//Acumulo consulta faltada
+							numConsultasFaltas += 1;
+						}
+					}
+				}
+				
+			}
+			System.out.println("Cliente:"+c.getNombre()+
+					"\tPedidas:"+numConsultasPedidas +
+					"\tFaltas:"+numConsultasFaltas +
+					"\t%:"+
+					(numConsultasPedidas==0?0:
+						numConsultasFaltas/numConsultasPedidas*100));
+		}
 	}
 	private static void mostrarBuenosClientes() {
 		// TODO Auto-generated method stub
@@ -204,12 +227,22 @@ public class Principal {
 		System.out.println("Código");
 		int codigo = t.nextInt();t.nextLine();		
 		Cliente c = ad.obtenerCliente(codigo);
-		if(c!=null) {			
-			if(ad.borrarCliente(c)) {
-				System.out.println("Cliente borrad");
+		if(c!=null) {	
+			if(c.getMascotas().isEmpty()) {
+				if(ad.borrarCliente(c)) {
+					System.out.println("Cliente borrad");
+				}
+				else {
+					System.out.println("Error al borrar el cliente");
+				}
 			}
 			else {
-				System.out.println("Error al borrar el cliente");
+				if(ad.borradoPeligroso(c)){
+					System.out.println("Cliente, mascotas y consultas borradas");
+				}
+				else {
+					System.out.println("Error al borrar el cliente");
+				}
 			}
 		}
 		else {

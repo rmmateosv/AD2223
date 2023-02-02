@@ -7,8 +7,10 @@ import java.util.Date;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
+@Table
 public class Consulta  implements Serializable{
 	@EmbeddedId	
 	private ConsultaClave idConsulta;	
