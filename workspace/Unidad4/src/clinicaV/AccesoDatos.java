@@ -317,37 +317,42 @@ public class AccesoDatos {
 		try {
 			t=em.getTransaction();
 			t.begin();
-			//Borrar conultas
-			Query consulta = em.createQuery("delete from Consulta "
-					+ "where idConsulta.mascota.cliente.codigo = ?1");
-			consulta.setParameter(1, c.getCodigo());
-			int r = consulta.executeUpdate();
-			if(r>0) {
-				//Borrar mascotas
-				consulta = em.createQuery("delete from Mascota "
-						+ "where cliente = ?1");
-				consulta.setParameter(1, c);
+			Query consulta =null;
+			int r=0;
+			//Borrar las consultas por mascota 
+			//ya que no nos permite por cliente
+			for(Mascota m:c.getMascotas()) {
+				//Borrar conultas
+				consulta = em.createQuery("delete from Consulta "
+						+ "where idConsulta.mascota = ?1");
+				consulta.setParameter(1, m);
 				r = consulta.executeUpdate();
-				if(r>=1) {
-					consulta = em.createQuery("delete from Cliente "
-							+ "where codigo = ?1");
-					consulta.setParameter(1, c.getCodigo());
-					r = consulta.executeUpdate();
-					if(r==1) {
-						t.commit();
-						em.clear();
-						resultado=true;
-					}
-					else {
-						t.rollback();
-					}
+				//No chequeamos error ya que r puede ser 0
+				//y eso no significa que haya error
+			}		
+			
+			//Borrar mascotas
+			consulta = em.createQuery("delete from Mascota "
+					+ "where cliente = ?1");
+			consulta.setParameter(1, c);
+			r = consulta.executeUpdate();
+			if(r>=1) {
+				consulta = em.createQuery("delete from Cliente "
+						+ "where codigo = ?1");
+				consulta.setParameter(1, c.getCodigo());
+				r = consulta.executeUpdate();
+				if(r==1) {
+					t.commit();
+					em.clear();
+					resultado=true;
 				}
 				else {
 					t.rollback();
 				}
 			}
-			
-			
+			else {
+				t.rollback();
+			}					
 			
 		} catch (Exception e) {
 			// TODO: handle exception
