@@ -1,9 +1,23 @@
 package taller;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name='pieza')
 public class Pieza {
 	
+	private enum tipo {motor, filtro, otros}
+	
+	@Id
 	private String codigo;
-	private String[] clase;
+	@Column(nullable = false)
+	@Enumerated(EnumType.ORDINAL)
+	private tipo clase;
+	@Column(nullable = false)
 	private String descripcion;
 	private float precio;
 	private int stock;
@@ -12,7 +26,7 @@ public class Pieza {
 		
 	}
 
-	public Pieza(String codigo, String[] clase, String descripcion, float precio, int stock) {
+	public Pieza(String codigo, tipo clase, String descripcion, float precio, int stock) {
 		this.codigo = codigo;
 		this.clase = clase;
 		this.descripcion = descripcion;
@@ -36,11 +50,11 @@ public class Pieza {
 		this.codigo = codigo;
 	}
 
-	public String[] getClase() {
+	public tipo getClase() {
 		return clase;
 	}
 
-	public void setClase(String[] clase) {
+	public void setClase(tipo clase) {
 		this.clase = clase;
 	}
 
