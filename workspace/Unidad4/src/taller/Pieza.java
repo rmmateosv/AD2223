@@ -1,32 +1,40 @@
 package taller;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name='pieza')
-public class Pieza {
-	
-	private enum tipo {motor, filtro, otros}
-	
+@Table(name="pieza")
+public class Pieza implements Serializable{	
 	@Id
 	private String codigo;
 	@Column(nullable = false)
-	@Enumerated(EnumType.ORDINAL)
-	private tipo clase;
+	private String clase;
 	@Column(nullable = false)
 	private String descripcion;
+	@Column(nullable = false)
 	private float precio;
+	@Column(nullable = false)
 	private int stock;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pieza")	
+	private List<PiezaReparacion> piezasRep = new ArrayList<>();
 	
 	public Pieza() {
 		
 	}
 
-	public Pieza(String codigo, tipo clase, String descripcion, float precio, int stock) {
+	public Pieza(String codigo, String clase, String descripcion, float precio, int stock) {
 		this.codigo = codigo;
 		this.clase = clase;
 		this.descripcion = descripcion;
@@ -50,11 +58,11 @@ public class Pieza {
 		this.codigo = codigo;
 	}
 
-	public tipo getClase() {
+	public String getClase() {
 		return clase;
 	}
 
-	public void setClase(tipo clase) {
+	public void setClase(String clase) {
 		this.clase = clase;
 	}
 

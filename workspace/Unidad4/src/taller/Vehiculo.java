@@ -1,13 +1,38 @@
 package taller;
 
-public class Vehiculo {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+@Entity
+@Table
+public class Vehiculo implements Serializable{
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int codigo;
+	@Column(nullable = false)
 	private String nombrePropietario;
+	@Column(nullable = false, unique = true) //Es clave alternativa
 	private String matricula;
+	@Column(nullable = false)
 	private String color;
+	@Column(nullable = false)
 	private String telefono;
+	@Column(nullable = false)
 	private String email;
+	
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "vehiculo")
+	List<Reparacion> reparaciones = new ArrayList<>();
 	
 	public Vehiculo() {
 		
@@ -23,13 +48,20 @@ public class Vehiculo {
 		this.email = email;
 	}
 	
-	public void mostrar() {
+	public void mostrar(boolean mostrarReparaciones) {
 		System.out.println("Codigo: " +codigo
 							+"\tNombre Propietario: " +nombrePropietario
 							+"\tMatricula: " +matricula
 							+"\tColor: " +color
 							+"\tTelefono: " +telefono
 							+"\tEmail: " +email);
+	if(mostrarReparaciones) {
+		System.out.println("-- REPARACIONES --");
+		for(Reparacion r:reparaciones) {
+			r.mostrar(false);
+		}
+		System.out.println("-- ------------ --");
+	}
 	}
 
 	public int getCodigo() {
