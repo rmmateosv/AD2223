@@ -35,7 +35,7 @@ public class Reparacion implements Serializable{
 	private int tiempo;
 	@Column(nullable = false)
 	private boolean pagado=false;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "reparacion")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "clave.reparacion")
 	private List<PiezaReparacion> piezasRep = new ArrayList<>();
 	
 	public Reparacion() {

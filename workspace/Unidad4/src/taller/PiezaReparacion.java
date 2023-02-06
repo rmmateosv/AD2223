@@ -1,44 +1,48 @@
 package taller;
 
-public class PiezaReparacion {
-	
-	private Reparacion reparacion;
-	private Pieza pieza;
+import java.io.Serializable;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table
+public class PiezaReparacion implements  Serializable{
+	@EmbeddedId
+	private clavePR clave;
+	@Column(nullable = false)
 	private float importe;
+	@Column(nullable = false)
 	private int cantidad;
 	
 	public PiezaReparacion() {
 		
 	}
 
-	public PiezaReparacion(Reparacion reparacion, Pieza pieza, float importe, int cantidad) {
-		this.reparacion = reparacion;
-		this.pieza = pieza;
+	public PiezaReparacion(clavePR clave, float importe, int cantidad) {
+		this.clave = clave;
 		this.importe = importe;
 		this.cantidad = cantidad;
 	}
 	
 	public void mostrar() {
-		System.out.println("Reparacion: " +reparacion
-							+"\tPieza: " +pieza
+		System.out.println("Reparacion: " +clave.getReparacion().getId()
+							+"\tPieza: " +clave.getPieza().getCodigo()+
+							          "-"+clave.getPieza().getDescripcion()
 							+"\tImporte: " +importe
 							+"\tCantidad. " +cantidad);
 	}
 
-	public Reparacion getReparacion() {
-		return reparacion;
+	
+
+	public clavePR getClave() {
+		return clave;
 	}
 
-	public void setReparacion(Reparacion reparacion) {
-		this.reparacion = reparacion;
-	}
-
-	public Pieza getPieza() {
-		return pieza;
-	}
-
-	public void setPieza(Pieza pieza) {
-		this.pieza = pieza;
+	public void setClave(clavePR clave) {
+		this.clave = clave;
 	}
 
 	public float getImporte() {

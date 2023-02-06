@@ -26,8 +26,9 @@ public class Pieza implements Serializable{
 	private float precio;
 	@Column(nullable = false)
 	private int stock;
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pieza")	
+
+	//¿Qué campo de PiezaReparacion tiene el pieza?
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "clave.pieza")	
 	private List<PiezaReparacion> piezasRep = new ArrayList<>();
 	
 	public Pieza() {
