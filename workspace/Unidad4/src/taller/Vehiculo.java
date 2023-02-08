@@ -111,6 +111,14 @@ public class Vehiculo implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	public List<Reparacion> getReparaciones() {
+		return reparaciones;
+	}
+
+	public void setReparaciones(List<Reparacion> reparaciones) {
+		this.reparaciones = reparaciones;
+	}
 	
 	
 }

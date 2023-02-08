@@ -90,6 +90,14 @@ public class Pieza implements Serializable{
 	public void setStock(int stock) {
 		this.stock = stock;
 	}
+
+	public List<PiezaReparacion> getPiezasRep() {
+		return piezasRep;
+	}
+
+	public void setPiezasRep(List<PiezaReparacion> piezasRep) {
+		this.piezasRep = piezasRep;
+	}
 	
 	
 }

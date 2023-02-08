@@ -47,14 +47,25 @@ public class Principal {
 		int codigo  = t.nextInt();t.nextLine();
 		Vehiculo v = ad.obtenerVehiculo(codigo);
 		if(v!=null) {
-			Reparacion r = new Reparacion();
-			r.setVehiculo(v);
-			r.setFecha(new Date());			
-			if(ad.crearReparacion(r)) {
-				System.out.println("Reparacion creada con código "+r.getId());
+			boolean abierta = false;
+			//Vamos a chequear si el vehículo tiene alguna reparación no pagada
+			for(Reparacion r:v.getReparaciones()) {
+				if(!r.isPagado()) {
+					System.out.println("Error, el vehículo tiene una reparación abierta: "+r.getId());
+					abierta = true;
+					break;
+				}
 			}
-			else {
-				System.out.println("Error al crear reparación");
+			if(!abierta) {
+				Reparacion r = new Reparacion();
+				r.setVehiculo(v);
+				r.setFecha(new Date());			
+				if(ad.crearReparacion(r)) {
+					System.out.println("Reparacion creada con código "+r.getId());
+				}
+				else {
+					System.out.println("Error al crear reparación");
+				}
 			}
 		}
 		else {
