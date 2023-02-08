@@ -50,8 +50,8 @@ public class Principal {
 			Reparacion r = new Reparacion();
 			r.setVehiculo(v);
 			r.setFecha(new Date());			
-			if(ad.crearReparacion(v)) {
-				System.out.println("Reparacion creada con código "+r.getCodigo());
+			if(ad.crearReparacion(r)) {
+				System.out.println("Reparacion creada con código "+r.getId());
 			}
 			else {
 				System.out.println("Error al crear reparación");
