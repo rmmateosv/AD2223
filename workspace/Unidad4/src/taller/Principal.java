@@ -20,13 +20,14 @@ public class Principal {
 			do {
 				System.out.println("Introduce opción:");
 				System.out.println("0-Salir");
+				System.out.println("1-Crear Reparación");
 				
 				
 				opcion = t.nextInt();
 				t.nextLine();
 				switch (opcion) {
 				case 1:
-					
+					crearReparacion();
 					break;
 				
 				}
@@ -35,6 +36,38 @@ public class Principal {
 			ad.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con Clínica");
+		}
+	}
+
+
+	private static void crearReparacion() {
+		// TODO Auto-generated method stub
+		mostrarVehiculos();
+		System.out.println("Codigo Vehículo:");
+		int codigo  = t.nextInt();t.nextLine();
+		Vehiculo v = ad.obtenerVehiculo(codigo);
+		if(v!=null) {
+			Reparacion r = new Reparacion();
+			r.setVehiculo(v);
+			r.setFecha(new Date());			
+			if(ad.crearReparacion(v)) {
+				System.out.println("Reparacion creada con código "+r.getCodigo());
+			}
+			else {
+				System.out.println("Error al crear reparación");
+			}
+		}
+		else {
+			System.out.println("Error, vehículo no existe");
+		}
+	}
+
+
+	private static void mostrarVehiculos() {
+		// TODO Auto-generated method stub
+		List<Vehiculo> coches = ad.obtenerVehiculos();
+		for(Vehiculo v: coches) {
+			v.mostrar(true);
 		}
 	}
 	
