@@ -78,4 +78,80 @@ public class AccesoDatos {
 		}
 		return resultado;
 	}
+
+	public List<Reparacion> obtenerReparaciones() {
+		// TODO Auto-generated method stub
+		List<Reparacion> resultado = new ArrayList<>();
+		try {
+			Query c = em.createQuery("from Reparacion order by fecha desc");
+			resultado = c.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public List<Pieza> obtenerPiezas() {
+		// TODO Auto-generated method stub
+		List<Pieza> resultado = new ArrayList<>();
+		try {
+			Query c = em.createQuery("from Pieza order by codigo");
+			resultado = c.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public Reparacion obtenerReparacion(int id) {
+		// TODO Auto-generated method stub
+		Reparacion resultado=null;
+		try {
+			resultado = em.find(Reparacion.class, id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public Pieza obtenerPieza(String codigo) {
+		// TODO Auto-generated method stub
+		Pieza resultado=null;
+		try {
+			resultado = em.find(Pieza.class, codigo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public PiezaReparacion obtenerPR(clavePR codigo) {
+		// TODO Auto-generated method stub
+		PiezaReparacion resultado=null;
+		try {
+			resultado = em.find(PiezaReparacion.class, codigo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean guardarPR(PiezaReparacion pr) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		EntityTransaction t = null;
+		try {
+			t= em.getTransaction();
+			t.begin();
+			em.persist(pr);
+			//em.persist(pr.getClave().getPieza());
+			t.commit();
+			em.clear();
+			resultado = true;
+		} catch (Exception e) {
+			t.rollback();
+			e.printStackTrace();
+		}
+		return resultado;
+	}
 }
