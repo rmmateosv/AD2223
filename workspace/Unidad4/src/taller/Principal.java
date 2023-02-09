@@ -30,6 +30,7 @@ public class Principal {
 				System.out.println("2-Añadir Pieza a Reparación");
 				System.out.println("3-Borrar Pieza a Reparación");
 				System.out.println("4-Imprimir Factura");
+				System.out.println("5-Estadística taller");
 				
 				
 				opcion = t.nextInt();
@@ -47,6 +48,9 @@ public class Principal {
 				case 4:
 					imprimirFactura();
 					break;
+				case 5:
+					estadisticaTaller();
+					break;
 				
 				}
 			} while (opcion != 0);
@@ -54,6 +58,18 @@ public class Principal {
 			ad.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con Clínica");
+		}
+	}
+
+
+	private static void estadisticaTaller() {
+		// TODO Auto-generated method stub
+		List<Object[]> datos=ad.obtenerEstadistica();
+		for(Object[] o:datos) {
+			System.out.println("Nº Piezas:"+ o[0] +
+					"\tPrecio Total:"+ o[1] + 
+					"\tPrecio Mínimo:"+ o[2] +
+					"\tPrecio Máximo:" + o[3]);
 		}
 	}
 

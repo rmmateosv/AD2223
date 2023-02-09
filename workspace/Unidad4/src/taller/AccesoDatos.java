@@ -193,4 +193,19 @@ public class AccesoDatos {
 		}
 		return resultado;
 	}
+
+	public List<Object[]> obtenerEstadistica() {
+		// TODO Auto-generated method stub
+		List<Object[]> resultado = new ArrayList<>();
+		try {
+			Query c = em.createQuery("select count(*),"
+					+ "sum(stock*precio), min(precio), max(precio) "
+					+ "from Pieza");
+			resultado = c.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
 }
