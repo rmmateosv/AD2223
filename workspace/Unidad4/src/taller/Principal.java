@@ -22,6 +22,11 @@ public class Principal {
 				System.out.println("Introduce opción:");
 				System.out.println("0-Salir");
 				System.out.println("1-Crear Reparación");
+				//2 Añade una pieza a una reparación
+				//Hay que chequear que hay stock suficiente
+				//Si la pieza aún no está en la reparación, se añade
+				//Si la pieza ya está en la reparación, se actualiza
+				//Hay que actualizar el stock de la pieza 
 				System.out.println("2-Añadir Pieza a Reparación");
 				
 				
@@ -53,26 +58,33 @@ public class Principal {
 		Reparacion r = ad.obtenerReparacion(id);
 		if(r!=null && !r.isPagado()) {
 			mostrarPiezas();
-			System.out.println("Introudce código pieza:");
+			System.out.println("Introduce código pieza:");
 			String codigo = t.nextLine();
 			Pieza p = ad.obtenerPieza(codigo);
+			//Chequear que la pieza existe y hay stock
 			if(p!=null && p.getStock()>0) {
 				System.out.println("Introduce cantidad");
 				int cantidad = t.nextInt();t.nextLine();
-				if(p.getStock()>=cantidad) {
-					//Ver si ya se ha metido la pieza
+				//Chequear que hay stock
+				if(p.getStock()>=cantidad) {					
 					PiezaReparacion pr = ad.obtenerPR(new clavePR(r,p));
+					//Ver si ya se ha metido la pieza
 					if(pr==null) {
+						//Se añade la pieza a la reparación
 						pr = new PiezaReparacion(
 								new clavePR(r, p), 
 								cantidad* p.getPrecio(), cantidad);
+						//Actualizar el stock de la pieza
 						p.setStock(p.getStock()-cantidad);
 					}
 					else {
-						p.setStock(p.getStock()+pr.getCantidad()-cantidad);						
+						//Se actualiza el stock de la pieza
+						p.setStock(p.getStock()+pr.getCantidad()-cantidad);
+						//Acutalizar la cantidad de la pieza en la rep.
 						pr.setCantidad(cantidad);
 						pr.setImporte(cantidad*p.getPrecio());						
 					}
+					//Hacer los cambios en la bd
 					if(ad.guardarPR(pr)) {
 						System.out.println("Pieza guarda");
 					}
