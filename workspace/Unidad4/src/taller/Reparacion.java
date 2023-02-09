@@ -105,6 +105,14 @@ public class Reparacion implements Serializable{
 	public void setPagado(boolean pagado) {
 		this.pagado = pagado;
 	}
+
+	public List<PiezaReparacion> getPiezasRep() {
+		return piezasRep;
+	}
+
+	public void setPiezasRep(List<PiezaReparacion> piezasRep) {
+		this.piezasRep = piezasRep;
+	}
 	
 	
 }

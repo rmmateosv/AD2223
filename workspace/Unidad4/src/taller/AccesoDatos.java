@@ -154,4 +154,43 @@ public class AccesoDatos {
 		}
 		return resultado;
 	}
+
+	public boolean borrarPr(PiezaReparacion pr) {
+		// TODO Auto-generated method stub
+		boolean resultado=false;
+		EntityTransaction t = null;
+		try {
+			t= em.getTransaction();
+			t.begin();
+			Query c = em.createQuery("delete from PiezaReparacion "
+					+ "where clave = ?1");
+			c.setParameter(1, pr.getClave());
+			int r = c.executeUpdate();
+			if(r==1) {
+				//Actualizar el stock de la pieza
+				c= em.createQuery("update Pieza set stock = stock + ?1 "
+						+ "where codigo = ?2");
+				c.setParameter(1, pr.getCantidad());
+				c.setParameter(2, pr.getClave().getPieza().getCodigo());
+				r = c.executeUpdate();
+				if(r==1) {
+					t.commit();
+					em.clear();
+					resultado = true;
+				}
+				else {
+					t.rollback();
+				}
+				
+			}
+			else {
+				t.rollback();
+			}
+			
+		} catch (Exception e) {
+			t.rollback();
+			e.printStackTrace();
+		}
+		return resultado;
+	}
 }

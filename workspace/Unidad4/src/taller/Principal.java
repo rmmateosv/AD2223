@@ -28,6 +28,7 @@ public class Principal {
 				//Si la pieza ya está en la reparación, se actualiza
 				//Hay que actualizar el stock de la pieza 
 				System.out.println("2-Añadir Pieza a Reparación");
+				System.out.println("3-Borrar Pieza a Reparación");
 				
 				
 				opcion = t.nextInt();
@@ -39,6 +40,9 @@ public class Principal {
 				case 2:
 					crearPiezaReparacion();
 					break;
+				case 3:
+					borrarPiezaReparacion();
+					break;
 				
 				}
 			} while (opcion != 0);
@@ -46,6 +50,41 @@ public class Principal {
 			ad.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con Clínica");
+		}
+	}
+
+
+	private static void borrarPiezaReparacion() {
+		// TODO Auto-generated method stub
+		mostrarReparaciones();
+		System.out.println("Codigo de reparacion");
+		int codigo = t.nextInt();t.nextLine();
+		Reparacion r = ad.obtenerReparacion(codigo);
+		if(r!=null) {
+			//Mostrar las piezas de la reparación
+			System.out.println("Piezas de la reparación");
+			for(PiezaReparacion pr:r.getPiezasRep()) {
+				pr.mostrar();
+			}
+			System.out.println("Código Pieza a borrar");
+			String codigoP = t.nextLine();
+			//Obtenemos la piezaReparación de la BD
+			PiezaReparacion pr = ad.obtenerPR(
+					new clavePR(r, ad.obtenerPieza(codigoP) ));
+			if(pr!=null) {				
+				if(ad.borrarPr(pr)) {
+					System.out.println("Pieza borrada");
+				}
+				else {
+					System.out.println("Error, al borrar la pieza");
+				}
+			}
+			else {
+				System.out.println("Error, no existe la pieza en la reparación");
+			}
+		}
+		else {
+			System.out.println("Error, no existe la reparación");
 		}
 	}
 
