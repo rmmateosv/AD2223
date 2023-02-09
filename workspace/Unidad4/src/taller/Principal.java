@@ -29,6 +29,7 @@ public class Principal {
 				//Hay que actualizar el stock de la pieza 
 				System.out.println("2-Añadir Pieza a Reparación");
 				System.out.println("3-Borrar Pieza a Reparación");
+				System.out.println("4-Imprimir Factura");
 				
 				
 				opcion = t.nextInt();
@@ -43,6 +44,9 @@ public class Principal {
 				case 3:
 					borrarPiezaReparacion();
 					break;
+				case 4:
+					imprimirFactura();
+					break;
 				
 				}
 			} while (opcion != 0);
@@ -50,6 +54,31 @@ public class Principal {
 			ad.cerrar();
 		} else {
 			System.out.println("Error, no hay conexión con Clínica");
+		}
+	}
+
+
+	private static void imprimirFactura() {
+		// TODO Auto-generated method stub
+		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+		mostrarReparaciones();
+		System.out.println("Código de reparación");
+		int codigo = t.nextInt();t.nextLine();
+		Reparacion r = ad.obtenerReparacion(codigo);
+		if(r!=null) {
+			System.out.println("Reparación:"+r.getId() + 
+					"\tCliente:"+r.getVehiculo().getNombrePropietario()+
+					"\tFecha:"+formato.format(r.getFecha()));
+			System.out.println("Codigo \t\t Nombre \t\t Cantidad \t\t Precio");
+			float total=0;
+			for(PiezaReparacion pr:r.getPiezasRep()) {
+				System.out.println(pr.getClave().getPieza().getCodigo()+
+						"\t\t"+pr.getClave().getPieza().getDescripcion()+
+						"\t\t"+pr.getCantidad()+
+						"\t\t"+pr.getImporte());
+				total+=pr.getImporte();
+			}
+			System.out.println("Total:"+total);
 		}
 	}
 

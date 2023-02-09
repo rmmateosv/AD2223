@@ -51,9 +51,9 @@ public class Reparacion implements Serializable{
 	}
 	
 	public void mostrar(boolean mostrarPiezas) {
-		SimpleDateFormat formato = new SimpleDateFormat("ddMMyyyy");
+		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 		System.out.println("Id: " +id
-							+"\tVehiculo: " +vehiculo
+							+"\tVehiculo: " +vehiculo.getMatricula()
 							+"\tFecha: " +formato.format(fecha)
 							+"\tTiempo: " +tiempo
 							+"\tPagado: " +pagado);
