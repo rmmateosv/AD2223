@@ -2,7 +2,9 @@ package instituto;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class AccesoDatos {
@@ -45,7 +47,26 @@ public class AccesoDatos {
 
 	public ArrayList<Alumno> obtenerAlumnos() {
 		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Alumno> resultado = new ArrayList();
+		try {
+			Statement consulta = cnx.createStatement();
+			ResultSet r = consulta.executeQuery("select id, nombre, "
+					+ "(dir).tipoVia, (dir).nombre, (dir).cp, "
+					+ "fechaN, numExpe, curso "
+					+ "from alumno");
+			while(r.next()) {
+				Alumno a = new Alumno(r.getInt(1), 
+						r.getString(2), 
+						new Direccion(r.getString(3), r.getString(4), r.getInt(5)), 
+						r.getDate(6), r.getInt(7), r.getString(8));
+				resultado.add(a);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
 	}
 	
 }
