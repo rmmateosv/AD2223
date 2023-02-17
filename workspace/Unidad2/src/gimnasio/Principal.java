@@ -65,7 +65,7 @@ public class Principal {
 		} while (opcion != 0);
 	}
 
-	//Rosa te quiero
+
 	private static void verRecibos()
 	{
 		//El mejor método
