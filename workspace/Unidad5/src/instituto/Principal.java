@@ -46,7 +46,7 @@ public class Principal {
 			mostrarAlumnos();
 			System.out.println("Introduce id:");
 			int id = sc.nextInt(); sc.nextLine();
-			Alumno a = ad.obtenerAlumno();
+			Alumno a = ad.obtenerAlumno(id);
 			if(a!=null) {
 				mostrarAsignaturas();
 				System.out.println("Introduce asignatura");
@@ -81,6 +81,14 @@ public class Principal {
 			System.out.println("Fecha Incorrectqa");
 		}
 		
+	}
+
+	private static void mostrarAsignaturas() {
+		// TODO Auto-generated method stub
+		ArrayList<Asignatura> asig = ad.obtenerAsignaturas();
+		for(Asignatura a: asig) {
+			a.mostrar();
+		}
 	}
 
 	private static void mostrarAlumnos() {

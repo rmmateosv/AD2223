@@ -2,6 +2,7 @@ package instituto;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -51,7 +52,7 @@ public class AccesoDatos {
 		try {
 			Statement consulta = cnx.createStatement();
 			ResultSet r = consulta.executeQuery("select id, nombre, "
-					+ "(dir).tipoVia, (dir).nombre, (dir).cp, "
+					+ "(dir).*, "
 					+ "fechaN, numExpe, curso "
 					+ "from alumno");
 			while(r.next()) {
@@ -60,6 +61,72 @@ public class AccesoDatos {
 						new Direccion(r.getString(3), r.getString(4), r.getInt(5)), 
 						r.getDate(6), r.getInt(7), r.getString(8));
 				resultado.add(a);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+
+	public Alumno obtenerAlumno(int id) {
+		// TODO Auto-generated method stub
+		Alumno resultado = null;
+		try {
+			PreparedStatement consulta = cnx.prepareStatement(
+					"select id, nombre, "
+					+ "(dir).*, "
+					+ "fechaN, numExpe, curso "
+					+ "from alumno where id = ?");
+			consulta.setInt(1, id);
+			ResultSet r = consulta.executeQuery();
+			if(r.next()) {
+				resultado = new Alumno(r.getInt(1), 
+						r.getString(2), 
+						new Direccion(r.getString(3), r.getString(4), 
+						r.getInt(5)), 
+						r.getDate(6), r.getInt(7), r.getString(8));				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+
+	public ArrayList<Asignatura> obtenerAsignaturas() {
+		// TODO Auto-generated method stub
+		ArrayList<Asignatura> resultado = new ArrayList();
+		try {
+			Statement consulta = cnx.createStatement();
+			ResultSet r = consulta.executeQuery("select * "
+					+ "from asignatura");
+			while(r.next()) {
+				Asignatura a = new Asignatura(r.getString(1), 
+						r.getString(2));
+				resultado.add(a);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+
+	public Asignatura obtenerAsignatura(String asig) {
+		// TODO Auto-generated method stub
+		Asignatura resultado = null;
+		try {
+			PreparedStatement consulta = cnx.prepareStatement(
+					"select * "
+					+ "from asignatura where codigo = ?");
+			consulta.setString(1, asig);
+			ResultSet r = consulta.executeQuery();
+			if(r.next()) {
+				resultado = new Asignatura(r.getString(1), r.getString(2));				
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
