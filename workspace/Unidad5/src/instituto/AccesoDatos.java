@@ -166,5 +166,55 @@ public class AccesoDatos {
 		
 		return resultado;
 	}
+
+	public boolean crearNota(Nota n) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			PreparedStatement consulta = cnx.prepareStatement(
+					"insert into nota values "
+					+ "(?,?,array[array[?,?,?]])");
+			consulta.setInt(1, n.getAlumno().getId());
+			consulta.setString(2, n.getAsig().getCodigo());
+			consulta.setString(3, n.getNotas().get(0)[0]);
+			consulta.setString(4, n.getNotas().get(0)[1]);
+			consulta.setString(5, n.getNotas().get(0)[2]);
+			int filas = consulta.executeUpdate();
+			if(filas==1) {
+				resultado=true;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean actualizarNota(Nota n, ArrayList<String[]> unaNota) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			PreparedStatement consulta = cnx.prepareStatement(
+					"update nota set notas = array_cat(notas,array[array[?,?,?]]) "
+					+ "where alumno = ? and asignatura = ?");
+			consulta.setInt(4, n.getAlumno().getId());
+			consulta.setString(5, n.getAsig().getCodigo());
+			consulta.setString(1, unaNota.get(0)[0]);
+			consulta.setString(2, unaNota.get(0)[1]);
+			consulta.setString(3, unaNota.get(0)[2]);
+			int filas = consulta.executeUpdate();
+			if(filas==1) {
+				resultado=true;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+
 	
 }

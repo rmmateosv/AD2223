@@ -73,19 +73,19 @@ public class Principal {
 						//Insert
 						n = new Nota(a, as, unaNota);
 						if(ad.crearNota(n)) {
-							System.out.println("Nota registrada");
+							System.out.println("Nota creada");
 						}
 						else {
-							System.out.println("Error, al registrar la nota");
+							System.out.println("Error, al crear la nota");
 						}
 					}
 					else {
 						//Update
 						if(ad.actualizarNota(n,unaNota)) {
-							System.out.println("Nota registrada");
+							System.out.println("Nota actualizada");
 						}
 						else {
-							System.out.println("Error, al registrar la nota");
+							System.out.println("Error, al actualizar la nota");
 						}
 					}
 				}
@@ -104,7 +104,25 @@ public class Principal {
 
 	private static String notaAtexto(float nota) {
 		// TODO Auto-generated method stub
-		return resultado;
+		
+		if(nota<5) {
+			return "INS";
+		}
+		if(nota<6) {
+			return "SUF";
+		}
+		if(nota<7) {
+			return "BI";
+		}
+		if(nota<9) {
+			return "NOT";
+		}
+		if(nota<=10) {
+			return "SOB";
+		}
+		
+		return null;
+		
 	}
 
 	private static void mostrarAsignaturas() {
