@@ -1,5 +1,6 @@
 package instituto;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -127,6 +128,36 @@ public class AccesoDatos {
 			ResultSet r = consulta.executeQuery();
 			if(r.next()) {
 				resultado = new Asignatura(r.getString(1), r.getString(2));				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+
+	public Nota obtenerNota(Alumno al, Asignatura as) {
+		// TODO Auto-generated method stub
+		Nota resultado = null;
+		try {
+			PreparedStatement consulta = cnx.prepareStatement(
+					"select * "
+					+ "from nota where alumno = ? and asignatura = ?");
+			consulta.setInt(1, al.getId());
+			consulta.setString(2, as.getCodigo());
+			ResultSet r = consulta.executeQuery();
+			if(r.next()) {
+				resultado = new Nota();
+				resultado.setAlumno(al);
+				resultado.setAsig(as);
+				//Rellenar ArrayList de notas
+				Array tmp = r.getArray(3);
+				//Convierto tmp a una matriz de String
+				String[][] tmp2 = (String[][]) tmp.getArray();
+				for(String[] nota:tmp2) {
+					resultado.getNotas().add(nota);
+				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

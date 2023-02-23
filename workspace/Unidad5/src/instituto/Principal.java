@@ -62,12 +62,31 @@ public class Principal {
 					//Si no tiene ninguna nota, hacemos insert
 					//Si tiene alugna nota hacemos update modificando
 					//el array (añadiendo un elemento al array)
-					Nota n = ad.obtenerNota(a, asig);
+					Nota n = ad.obtenerNota(a, as);
+					
+					//Creamos la nota a registrar					
+					ArrayList<String[]> unaNota = new ArrayList();
+					unaNota.add(new String[] {formato.format(f),
+							String.valueOf(nota),notaAtexto(nota)});
+					
 					if(n==null) {
 						//Insert
+						n = new Nota(a, as, unaNota);
+						if(ad.crearNota(n)) {
+							System.out.println("Nota registrada");
+						}
+						else {
+							System.out.println("Error, al registrar la nota");
+						}
 					}
 					else {
 						//Update
+						if(ad.actualizarNota(n,unaNota)) {
+							System.out.println("Nota registrada");
+						}
+						else {
+							System.out.println("Error, al registrar la nota");
+						}
 					}
 				}
 				else {
@@ -81,6 +100,11 @@ public class Principal {
 			System.out.println("Fecha Incorrectqa");
 		}
 		
+	}
+
+	private static String notaAtexto(float nota) {
+		// TODO Auto-generated method stub
+		return resultado;
 	}
 
 	private static void mostrarAsignaturas() {

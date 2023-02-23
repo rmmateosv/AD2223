@@ -19,8 +19,8 @@ public class Nota {
 		System.out.println("Alumno:"+ alumno.getNumExp() + " "+ alumno.getNombre()+
 				"\tAsignatura:"+asig.getNombre());
 		for(String[] n: notas) {
-			System.out.println("Nota Numérica:"+n[0]+
-					"Nota Texto:"+n[1]);
+			System.out.println("Fecha:"+n[0]+"Nota Numérica:"+n[1]+
+					"Nota Texto:"+n[2]);
 		}
 	}
 	public Alumno getAlumno() {
