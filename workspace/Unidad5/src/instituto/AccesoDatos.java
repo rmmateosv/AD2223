@@ -215,6 +215,42 @@ public class AccesoDatos {
 		return resultado;
 	}
 
+	public ArrayList<Nota> obtenerNotasAlumno(int id) {
+		// TODO Auto-generated method stub
+		ArrayList<Nota> resultado = new ArrayList();
+		try {
+			PreparedStatement consulta = cnx.prepareStatement(
+					"select *, (dir).* "
+					+ "from nota inner join alumno "
+					+ "on alumno =id inner join asignatura "
+					+ "on codigo = asignatura where alumno = ?");
+			consulta.setInt(1, id);
+			
+			ResultSet r = consulta.executeQuery();
+			while(r.next()) {
+				Nota n = new Nota();
+				n.setAlumno(new Alumno(r.getInt(1),r.getString(5),
+						new Direccion(r.getString(12),r.getString(13),r.getInt(14)),
+						r.getDate(7),
+						r.getInt(8),
+						r.getString(9)));
+				n.setAsig(new Asignatura(r.getString(2), r.getString(11)));
+				//Rellenar ArrayList de notas
+				Array tmp = r.getArray(3);
+				//Convierto tmp a una matriz de String
+				String[][] tmp2 = (String[][]) tmp.getArray();
+				for(String[] nota:tmp2) {
+					n.getNotas().add(nota);
+				}
+				resultado.add(n);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
 
 	
 }

@@ -33,10 +33,86 @@ public class Principal {
 				case 2:
 					ponerNota();
 					break;
-				
+				case 3:
+					mostrarNotasAlumno();
+					break;
+				case 4:
+					modificarNota();
 
 				}
 			} while (opcion != 0);
+		}
+	}
+
+	private static void modificarNota() {
+		// TODO Auto-generated method stub
+		try {
+		mostrarAlumnos();
+		System.out.println("Introduce id:");
+		int id = sc.nextInt(); sc.nextLine();
+		Alumno a = ad.obtenerAlumno(id);
+		if(a!=null) {
+			mostrarAsignaturas();
+			System.out.println("Introduce asignatura");
+			String asig = sc.nextLine();
+			Asignatura as = ad.obtenerAsignatura(asig);
+			if(as!=null) {
+				Nota n = ad.obtenerNota(a, as);
+				if(n!=null) {
+					n.mostrar();
+					System.out.println("Fecha de la nota");
+					String fecha = formato.format(formato.parse(sc.nextLine()));
+					//Buscar la nota a modificar
+					boolean existe = false;
+					for(String[] nota:n.getNotas()) {
+						if(nota[0].equals(fecha)) {
+							existe = true;
+							System.out.println("Introduce nueva nota");
+							float nuevaNota = sc.nextFloat();
+							nota[1] = String.valueOf(nuevaNota);
+							nota[2] = notaAtexto(nuevaNota);
+							break;
+						}
+					}
+					if(existe) {
+						
+					}
+					else {
+						System.out.println("No hay nota para esa fecha");
+					}
+				}
+				else {
+					System.out.println("No hay notas para el alumno en la asignatura");
+				}
+				
+			}
+			else {
+				System.out.println("Error, asignatura no existe");
+			}
+		}
+		else {
+			System.out.println("Error, alumno no existe");
+		}
+	} catch (ParseException e) {
+		System.out.println("Fecha Incorrectqa");
+	}
+
+	}
+
+	private static void mostrarNotasAlumno() {
+		// TODO Auto-generated method stub
+		mostrarAlumnos();
+		System.out.println("Introduce id:");
+		int id = sc.nextInt(); sc.nextLine();
+		ArrayList<Nota> notas= ad.obtenerNotasAlumno(id);
+		if(!notas.isEmpty()) {			
+			for(Nota n: notas) {
+				n.mostrar();
+			}
+		}
+		
+		else {
+			System.out.println("No existen notas");
 		}
 	}
 
