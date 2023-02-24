@@ -38,9 +38,26 @@ public class Principal {
 					break;
 				case 4:
 					modificarNota();
+					break;
+				case 5:
+					modificarDireccion();
+					break;
 
 				}
 			} while (opcion != 0);
+		}
+	}
+
+	private static void modificarDireccion() {
+		// TODO Auto-generated method stub
+		mostrarPersonas();
+	}
+
+	private static void mostrarPersonas() {
+		// TODO Auto-generated method stub
+		ArrayList<Persona> personas = ad.obtenerPersonas();
+		for(Persona p: personas) {
+			p.mostrar();
 		}
 	}
 
@@ -75,7 +92,12 @@ public class Principal {
 						}
 					}
 					if(existe) {
-						
+						if(ad.modificarNota(n)) {
+							System.out.println("Nota modificada");
+						}
+						else {
+							System.out.println("Error al modificar la nota");
+						}
 					}
 					else {
 						System.out.println("No hay nota para esa fecha");

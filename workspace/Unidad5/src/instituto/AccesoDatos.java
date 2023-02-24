@@ -251,6 +251,76 @@ public class AccesoDatos {
 		return resultado;
 	}
 
+	public boolean modificarNota(Nota n) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			PreparedStatement consulta = cnx.prepareStatement(
+					"update nota set notas = ?"
+					+ "where alumno = ? and asignatura = ?");
+			consulta.setArray(1, cnx.createArrayOf("text", n.getNotas().toArray(new String[0][0])));
+			consulta.setInt(2, n.getAlumno().getId());
+			consulta.setString(3, n.getAsig().getCodigo());			
+			int filas = consulta.executeUpdate();
+			if(filas==1) {
+				resultado=true;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
 
-	
+	public ArrayList<Persona> obtenerPersonas() {
+		// TODO Auto-generated method stub
+		ArrayList<Persona> resultado = new ArrayList();
+		try {
+			Statement consulta = cnx.createStatement();
+			ResultSet r = consulta.executeQuery("select id, nombre, "
+					+ "(dir).*, "
+					+ "fechaN  "
+					+ "from persona");
+			while(r.next()) {
+				Persona p = new Persona(r.getInt(1), 
+						r.getString(2), 
+						new Direccion(r.getString(3), r.getString(4), r.getInt(5)), 
+						r.getDate(6));
+				resultado.add(p);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+
+
+	public Persona obtenerPersona(int id) {
+		// TODO Auto-generated method stub
+		Persona resultado = null;
+		try {
+			PreparedStatement consulta = cnx.prepareStatement(
+					"select id, nombre, "
+					+ "(dir).*, "
+					+ "fechaN "
+					+ "from persona where id = ?");
+			consulta.setInt(1, id);
+			ResultSet r = consulta.executeQuery();
+			if(r.next()) {
+				resultado = new Persona(r.getInt(1), 
+						r.getString(2), 
+						new Direccion(r.getString(3), r.getString(4), 
+						r.getInt(5)), 
+						r.getDate(6));				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
 }
