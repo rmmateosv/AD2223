@@ -51,6 +51,27 @@ public class Principal {
 	private static void modificarDireccion() {
 		// TODO Auto-generated method stub
 		mostrarPersonas();
+		System.out.println("Introduce id:");
+		Persona p = ad.obtenerPersona(sc.nextInt()); sc.nextLine();
+		if(p!=null) {
+			Direccion d = new Direccion();
+			System.out.println("Nuevo tipo de vía:");
+			d.setTipoVia(sc.nextLine());
+			System.out.println("Nueva calle:");
+			d.setNombre(sc.nextLine());
+			System.out.println("Nuevo CP:");
+			d.setCp(sc.nextInt());sc.nextLine();
+			p.setDir(d);
+			if(ad.modificarDireccion(p)) {
+				System.out.println("Dirección modificada");
+			}
+			else {
+				System.out.println("Error al modificar la dirección");
+			}
+		}
+		else {
+			System.out.println("Error, no existe la persona");
+		}
 	}
 
 	private static void mostrarPersonas() {

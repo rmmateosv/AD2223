@@ -323,4 +323,24 @@ public class AccesoDatos {
 		
 		return resultado;
 	}
+
+	public boolean modificarDireccion(Persona p) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			PreparedStatement consulta = cnx.prepareStatement(
+					"update ");
+			
+			
+			int filas = consulta.executeUpdate();
+			if(filas==1) {
+				resultado=true;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
 }
