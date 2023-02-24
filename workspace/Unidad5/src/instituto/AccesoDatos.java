@@ -329,8 +329,16 @@ public class AccesoDatos {
 		boolean resultado = false;
 		try {
 			PreparedStatement consulta = cnx.prepareStatement(
-					"update ");
+					"update persona "
+					+ "set dir.tipoVia = ?,"
+					+ "dir.nombre= ?,"
+					+ "dir.cp = ? "
+					+ "where id = ?");
 			
+			consulta.setString(1, p.getDir().getTipoVia());
+			consulta.setString(2, p.getDir().getNombre());
+			consulta.setInt(3, p.getDir().getCp());
+			consulta.setInt(4, p.getId());
 			
 			int filas = consulta.executeUpdate();
 			if(filas==1) {
