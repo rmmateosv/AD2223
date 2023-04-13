@@ -36,7 +36,6 @@ public class AccesoDatos {
 		// TODO Auto-generated method stub
 		boolean resultado = false;
 		RandomAccessFile f = null;
-		f=
 		
 		return resultado;
 	}
@@ -56,6 +55,20 @@ public class AccesoDatos {
 					m+=f.readChar();
 				}
 				m=m.trim();
+				//Comprobamos si la matricula es la que estamos buscando
+				if(m.equalsIgnoreCase(matricula)) {
+					//Devolvemos true para que el bucle pare,
+					//ya que hemos encontrado la matricula
+					return true;
+					
+					
+				}else {
+					//Colocamos el apuntador en la siguiente matricula,
+					//porque la matricula no es la correcta
+					f.seek(f.getFilePointer()+16);
+					
+				}
+				
 			}
 			
 			
@@ -70,6 +83,8 @@ public class AccesoDatos {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			f.close();
 		}
 		
 		return resultado;
