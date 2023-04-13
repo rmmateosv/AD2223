@@ -36,16 +36,16 @@ public class Principal {
 		
 		if(radar!=null) {
 		for(Multa m :radar.getMultas()) {
+			float precio=calcularImporte(m.getVelocidad(),radar.getMaximo());
 			//chequear si hay un registro en el fichero binario
 			//para la matricula de esta multa 
 			if(ad.existeMultaCoche(m.getMatricula())) {
 				//modificar  registro del fichero binario 
-			
 				
 			}
 			else {
 				//crear registro en el fichero binario
-				if(ad.crearMulta(m)) {
+				if(ad.crearMulta(m,precio)) {
 					System.out.println("Multa cargada para vehículo :"+m.getMatricula());
 				}
 				else
@@ -60,6 +60,19 @@ public class Principal {
 		}
 		else {
 			System.out.println("Error al cargar el fichero ");
+		}
+	}
+
+
+	private static float calcularImporte(int velocidad, int maximo) {
+		// TODO Auto-generated method stub
+		if(velocidad-maximo<=10) {
+			return 100;
+		}
+		if(velocidad-maximo<=30) {
+			return 300;
+		}else {
+			return 500;
 		}
 	}
 
