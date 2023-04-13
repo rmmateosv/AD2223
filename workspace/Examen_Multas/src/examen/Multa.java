@@ -1,6 +1,7 @@
 package examen;
 
 import javax.xml.bind.annotation.XmlAnyAttribute;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -17,7 +18,7 @@ public class Multa {
 		this.hora = hora;
 		this.velocidad = velocidad;
 	}
-	@XmlAnyAttribute
+	@XmlAttribute
 	public String getMatricula() {
 		return matricula;
 	}

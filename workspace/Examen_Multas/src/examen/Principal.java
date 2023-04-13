@@ -41,7 +41,13 @@ public class Principal {
 			//para la matricula de esta multa 
 			if(ad.existeMultaCoche(m.getMatricula())) {
 				//modificar  registro del fichero binario 
-				
+				if(ad.modificarMulta(m,precio)) {
+					System.out.println("Multa cargada para vehículo :"+m.getMatricula());
+				}
+				else
+				{
+					System.out.println("Error al cargar la matricula :"+m.getMatricula());
+				}
 			}
 			else {
 				//crear registro en el fichero binario
@@ -57,6 +63,7 @@ public class Principal {
 			
 			
 		}
+		ad.mostrarBinario();
 		}
 		else {
 			System.out.println("Error al cargar el fichero ");
