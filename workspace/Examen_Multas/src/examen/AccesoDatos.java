@@ -56,6 +56,7 @@ public class AccesoDatos {
 			//Escribimos el precio de la multa pasado por parametro
 			f.writeFloat(precio);
 			f.writeLong(new Date().getTime());
+			return true;
 			
 			
 		} catch (IOException e) {
@@ -251,6 +252,15 @@ public class AccesoDatos {
 				e.printStackTrace();
 			}
 		}
+	}
+
+
+	public boolean borrarCoche(String matricula) {
+		boolean resultado = false;
+		
+		
+		
+		return resultado;
 	}
 	
 	

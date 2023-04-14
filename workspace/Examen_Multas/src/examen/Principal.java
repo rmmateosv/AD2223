@@ -14,6 +14,7 @@ public class Principal {
 			System.out.println("Introduce opción:");
 			System.out.println("0-Salir");
 			System.out.println("1-Ejercicio1");
+			System.out.println("2-Ejercicio2");
 			
 			opcion = t.nextInt();
 			t.nextLine();
@@ -21,10 +22,33 @@ public class Principal {
 			case 1:
 				Ejercicio1();
 				break;
+			case 2:
+				Ejercicio2();
+				break;
 			}	
 
 		} while (opcion != 0);
 
+	}
+
+
+	private static void Ejercicio2() {
+		ad.mostrarBinario();
+		System.out.println("Introduzca la matrícula del vehículo que desea borrar");
+		String matricula = t.nextLine();
+		if(ad.existeMultaCoche(matricula)) {
+			//Borramos la matrícula
+			if(ad.borrarCoche(matricula)) {
+				System.out.println("El coche con la matrícula "+matricula+
+						" ha sido eliminado correctamente");
+				
+			}else {
+				System.out.println("Error al eliminar el coche con la matrícula "+matricula);
+			}
+		}else {
+			System.out.println("Error, no existe la matrícula");
+		}
+		
 	}
 
 
