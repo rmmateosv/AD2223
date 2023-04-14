@@ -1,5 +1,6 @@
 package examen;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Principal {
@@ -15,6 +16,7 @@ public class Principal {
 			System.out.println("0-Salir");
 			System.out.println("1-Ejercicio1");
 			System.out.println("2-Ejercicio2");
+			System.out.println("3-Ejercicio3");
 			
 			opcion = t.nextInt();
 			t.nextLine();
@@ -25,10 +27,40 @@ public class Principal {
 			case 2:
 				Ejercicio2();
 				break;
+			case 3:
+				Ejercicio3();
+				break;
 			}	
 
 		} while (opcion != 0);
 
+	}
+
+
+	private static void Ejercicio3() {
+		float total = 0;
+		float importe = 0;
+		System.out.println("Introduzca una matrícula");
+		String m = t.nextLine();
+		System.out.println("Multas Vehículo: "+m);
+		MatriculaBin mBin = ad.obtenerMatricula(m);
+		if(mBin!=null) {
+			System.out.println("Nº multas en radares fijos: "+mBin.getNumMultas()+
+					"\t Importe recaudado: "+ mBin.getImporte());
+			total += mBin.getImporte();
+				
+		}
+		
+		ArrayList<MatriculaTxt> mTxt = ad.obtenerMatriculaTxt(m);
+
+		for(MatriculaTxt mt: mTxt) {		
+			importe += calcularImporte(mt.getVelocidadC(), mt.getVelocidad());
+		}
+		System.out.print("Nº multas en radares móviles: "+ mTxt.size()+
+				"\t Importe recaudado: "+importe+ "\n");
+		System.out.println("Total: "+ (total+importe)+"€");
+
+		
 	}
 
 
