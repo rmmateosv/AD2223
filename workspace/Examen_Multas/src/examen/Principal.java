@@ -41,6 +41,7 @@ public class Principal {
 			if(ad.borrarCoche(matricula)) {
 				System.out.println("El coche con la matrícula "+matricula+
 						" ha sido eliminado correctamente");
+				ad.mostrarBinario();
 				
 			}else {
 				System.out.println("Error al eliminar el coche con la matrícula "+matricula);

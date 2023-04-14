@@ -1,7 +1,9 @@
 package examen;
 
+import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -258,7 +260,68 @@ public class AccesoDatos {
 	public boolean borrarCoche(String matricula) {
 		boolean resultado = false;
 		
+		DataInputStream fO = null;
+		RandomAccessFile fTmp = null;
 		
+		try {
+			fO = new DataInputStream(new FileInputStream(fbin));
+			fTmp = new RandomAccessFile("fTmp", "rw");
+			while(true) {
+				String m = "";
+				for(int i=0; i<7;i++) {
+					m += fO.readChar();
+				}
+				if(m.trim().equalsIgnoreCase(matricula)) {				
+					fO.readInt();
+					fO.readFloat();
+					fO.readLong();
+				}else {
+					fTmp.writeChars(m);
+					fTmp.writeInt(fO.readInt());
+					fTmp.writeFloat(fO.readFloat());
+					fTmp.writeLong(fO.readLong());
+				}
+			}
+		}catch(EOFException e){
+			
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if(fO!=null) {
+				try {
+					fO.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(fTmp!=null) {
+				try {
+					fTmp.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		File fichO = new File(fbin);
+		File fichTmp = new File("fTmp");
+		
+		if(fichO.delete()) {
+			if(fichTmp.renameTo(fichO)) {
+				resultado = true;
+			}else {
+				System.out.println("Error al renombrar el fichero");
+			}
+		}else {
+			System.out.println("Error al borrar el fichero original");
+		}
 		
 		return resultado;
 	}
