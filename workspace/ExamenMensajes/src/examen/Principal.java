@@ -50,8 +50,44 @@ public class Principal {
 	}
 
 	private static void menu() {
-		// TODO Auto-generated method stub
+
+		int opcion;
+		do {
+			System.out.println("Introduce opción:");
+			System.out.println("0-Salir");
+			System.out.println("1- Enviar mensajes");
+			System.out.println("2- Leer mensajes");
+			System.out.println("3- Estadística mensajes");
+			opcion = t.nextInt();
+			t.nextLine();
+			switch (opcion) {
+			case 1:
+				Enviar();
+				break;
+			case 2:
+				Leer();
+				break;
+			case 3:
+				Estadistica();
+				break;
+
+			}
+		} while (opcion != 0);
+	}
+
+	private static void Estadistica() {
 		
 	}
+
+	private static void Leer() {
+		
+	}
+
+	private static void Enviar() {
+		
+		
+		
+	}
+	
 
 }
