@@ -85,7 +85,22 @@ public class Principal {
 
 	private static void Enviar() {
 		
+		mostrarDepartamento();
 		
+		System.out.println("Introduce el departamento: ");
+		int departamento = t.nextInt(); t.nextLine();
+		
+		Departamento d = ad.obtenerDepartamento(departamento);
+		if(d != null) {
+			
+		}else {
+			System.out.println("El departamento no existe");
+		}
+		
+	}
+
+	private static void mostrarDepartamento() {
+		// TODO Auto-generated method stub
 		
 	}
 	

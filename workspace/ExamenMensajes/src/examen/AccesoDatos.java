@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
@@ -74,6 +75,31 @@ public class AccesoDatos {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return resultado;
+	}
+
+	public Departamento obtenerDepartamento(int departamento) {
+		Departamento resultado = null;
+		
+		try {
+			PreparedStatement obtener = cnx.prepareStatement("select * from departemento "
+					+ "where codigo = ?");
+			
+			obtener.setInt(1, departamento);
+			
+			ResultSet retorno = obtener.executeQuery();
+			
+			if(retorno.next()) {
+				resultado = new Departamento(retorno.getInt(1), retorno.getString(2));
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 		return resultado;
 	}
