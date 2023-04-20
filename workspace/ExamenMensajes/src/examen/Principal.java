@@ -1,17 +1,19 @@
 package examen;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Principal {
 
 	static Scanner t = new Scanner(System.in);
 	static AccesoDatos ad = new AccesoDatos();
+	static int usuario;
 	
 	public static void main(String[] args) {
 
 		if(ad.getCnx()!=null) {
 			System.out.println("Introduce el usuario: ");
-			int usuario = t.nextInt(); t.nextLine();
+			usuario = t.nextInt(); t.nextLine();
 			
 			System.out.println("Introduce la contraseña: ");
 			String clave = t.nextLine();
@@ -85,13 +87,34 @@ public class Principal {
 
 	private static void Enviar() {
 		
-		mostrarDepartamento();
+		mostrarDepartamentos();
 		
 		System.out.println("Introduce el departamento: ");
 		int departamento = t.nextInt(); t.nextLine();
 		
 		Departamento d = ad.obtenerDepartamento(departamento);
 		if(d != null) {
+			System.out.println("Introduce el asunto del mensaje: ");
+			String asunto = t.nextLine();
+			
+			System.out.println("Introduce el texto del mensaje: ");
+			String texto = t.nextLine();
+			
+			//Obtener los empleados del departamento d 
+			ArrayList<Empleado> empleados = ad.obtenerEmpleados(d);
+			
+			int numMensaje = ad.crearMensaje(usuario, d, empleados, asunto, texto);
+			
+			if(numMensaje == -1) {
+				System.out.println("Se ha producido un error al crear mensaje");
+			} else {
+				System.out.println("Mensaje creado: " + numMensaje);
+				System.out.println("Mensaje enviado a :" );
+				for(Empleado e: empleados) {
+					System.out.println(e.toString()); 
+				}
+			}
+				
 			
 		}else {
 			System.out.println("El departamento no existe");
@@ -99,8 +122,13 @@ public class Principal {
 		
 	}
 
-	private static void mostrarDepartamento() {
-		// TODO Auto-generated method stub
+	private static void mostrarDepartamentos() {
+		
+		ArrayList<Departamento> d = ad.obtenerDepartamentos();
+		
+		for(Departamento depar: d) {
+			depar.mostrar();
+		}
 		
 	}
 	
