@@ -83,6 +83,18 @@ public class Principal {
 
 	private static void Leer() {
 		
+		ArrayList<Mensaje> mensajes = ad.obtenerMensajes(usuario);
+		
+		if(!mensajes.isEmpty()) {
+		
+		for(Mensaje m : mensajes) {
+			System.out.println(m.toString());
+		}
+		if(ad.marcarLeidos(usuario)) {
+			System.out.println("Se han marcado toso los mensajes ");
+		}
+		}
+		
 	}
 
 	private static void Enviar() {

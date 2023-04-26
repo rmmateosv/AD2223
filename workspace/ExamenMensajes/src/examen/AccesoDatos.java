@@ -218,6 +218,29 @@ public class AccesoDatos {
 		
 		return resultado;
 	}
+
+	public ArrayList<Mensaje> obtenerMensajes(int usuario2) {
+		// TODO Auto-generated method stub
+		
+		ArrayList<Mensaje> resultado= new ArrayList<>();
+		
+		try {
+			PreparedStatement consulta = cnx.prepareStatement("select * from ");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	
+		
+		
+		return resultado;
+	}
+
+	public boolean marcarLeidos(int usuario2) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	
 }
