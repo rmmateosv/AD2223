@@ -225,7 +225,67 @@ public class AccesoDatos {
 		ArrayList<Mensaje> resultado= new ArrayList<>();
 		
 		try {
-			PreparedStatement consulta = cnx.prepareStatement("select * from ");
+			PreparedStatement consulta = cnx.prepareStatement("select * from para as p "
+					+ "inner join mensaje as m on p.mensaje= m.id "
+					+ "where p.paraEmpleado=?");
+			
+			consulta.setInt(1, usuario2);
+			
+			 ResultSet r= consulta.executeQuery();
+			 
+			 while(r.next()) {
+				 
+				 Mensaje m = new Mensaje();
+				 m.setId(r.getInt(1));
+				 m.setDeEmpleado(r.getInt(5));
+				 m.setParaDepartamento(r.getInt(6));
+				 m.setAsunto(r.getString(7));
+				 m.setFechaEnvio(r.getDate(8));
+				 m.setMensaje(r.getString(9));
+				 
+				 resultado.add(m);
+				 
+			 }
+			 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	
+		
+		
+		return resultado;
+	}
+	public ArrayList<Object[]> obtenerMensajesCompleto(int usuario2) {
+		// TODO Auto-generated method stub
+		
+		ArrayList<Object[]> resultado= new ArrayList<>();
+		
+		try {
+			PreparedStatement consulta = cnx.prepareStatement("select * from para as p "
+					+ "inner join mensaje as m on p.mensaje= m.id "
+					+ "inner join empleado as e on m.deempleado=e.codigo "
+					+ "where p.paraEmpleado=?");
+			
+			consulta.setInt(1, usuario2);
+			
+			 ResultSet r= consulta.executeQuery();
+			 
+			 while(r.next()) {
+				 
+				 Object[] m =  {
+				 r.getInt(1),
+				 r.getString(13),
+				 r.getInt(6),
+				 r.getString(7),
+				 r.getDate(8),
+				 r.getString(9)
+				 };
+				 resultado.add(m);
+				 
+			 }
+			 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
