@@ -91,7 +91,7 @@ public class Principal {
 				System.out.println(m.toString());
 			}
 			if (ad.marcarLeidos(usuario)) {
-				System.out.println("Se han marcado toso los mensajes ");
+				System.out.println("Se han marcado todos los mensajes ");
 
 			}
 			ArrayList<Object[]> mensajesCompletos = ad.obtenerMensajesCompleto(usuario);
