@@ -10,6 +10,8 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 
+import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
+
 public class AccesoDatos {
 
 	private Connection cnx;
@@ -299,7 +301,20 @@ public class AccesoDatos {
 
 	public boolean marcarLeidos(int usuario2) {
 		// TODO Auto-generated method stub
-		return false;
+		boolean resultado = false;
+		try {
+			PreparedStatement consulta= cnx.prepareStatement("update para set leido= true "
+					+ "where paraEmpleado = ? and leido=false");
+			
+			consulta.setInt(1, usuario2);
+			  consulta.executeUpdate();
+			resultado=true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
 	}
 	
 	
