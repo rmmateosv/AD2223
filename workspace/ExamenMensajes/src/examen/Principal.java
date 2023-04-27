@@ -78,7 +78,18 @@ public class Principal {
 	}
 
 	private static void Estadistica() {
-
+		ArrayList<Object[]> info = ad.obtenerEstadistica(usuario);
+		if(!info.isEmpty()) {
+			for(Object[] o : info) {
+				System.out.println("Nombre de departamento: " + o[0] 
+						+ "\tNº Mensajes eviados: " + o[1] 
+						+ "\tFecha primer mensaje: " + o[2]
+						+ "\tFecha del ultimo mensaje: " + o[3]);
+			}
+		}else {
+			System.out.println("El empleado no ha enviado mensajes");
+		}
+		
 	}
 
 	private static void Leer() {

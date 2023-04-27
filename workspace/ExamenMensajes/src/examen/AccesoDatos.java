@@ -316,6 +316,36 @@ public class AccesoDatos {
 		
 		return resultado;
 	}
+
+	public ArrayList<Object[]> obtenerEstadistica(int usuario2) {
+		// TODO Auto-generated method stub
+		ArrayList<Object[]> resultado = new ArrayList();
+		
+		try {
+			PreparedStatement consulta = cnx.prepareStatement("select d.nombre, "
+					+ "count(*), min(m.fechaEnvio), max(m.fechaEnvio) "
+					+ "from mensaje as m inner join departamento as d "
+					+ "on m.paraDepartamento = d.numero "
+					+ "where m.deEmpleado = ? "
+					+ "group by m.paraDepartamento");
+			consulta.setInt(1, usuario2);
+			ResultSet r = consulta.executeQuery();
+			while(r.next()) {
+				Object[] o = {
+					r.getString(1),
+					r.getInt(2),
+					r.getDate(3),
+					r.getDate(4)
+				};
+				resultado.add(o);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
 	
 	
 }
