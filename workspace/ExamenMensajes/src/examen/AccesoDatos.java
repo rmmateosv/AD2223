@@ -346,6 +346,4 @@ public class AccesoDatos {
 		
 		return resultado;
 	}
-	
-	
 }
