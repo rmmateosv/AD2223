@@ -68,4 +68,16 @@ public class AccesoDatos {
 		}
 
 	}
+
+	public Empleado obtenerEmpleado(String dni) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean crearEmpleado(Empleado e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	
 }

@@ -3,8 +3,6 @@ package examenMongoMensajes;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import com.mysql.cj.xdevapi.DatabaseObject.DbObjectType;
-
 public class Principal {
 
 	static Scanner t = new Scanner(System.in);
@@ -50,7 +48,25 @@ public class Principal {
 
 	private static void CrearEmpleado() {
 		// TODO Auto-generated method stub
+		System.out.println("Introduce DNI: ");
+		String dni = t.nextLine();
 		
+		Empleado e = ad.obtenerEmpleado(dni);
+		if(e == null) {
+			e = new Empleado();
+			e.setDni(dni);
+			System.out.println("Nombre");
+			e.setNombre(t.nextLine());
+			System.out.println("Departamento");
+			e.setDepartamento(t.nextLine());
+			if(ad.crearEmpleado(e)) {
+				System.out.println("Empleado creado");
+			}else {
+				System.out.println("Error al crear empleado");
+			}
+		}else {
+			System.out.println("Error ya existe el empleado");
+		}
 	}
 
 	
