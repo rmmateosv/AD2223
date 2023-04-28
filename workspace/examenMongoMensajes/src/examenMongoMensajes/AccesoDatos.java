@@ -4,15 +4,25 @@ import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.bson.Document;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.bson.conversions.Bson;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.result.InsertOneResult;
 
 public class AccesoDatos {
 	private MongoClient cluster = null;
@@ -70,13 +80,103 @@ public class AccesoDatos {
 	}
 
 	public Empleado obtenerEmpleado(String dni) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Empleado resultado = null;
+		
+		try {
+			//nos conectaos a la coleccion empleado 
+			MongoCollection<Empleado> col = cnx.getCollection("Empleados",Empleado.class);
+			
+			// Creamos un filtro para encontrar el documento 
+			Bson filtro = Filters.eq("dni", dni);
+			//buscar un documento por el campo dni 
+			resultado =  col.find(filtro).first();
+			//Filtro con dos condiciones
+			//Filt.and(Filters.gt(),Filters.eq()
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
+		return resultado;
 	}
 
-	public boolean crearEmpleado(Empleado e) {
+	public boolean crearEmpleado(Empleado em) {
 		// TODO Auto-generated method stub
-		return false;
+		boolean resultado = false;
+		try {
+			MongoCollection<Empleado> col = cnx.getCollection("Empleados",Empleado.class);
+			
+			//Insertar 
+		InsertOneResult r=col.insertOne(em);
+		if(r.getInsertedId()!=null) {
+			resultado=true;
+		}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
+		return resultado;
+	}
+
+	public ArrayList<Empleado> obtenerEmpleados(String departamento) {
+		// TODO Auto-generated method stub
+		ArrayList<Empleado> resultado=new ArrayList();
+		
+		try {
+			MongoCollection<Empleado> col = cnx.getCollection("Empleados",Empleado.class);
+			
+
+		Bson filtro= Filters.eq("departamento", departamento);
+		  col.find(filtro).into(resultado);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
+		
+		return resultado;
+	}
+
+	public int obtenerCodigo() {
+		
+		int resultado=1;
+		try {
+			MongoCollection<Mensaje> col = cnx.getCollection("Mensajes",Mensaje.class);
+			
+			//hacer una consulta que obtenga el codigo 
+			//mas alto equivale a un select max de sql
+			Mensaje m =  col.aggregate(Arrays.asList(Aggregates.group(null, Accumulators.max("codigo", "$codigo")))).first();
+			if(m!=null) {
+				resultado= m.getCodigo()+1;
+			}
+		
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
+		return resultado;
+	}
+
+	public boolean crearMensaje(Mensaje m) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		try {
+			MongoCollection<Mensaje> col = cnx.getCollection("Mensajes",Mensaje.class);
+			
+			//Insertar 
+		InsertOneResult r=col.insertOne(m);
+		if(r.getInsertedId()!=null) {
+			resultado=true;
+		}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
+		return resultado;
 	}
 	
 	

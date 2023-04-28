@@ -1,16 +1,17 @@
 package examenMongoMensajes;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Principal {
 
+	static Empleado usuario;
 	static Scanner t = new Scanner(System.in);
 	static AccesoDatos ad = new AccesoDatos();
-	static int usuario;
 
 	public static void main(String[] args) {
-		
+
 		if (ad.getCnx() != null) {
 			menu();
 		} else {
@@ -35,7 +36,7 @@ public class Principal {
 			case 1:
 				CrearEmpleado();
 				break;
-			case 2:
+			case 2:EnviarMensaje();
 				break;
 			case 3:
 				break;
@@ -46,29 +47,82 @@ public class Principal {
 		} while (opcion != 0);
 	}
 
+	private static void EnviarMensaje() {
+		// TODO Auto-generated method stub
+		if(IndentificarEmpleado()){
+			System.out.println("Introduzca el departamento al cual se envia el mensaje");
+			String departamento= t.nextLine();
+			ArrayList<Empleado> empleados=ad.obtenerEmpleados(departamento);
+			if(empleados.isEmpty()) {
+				System.out.println("No hay empleados en el departamento ");
+				
+			}
+			else {
+				//Crear los destinatarios del mensaje
+				ArrayList<Destinatario> destinatarios=new ArrayList();
+				for(Empleado e :empleados) {
+					destinatarios.add(new Destinatario(e.getDni(), true));
+					
+				}
+				Mensaje m= new Mensaje();
+				m.setDestinatarios(destinatarios);
+				System.out.println("Indique el asunto");
+				m.setAsunto(t.nextLine());
+				System.out.println("Escribe el mensaje");
+				m.setMensaje(t.nextLine());
+				m.setFecha(new Date());
+				m.setCodigo(ad.obtenerCodigo());
+				m.setDeEmpleado(usuario.getDni());
+				m.setParaDepartamento(departamento);
+				if(ad.crearMensaje(m)) {
+					System.out.println("Mensaje enviado");
+				}
+			}
+			
+		}
+		
+	}
+
 	private static void CrearEmpleado() {
 		// TODO Auto-generated method stub
 		System.out.println("Introduce DNI: ");
 		String dni = t.nextLine();
-		
+
 		Empleado e = ad.obtenerEmpleado(dni);
-		if(e == null) {
+		if (e == null) {
 			e = new Empleado();
 			e.setDni(dni);
 			System.out.println("Nombre");
 			e.setNombre(t.nextLine());
 			System.out.println("Departamento");
 			e.setDepartamento(t.nextLine());
-			if(ad.crearEmpleado(e)) {
+			if (ad.crearEmpleado(e)) {
 				System.out.println("Empleado creado");
-			}else {
+			} else {
 				System.out.println("Error al crear empleado");
 			}
-		}else {
+		} else {
 			System.out.println("Error ya existe el empleado");
 		}
 	}
 
-	
+	private static boolean IndentificarEmpleado() {
+
+		boolean resultado = false;
+		if (usuario == null) {
+			System.out.println("Introduce dni: ");
+
+			usuario = ad.obtenerEmpleado(t.nextLine());
+			if (usuario != null) {
+				System.out.println("Usuario identificado");
+				resultado = true;
+			}
+
+		} else {
+			resultado = true;
+		}
+
+		return resultado;
+	}
 
 }
