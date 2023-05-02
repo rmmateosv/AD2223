@@ -18,6 +18,7 @@ import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
@@ -175,6 +176,30 @@ public class AccesoDatos {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
+		
+		return resultado;
+	}
+
+	public ArrayList<Object[]> obtenerMensajes(Empleado usuario) {
+		// TODO Auto-generated method stub
+		ArrayList<Object []>resultado=new ArrayList<>();
+		try {
+			//Se pone document porque los objetos que queremos recuperar
+			//no son de la clase mensaje
+			//Para la clase document no se pone segundo parametro
+			MongoCollection<Document> col = cnx.getCollection("Mensajes");
+			Bson filtro=Filters.eq("destinatarios.dni",usuario.getDni());
+			MongoCursor<Document> mc=col.aggregate(Arrays.asList
+					(Aggregates.match(filtro),
+					//
+						Aggregates.lookup("Empleados",
+								"deEmpleado","dni","datosEmpleado")
+							)).cursor();
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
 		
 		return resultado;
 	}

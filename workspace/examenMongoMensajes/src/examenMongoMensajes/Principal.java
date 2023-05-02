@@ -38,13 +38,36 @@ public class Principal {
 				break;
 			case 2:EnviarMensaje();
 				break;
-			case 3:
+			case 3:leerBorrarMensajes();
 				break;
 			case 4:
 				break;
 
 			}
 		} while (opcion != 0);
+	}
+
+	private static void leerBorrarMensajes() {
+		// TODO Auto-generated method stub
+		if(IndentificarEmpleado()){
+			ArrayList<Object[]>recibidos=ad.obtenerMensajes(usuario);
+			if(recibidos.isEmpty()) {
+				System.out.println("No hay mensajes");
+			}else {
+				for(Object []o:recibidos) {
+					System.out.println("De:"+o[0]+
+					"\t Asunto: "+o[1]+
+					"\t Mensaje:"+o[2]);
+				}
+				if(ad.borrarMensajes(usuario)) {
+					System.out.println("Mensajes borrados correctamente");
+				}else {
+					System.out.println("Error al borrar los mensajes de "+usuario);
+				}
+			}
+			
+		}
+		
 	}
 
 	private static void EnviarMensaje() {
