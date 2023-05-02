@@ -250,6 +250,43 @@ public class AccesoDatos {
 		
 		return resultado;
 	}
+
+	public ArrayList<Object[]> obtenerMensajesEnviados(Empleado usuario) {
+		// TODO Auto-generated method stub
+		ArrayList<Object[]>resultado=new ArrayList<>();
+		try {
+		MongoCollection<Document> col = cnx.getCollection("Mensajes");
+		Bson filtro=Filters.eq("deEmpleado",usuario.getDni());
+		MongoCursor<Document> mc=col.aggregate(Arrays.asList
+				(Aggregates.match(filtro),
+				Aggregates.group("$paraDepartamento",
+				//Nombre que le queremos dar - cantidad que va a ir sumando
+						Accumulators.sum("numMensajes",1),
+				//Nombre que le queremos dar, campo de la tabla mensajes
+				//sobre la que se va a realizar el min()
+						Accumulators.min("primerMensaje","$fecha"),
+				//Nombre que le queremos dar, campo de la tabla mensajes
+				//sobre la que se va a realizar el max()
+						Accumulators.max("ultimoMensaje", "$fecha")
+						))).cursor();
+		while(mc.hasNext()) {
+			Document d=mc.next();
+			//Se llama _id porque haciendo el debug se ve el nombre que tiene
+			//y como lo tenemos que llamar para recuperar la informacion
+			Object[]o= {d.getString("_id"),
+					d.getInteger("numMensajes"),
+					d.getDate("primerMensaje"),
+					d.getDate("ultimoMensaje")};
+			resultado.add(o);
+			
+		}
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return resultado;
+	}
 	
 	
 }

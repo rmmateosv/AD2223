@@ -40,11 +40,29 @@ public class Principal {
 				break;
 			case 3:leerBorrarMensajes();
 				break;
-			case 4:
+			case 4:estadisticaMensaje();
 				break;
 
 			}
 		} while (opcion != 0);
+	}
+
+	private static void estadisticaMensaje() {
+		// TODO Auto-generated method stub
+		if(IndentificarEmpleado()){
+			ArrayList<Object[]>info=ad.obtenerMensajesEnviados(usuario);
+			if(info.isEmpty()) {
+				System.out.println("No hay mensajes");
+			}else {
+				for(Object []o:info) {
+					System.out.println(
+					"Nombre departamento:"+o[0]+
+					"\t Nº Mensajes Enviados: "+o[1]+
+					"\t Primer mensaje:"+o[2]+
+					"\t Ultimo mensaje:"+o[3]);
+				}
+			}
+		}
 	}
 
 	private static void leerBorrarMensajes() {
