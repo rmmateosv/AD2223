@@ -4,8 +4,10 @@ import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
+import java.awt.Cursor;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecProvider;
@@ -23,7 +25,9 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
 
 public class AccesoDatos {
 	private MongoClient cluster = null;
@@ -191,15 +195,58 @@ public class AccesoDatos {
 			Bson filtro=Filters.eq("destinatarios.dni",usuario.getDni());
 			MongoCursor<Document> mc=col.aggregate(Arrays.asList
 					(Aggregates.match(filtro),
-					//
+					//El lookup crea un array de objetos aparte de la clase 
+					//que se indica en el mongo collection
+					//Lo primero es la tabla a que queremos hacer el join 
+					//El segundo parametro es el campo de la tabla mensajes que
+					//tiene que ser clave externa a la clase empleados, como un on
+					//y el ultimo parametro es el nombre por el que vamos a poder
+					//acceder a esta informacion
 						Aggregates.lookup("Empleados",
 								"deEmpleado","dni","datosEmpleado")
 							)).cursor();
+			while(mc.hasNext()) {
+				Document d=mc.next();
+				String asunto=d.getString("asunto");
+				String mensaje=d.getString("mensaje");
+				ArrayList<Document>empleados=
+						(ArrayList<Document>) d.get("datosEmpleado");
+				String nombreEmpleado=empleados.get(0).getString("dni");
+				Object[] o={nombreEmpleado,asunto,mensaje};
+				resultado.add(o);
+			}
 		
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
 		
+		
+		return resultado;
+	}
+
+	public boolean borrarMensajes(Empleado usuario) {
+		// TODO Auto-generated method stub
+		boolean resultado=false;
+		try {
+			MongoCollection<Document> col = cnx.getCollection("Mensajes");
+			
+			Bson filtro = Filters.eq("destinatarios.dni",usuario.getDni());
+			
+			Bson camposModif = Updates.combine(
+					//pull es para los arrays
+					Updates.pull("destinatarios",
+							new Document("dni",usuario.getDni())),
+					Updates.set("fecha",new Date()));
+			
+			UpdateResult r = col.updateMany(filtro, camposModif);
+			if(r.getModifiedCount()>=1) {
+				resultado = true;
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 		
 		return resultado;
 	}
