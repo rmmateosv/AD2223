@@ -108,4 +108,9 @@ public class AccesoDatos {
 		
 		
 	}
+
+	public int obtenerNumeroFactura() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
