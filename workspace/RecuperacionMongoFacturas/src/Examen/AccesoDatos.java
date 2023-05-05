@@ -168,7 +168,7 @@ public class AccesoDatos {
 			Bson modificaciones = Updates.combine(Updates.inc("stock", d.getCantidad()*-1));
 			
 			UpdateResult r = col.updateOne(filtro, modificaciones);
-			if(r.getUpsertedId()!=null) {
+			if(r.getModifiedCount()==1) {
 				resultado = true;
 			}
 			
@@ -193,6 +193,64 @@ public class AccesoDatos {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		return resultado;
+	}
+
+	public ArrayList<Facturas> obtenerFacturas() {
+		ArrayList<Facturas> resultado = new ArrayList(); 
+		try {
+			
+			MongoCollection<Facturas> col = cnx.getCollection("facturas",Facturas.class);
+		    
+			col.find().into(resultado);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+
+	public Facturas obtenerFactura(int numFactura) {
+		Facturas resultado = null;
+		try {
+			
+			MongoCollection<Facturas> col = cnx.getCollection("facturas",Facturas.class);
+		    
+			Bson filtro = Filters.eq("numero", numFactura);
+			resultado = col.find(filtro).first();
+			
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean ponerFAnulacion(int numFactura, int numero) {
+boolean resultado = false;
+		
+		try {
+			
+			MongoCollection<Document> col = cnx.getCollection("facturas");
+			
+			Bson filtro = Filters.eq("numero", numFactura);
+			
+			Bson modificaciones = Updates.combine(Updates.set("facturaAnulacion", numero));
+			
+			UpdateResult r = col.updateOne(filtro, modificaciones);
+			if(r.getModifiedCount()==1) {
+				resultado = true;
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		
 		return resultado;
 	}

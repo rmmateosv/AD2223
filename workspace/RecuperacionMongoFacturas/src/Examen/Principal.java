@@ -44,7 +44,52 @@ public static  void main(String[]args) {
 	}
 
 	private static void AnularFactura() {
-		// TODO Auto-generated method stub
+		mostrarFacturas();
+		
+		System.out.println("Inroduce el numero de la factura: ");
+		int numFactura = t.nextInt(); t.nextLine();
+		
+		Facturas f = ad.obtenerFactura(numFactura);
+		if(f!=null) {
+		
+			//cambio de las cantidades a negativo
+			for(Detalle d:f.getDetalle()) {
+				d.setCantidad(d.getCantidad()*-1);
+				
+			}
+			//cambiamos la fecha
+			f.setFecha(new Date());
+			//cambiamos el numero de la factura
+			f.setNumero(ad.obtenerNumeroFactura());
+			
+			if(!f.getDetalle().isEmpty()) {
+				if(ad.crearFactura(f)) {
+					//decrementar el stock de los productos de la factura
+					for(Detalle d: f.getDetalle()) {
+						if(!ad.actualizarStock(d)) {
+							System.out.println("Error al actualizar el stock del producto "+
+									d.getProducto());
+						}
+					}
+					//Modificar la factura original para poner la factura de anulación
+					if(ad.ponerFAnulacion(numFactura, f.getNumero())) {
+						System.out.println("Factura anulada");
+					}
+				}
+			}else {
+				System.out.println("Error");
+			}
+		}else {
+			System.out.println("Error, no existe la factura");
+		}
+		
+	}
+
+	private static void mostrarFacturas() {
+		ArrayList<Facturas> f = ad.obtenerFacturas();
+		for(Facturas fact: f) {
+			System.out.println(fact.toString());
+		}
 		
 	}
 
@@ -72,7 +117,7 @@ public static  void main(String[]args) {
 				d.setProducto(cod);
 				d.setPrecioUnidad(p.getPrecio());
 				System.out.println("Introduce la cantidad: ");	
-				d.setCantidad(t.nextInt());
+				d.setCantidad(t.nextInt());t.nextLine();
 				
 				if(p.getStock()>=d.getCantidad()) {
 					fact.getDetalle().add(d);
