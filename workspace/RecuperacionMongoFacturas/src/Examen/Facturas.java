@@ -10,8 +10,10 @@ public class Facturas {
 	private String cliente;
 	private ArrayList<Detalle> detalle= new ArrayList();
 	private int facturaAnulacion;
+	
 	public Facturas() {
 	}
+	
 	public Facturas(int numero, Date fecha, String cliente, ArrayList<Detalle> detalle, int facturaAnulacion) {
 		this.numero = numero;
 		this.fecha = fecha;

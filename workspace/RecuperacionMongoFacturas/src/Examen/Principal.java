@@ -1,5 +1,6 @@
 package Examen;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -60,16 +61,54 @@ public static  void main(String[]args) {
 		do {
 			
 			mostrarProductos();
+			System.out.println("Introduce el codigo del producto");
+			String cod = t.nextLine();
+			Productos p = ad.obtenerProducto(cod);
+			if(p==null) {
+				System.out.println("El producto no existe");
+				
+			}else {
+				Detalle d = new Detalle();
+				d.setProducto(cod);
+				d.setPrecioUnidad(p.getPrecio());
+				System.out.println("Introduce la cantidad: ");	
+				d.setCantidad(t.nextInt());
+				
+				if(p.getStock()>=d.getCantidad()) {
+					fact.getDetalle().add(d);
+					
+					
+				}else {
+					System.out.println("Error, no hay suficiente stock");
+				}
+			}
+			
 			
 			
 			System.out.println("Deseas introducir mas productos(0-no)");
 			elec=t.nextLine();
 		}while(!elec.equals("0"));
+		
+		if(!fact.getDetalle().isEmpty()) {
+			if(ad.crearFactura(fact)) {
+				//decrementar el stock de los productos de la factura
+				for(Detalle d: fact.getDetalle()) {
+					if(!ad.actualizarStock(d)) {
+						System.out.println("Error al actualizar el stock del producto "+
+								d.getProducto());
+					}
+				}
+			}
+		}else {
+			System.out.println("Error");
+		}
 	}
 
 	private static void mostrarProductos() {
-		// TODO Auto-generated method stub
-		
+		ArrayList<Productos> p = ad.obtenerProductos();
+		for(Productos prod: p) {
+			System.out.println(prod.toString());
+		}
 	}
 
 	private static void CrearProducto() {

@@ -4,6 +4,10 @@ import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.bson.Document;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
@@ -15,8 +19,12 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
 
 public class AccesoDatos {
 
@@ -110,7 +118,82 @@ public class AccesoDatos {
 	}
 
 	public int obtenerNumeroFactura() {
-		// TODO Auto-generated method stub
-		return 0;
+		int resultado = 0;
+		
+		try {
+			
+			MongoCollection<Facturas> col = cnx.getCollection("facturas", Facturas.class);
+			Facturas f = col.aggregate(Arrays.asList(Aggregates.group(null, Accumulators.max("numero", 
+					"$numero")))).first();
+			if( f!= null) {
+				resultado = f.getNumero()+1;
+			}else {
+				resultado = 1;
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+
+	public boolean crearFactura(Facturas fact) {
+		boolean resultado = false;
+		try {
+			
+			MongoCollection<Facturas> col = cnx.getCollection("facturas", Facturas.class);
+			
+			InsertOneResult r = col.insertOne(fact);
+			if(r.getInsertedId()!=null) {
+				resultado = true;
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+
+	public boolean actualizarStock(Detalle d) {
+		boolean resultado = false;
+		
+		try {
+			
+			MongoCollection<Document> col = cnx.getCollection("producto");
+			
+			Bson filtro = Filters.eq("codigo", d.getProducto());
+			
+			Bson modificaciones = Updates.combine(Updates.inc("stock", d.getCantidad()*-1));
+			
+			UpdateResult r = col.updateOne(filtro, modificaciones);
+			if(r.getUpsertedId()!=null) {
+				resultado = true;
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return resultado;
+		
+	}
+
+	public ArrayList<Productos> obtenerProductos() {
+		ArrayList<Productos> resultado = new ArrayList(); 
+		try {
+			
+			MongoCollection<Productos> col = cnx.getCollection("producto",Productos.class);
+		    
+			col.find().into(resultado);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultado;
 	}
 }
