@@ -4,6 +4,7 @@ import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -18,6 +19,7 @@ import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
@@ -253,5 +255,37 @@ boolean resultado = false;
 		
 		
 		return resultado;
+	}
+
+	public ArrayList<Object[]> obtenerInformacionF() {
+		// TODO Auto-generated method stub
+		ArrayList<Object[]> resultado = new ArrayList<>();
+		try {
+			
+			MongoCollection<Document> col = cnx.getCollection("facturas");
+			MongoCursor<Document>cursor=col.aggregate(
+					Arrays.asList(
+							Aggregates.unwind("$detalle"),
+							Aggregates.group("$detalle.producto",
+									Accumulators.sum("numFacturas",1),
+									Accumulators.sum("UnidadesVendidas","$cantidad"),
+									Accumulators.sum("ImporteFacturado","$cantidad * $precioUnidad")),
+							//Aggregates.lookup(null, null, null,null);
+							//Coleccion||clave externa||clave privada||nombre del campo que le queremos dar
+									Aggregates.lookup("productos", "producto","codigo","nombre"))).cursor();
+			
+		while(cursor.hasNext()) {
+			System.out.println(cursor.next().toJson());
+		}
+			
+			
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+		
 	}
 }

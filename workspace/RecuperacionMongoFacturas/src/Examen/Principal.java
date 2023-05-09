@@ -40,7 +40,14 @@ public static  void main(String[]args) {
 
 	private static void InformeDeFacturacion() {
 		// TODO Auto-generated method stub
-		
+		ArrayList<Object[]>info=ad.obtenerInformacionF();
+		for(Object []o:info) {
+			System.out.print("Codigo producto: "+o[0]);
+			System.out.print("\t Nombre: "+o[1]);
+			System.out.print("\t Numero de ventas: "+o[2]);
+			System.out.print("\t Cantidad vendida: "+o[3]);
+			System.out.println("\t Importe recaudado: "+o[4]);
+		}
 	}
 
 	private static void AnularFactura() {
