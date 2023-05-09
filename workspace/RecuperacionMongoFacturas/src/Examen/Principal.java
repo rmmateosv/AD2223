@@ -46,7 +46,7 @@ public static  void main(String[]args) {
 	private static void AnularFactura() {
 		mostrarFacturas();
 		
-		System.out.println("Inroduce el numero de la factura: ");
+		System.out.println("Introduce el numero de la factura: ");
 		int numFactura = t.nextInt(); t.nextLine();
 		
 		Facturas f = ad.obtenerFactura(numFactura);
