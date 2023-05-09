@@ -50,7 +50,7 @@ public static  void main(String[]args) {
 		int numFactura = t.nextInt(); t.nextLine();
 		
 		Facturas f = ad.obtenerFactura(numFactura);
-		if(f!=null) {
+		if(f!=null && f.getFacturaAnulacion()==0) {
 		
 			//cambio de las cantidades a negativo
 			for(Detalle d:f.getDetalle()) {
@@ -80,7 +80,7 @@ public static  void main(String[]args) {
 				System.out.println("Error");
 			}
 		}else {
-			System.out.println("Error, no existe la factura");
+			System.out.println("Error, no existe la factura o ya esta anulada");
 		}
 		
 	}

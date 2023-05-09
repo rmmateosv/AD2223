@@ -55,12 +55,12 @@ public class Facturas {
 	public String toString() {
 		String resultado=  "Facturas [numero=" + numero + ", fecha=" + 
 	fecha + ", cliente=" + cliente +  ", facturaAnulacion=" + facturaAnulacion + "]";
-		
+		float totalFactura=0;
 		for(Detalle d : detalle) {
 			resultado+="\n"+d.toString();
-			
+			totalFactura+=d.getCantidad()*d.getPrecioUnidad();
 		}
-		resultado+="************";
+		resultado+="Total Factura= "+totalFactura+"************";
 		return resultado;
 		
 	}

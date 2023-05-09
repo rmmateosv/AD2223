@@ -32,7 +32,7 @@ public class Detalle {
 	}
 	@Override
 	public String toString() {
-		return "Detalle [producto=" + producto + ", cantidad=" + cantidad + ", precioUnidad=" + precioUnidad + "]";
+		return "Detalle [producto=" + producto + ", cantidad=" + cantidad + ", precioUnidad=" + precioUnidad + ", total linea: "+precioUnidad*cantidad+"]";
 	}
 	
 	
