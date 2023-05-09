@@ -268,14 +268,25 @@ boolean resultado = false;
 							Aggregates.unwind("$detalle"),
 							Aggregates.group("$detalle.producto",
 									Accumulators.sum("numFacturas",1),
-									Accumulators.sum("UnidadesVendidas","$cantidad"),
-									Accumulators.sum("ImporteFacturado","$cantidad * $precioUnidad")),
+									Accumulators.sum("UnidadesVendidas","$detalle.cantidad"),
+									Accumulators.sum("ImporteFacturado",new Document(
+											"$multiply",Arrays.asList( "$detalle.cantidad" , "$detalle.precioUnidad")))),
 							//Aggregates.lookup(null, null, null,null);
 							//Coleccion||clave externa||clave privada||nombre del campo que le queremos dar
-									Aggregates.lookup("productos", "producto","codigo","nombre"))).cursor();
+									Aggregates.lookup("producto", "_id","codigo","nombre"))).cursor();
 			
 		while(cursor.hasNext()) {
-			System.out.println(cursor.next().toJson());
+			Document d=cursor.next();
+			Document producto=d.getList("nombre",Document.class).get(0);
+			Object[]o= {d.getString("_id"),
+					producto.getString("nombre"),
+					d.getInteger("numFacturas"),
+					d.getInteger("UnidadesVendidas"),
+					d.getDouble("ImporteFacturado")};
+			
+			
+			
+			resultado.add(o);
 		}
 			
 			
