@@ -1,7 +1,20 @@
 package examen;
 
+
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "jugador_partido")
 public class JugadorPartido {
+	
+	@EmbeddedId
 	private ClaveJugadorPartido cjp;
+	
+	@Column(nullable = true)
 	private String resultado;
 	
 	public JugadorPartido() {

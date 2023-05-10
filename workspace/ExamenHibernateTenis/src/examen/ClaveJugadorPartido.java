@@ -1,7 +1,18 @@
 package examen;
 
-public class ClaveJugadorPartido {
+
+
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+public class ClaveJugadorPartido  {
+	
+	@ManyToOne
+	@JoinColumn(name = "partido",referencedColumnName = "codigo")
 	private Partido partido;
+	
+	@ManyToOne
+	@JoinColumn(name = "jugador",referencedColumnName = "codigo")
 	private Jugador jugador;
 	
 	public ClaveJugadorPartido() {

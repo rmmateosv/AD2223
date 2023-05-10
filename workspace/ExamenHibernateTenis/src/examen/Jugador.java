@@ -1,13 +1,34 @@
 package examen;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+@Entity
+@Table
 public class Jugador {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int codigo;
+	
+	@Column(nullable = false)
 	private String nombre;
+	
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "cjp.jugador")
 	//Relación uno a muchos entre jugador y jugador partido
 	private List<JugadorPartido> jugados = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "ganador")
 	//Relación uno a muchos entre jugador y partido, representa los partidos que gana un jugador
 	private List<Partido> ganados = new ArrayList<>();
 	
