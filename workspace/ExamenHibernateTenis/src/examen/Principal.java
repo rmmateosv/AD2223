@@ -1,6 +1,7 @@
 package examen;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -8,7 +9,7 @@ import java.util.Scanner;
 public class Principal {
 	static Scanner t = new Scanner(System.in);
 	static AccesoDatos ad = new AccesoDatos();
-
+	static SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
@@ -59,8 +60,27 @@ public class Principal {
 	}
 
 	private static void mostrarDatosPartido() {
-		// TODO Auto-generated method stub
+		mostrarPartidos();
+		System.out.println("Introduce el codigo de un partido");
+		int codigo = t.nextInt(); t.nextLine();
+		Partido p = ad.obtenerPartido(codigo);
+		if(p!=null) {
+			System.out.println(p.toString());
+			for(JugadorPartido jp :p.getJugadores()) {
+				System.out.println("Jugador: "+jp.getCjp().getJugador().getNombre()
+						+"\tResultado: "+jp.getResultado());		
+			}
+		}else {
+			System.out.println("El partido con el codigo "+codigo+ " no existe");
+		}
+	}
+
+	private static void mostrarPartidos() {
 		
+		List<Partido> partidos = ad.obtenerPartidos();
+		for(Partido p: partidos) {
+			System.out.println(p.toString());
+		}
 	}
 
 	private static void crearPartido() {
@@ -68,14 +88,43 @@ public class Principal {
 		System.out.println("Introduce el codigo del primer jugador");
 		int codigo = t.nextInt(); t.nextLine();
 		Jugador j1 = ad.obtenerJugador(codigo);
-		if(j1!=null) {
+		try {
 			
-			mostrarJugadores();
-			System.out.println("Introduzca el codigo del segundo jugador");
-			
-			
-		}else {
-			System.out.println("Error, no existe el jugador con el código: "+codigo);
+			if(j1!=null) {			
+				mostrarJugadores();
+				System.out.println("Introduzca el codigo del segundo jugador");
+				codigo = t.nextInt(); t.nextLine();
+				Jugador j2 = ad.obtenerJugador(codigo);
+				if(j2!=null && j2.getCodigo()!=j1.getCodigo()) {
+					Partido p = new Partido();
+					System.out.println("Introduce la fecha del partido DD-MM-YYYY");
+					p.setFecha(formato.parse(t.nextLine()));
+					int sets;
+					do {
+						System.out.println("Introduce el número de sets (3 o 5)");
+						sets = t.nextInt(); t.nextLine();
+						
+					}while(sets!=3 && sets!=5);
+					p.setNum_Set(sets);
+					
+					p.getJugadores().add(new JugadorPartido(new ClaveJugadorPartido(p, j1), null));
+					p.getJugadores().add(new JugadorPartido(new ClaveJugadorPartido(p, j2), null));
+					if(ad.crearPartido(p)) {
+						System.out.println("Partido creado correctamente");
+					}else {
+						System.out.println("Error al crear el partido");
+					}
+				}else {
+					System.out.println("Jugador con el código "+codigo+ " no existe o coincide con el primero");
+				}
+				
+				
+			}else {
+				System.out.println("Error, no existe el jugador con el código: "+codigo);
+			}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
