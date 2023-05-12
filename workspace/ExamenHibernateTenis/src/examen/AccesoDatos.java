@@ -1,8 +1,12 @@
 package examen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 
 public class AccesoDatos {
 
@@ -33,6 +37,20 @@ public class AccesoDatos {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public List<Jugador> obtenerJugadores() {
+		List<Jugador> resultado = new ArrayList<>();
+		
+		try {
+			Query consulta = em.createQuery("from Jugador");
+			resultado = consulta.getResultList();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultado;
 	}
 	
 	

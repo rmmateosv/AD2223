@@ -1,6 +1,8 @@
 package examen;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Principal {
@@ -62,7 +64,26 @@ public class Principal {
 	}
 
 	private static void crearPartido() {
-		// TODO Auto-generated method stub
+		mostrarJugadores();
+		System.out.println("Introduce el codigo del primer jugador");
+		int codigo = t.nextInt(); t.nextLine();
+		Jugador j1 = ad.obtenerJugador(codigo);
+		if(j1!=null) {
+			
+			mostrarJugadores();
+			System.out.println("Introduzca el codigo del segundo jugador");
+			
+			
+		}else {
+			System.out.println("Error, no existe el jugador con el código: "+codigo);
+		}
+	}
+
+	private static void mostrarJugadores() {
 		
+		List<Jugador> jugadores = ad.obtenerJugadores();
+		for(Jugador j: jugadores) {
+			System.out.println(j.toString());
+		}
 	}
 }
