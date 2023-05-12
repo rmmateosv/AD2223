@@ -55,7 +55,29 @@ public class Principal {
 	}
 
 	private static void registrarDatosPartidos() {
-		// TODO Auto-generated method stub
+		mostrarPartidos();
+		System.out.println("Introduce el codigo de un partido");
+		int codigo = t.nextInt(); t.nextLine();
+		Partido p = ad.obtenerPartido(codigo);
+		if(p!=null) {
+			for(JugadorPartido jp :p.getJugadores()) {
+				System.out.println("Introduce si el jugador "+jp.getCjp().getJugador().getNombre()
+						+" ha ganado (0-no 1-si)");
+				int ganador = t.nextInt(); t.nextLine();
+				if(ganador==1) {
+					p.setGanador(jp.getCjp().getJugador());
+				}
+				for(int i=1;i<=p.getNum_Set();i++) {
+					System.out.println("Introduce los juegos ganados de "+jp.getCjp().getJugador().getNombre()+
+							" en el set "+i);
+					jp.setResultado("");
+				}
+				
+				
+			}
+		}else {
+			System.out.println("El partido con el codigo "+codigo+ " no existe");
+		}
 		
 	}
 
