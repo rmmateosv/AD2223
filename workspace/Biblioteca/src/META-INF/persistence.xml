@@ -4,7 +4,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
 http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 version="2.0">
-	<persistence-unit name="UPTenis" transaction-type="RESOURCE_LOCAL">
+	<persistence-unit name="UPBiblioteca" transaction-type="RESOURCE_LOCAL">
 	<!-- Persistence provider -->
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>	
 		
@@ -14,7 +14,7 @@ version="2.0">
 			value="org.hibernate.dialect.MySQL8Dialect"/>
 			<!-- The JDBC URL to the database instance -->
 			<property name="javax.persistence.jdbc.url"
-			value="jdbc:mysql://localhost:3306/tenis?serverTimezone=Europe/Madrid"
+			value="jdbc:mysql://localhost:3306/recup2223t4?serverTimezone=Europe/Madrid"
 			/>
 			<!-- The database username -->
 			<property name="javax.persistence.jdbc.user" value="root" />
