@@ -67,14 +67,14 @@ public class Principal {
 				if(ganador==1) {
 					p.setGanador(jp.getCjp().getJugador());
 				}
+				jp.setResultado("");
 				for(int i=1;i<=p.getNum_Set();i++) {
 					System.out.println("Introduce los juegos ganados de "+jp.getCjp().getJugador().getNombre()+
 							" en el set "+i);
-					jp.setResultado("");
-				}
-				
-				
+					jp.setResultado(jp.getResultado()+ " Set "+i+": "+ t.nextInt()); t.nextLine();
+				}	
 			}
+			
 		}else {
 			System.out.println("El partido con el codigo "+codigo+ " no existe");
 		}
