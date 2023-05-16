@@ -122,11 +122,24 @@ public class AccesoDatos {
 			
 			t.begin();
 			
-			Query consulta = em.createQuery("delete from JugadorPartido where ");
+			Query consulta = em.createQuery("delete from JugadorPartido where cjp.partido=?1");
+			consulta.setParameter(1, p);
+			int r = consulta.executeUpdate();
+			if(r==2) {
+				consulta = em.createQuery("delete from Partido where codigo=?1");
+				consulta.setParameter(1, p.getCodigo());
+				r = consulta.executeUpdate();
+				if(r==1) {
+					t.commit();
+					em.clear();
+					resultado = true;
+				}else {
+					t.rollback();
+				}
+			}else {
+				t.rollback();
+			}
 			
-			t.commit();
-			em.clear();
-			resultado = true;
 			
 		} catch (Exception e) {
 			t.rollback();
