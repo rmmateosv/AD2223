@@ -40,7 +40,7 @@ public class JugadorPartido {
 	
 	@Override
 	public String toString() {
-		return "JugadorPartido [cjp Jugador=" + cjp.getJugador() + "cjp Partido=" +cjp.getPartido()+ ", resultado=" + resultado + "]";
+		return "JugadorPartido [cjp Jugador=" + cjp.getJugador().getNombre() + "cjp Partido=" +cjp.getPartido().getCodigo()+ ", resultado=" + resultado + "]";
 	}
 	
 }

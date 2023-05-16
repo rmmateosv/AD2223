@@ -60,19 +60,35 @@ public class Principal {
 		int codigo = t.nextInt(); t.nextLine();
 		Partido p = ad.obtenerPartido(codigo);
 		if(p!=null) {
+			boolean pedirGanador = true;
 			for(JugadorPartido jp :p.getJugadores()) {
-				System.out.println("Introduce si el jugador "+jp.getCjp().getJugador().getNombre()
-						+" ha ganado (0-no 1-si)");
-				int ganador = t.nextInt(); t.nextLine();
-				if(ganador==1) {
-					p.setGanador(jp.getCjp().getJugador());
+				if(pedirGanador ) {
+					System.out.println("Introduce si el jugador "+jp.getCjp().getJugador().getNombre()
+							+" ha ganado (0-no 1-si)");
+					int ganador = t.nextInt(); t.nextLine();
+					if(ganador==1) {
+						p.setGanador(jp.getCjp().getJugador());					
+					}
+					pedirGanador = false;
+				}else {
+					if(p.getGanador()==null) {
+						p.setGanador(jp.getCjp().getJugador());
+					}
+					
 				}
+				
 				jp.setResultado("");
 				for(int i=1;i<=p.getNum_Set();i++) {
 					System.out.println("Introduce los juegos ganados de "+jp.getCjp().getJugador().getNombre()+
 							" en el set "+i);
 					jp.setResultado(jp.getResultado()+ " Set "+i+": "+ t.nextInt()); t.nextLine();
 				}	
+			}
+			if(ad.crearPartido(p)) {
+				System.out.println("Se ha modificado correctamente el partido");
+				System.out.println(p.toString());
+			}else {
+				System.out.println("Error al modificar el partido");
 			}
 			
 		}else {
