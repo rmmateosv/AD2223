@@ -50,8 +50,17 @@ public class Principal {
 	}
 
 	private static void borrarPartidos() {
-		// TODO Auto-generated method stub
-		
+		mostrarPartidos();
+		System.out.println("Introduce el codigo de un partido");
+		int codigo = t.nextInt(); t.nextLine();
+		Partido p = ad.obtenerPartido(codigo);
+		if(p!=null) {
+			if(ad.borrarPartido(p)) {
+				System.out.println("Partido borrado correctamente");
+			}else {
+				System.out.println("Error al borrar el partido");
+			}
+		}
 	}
 
 	private static void registrarDatosPartidos() {

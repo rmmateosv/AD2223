@@ -113,6 +113,28 @@ public class AccesoDatos {
 		
 		return p;
 	}
+
+	public boolean borrarPartido(Partido p) {
+		boolean resultado = false;
+		
+		EntityTransaction t = em.getTransaction();
+		try {
+			
+			t.begin();
+			
+			Query consulta = em.createQuery("delete from JugadorPartido where ");
+			
+			t.commit();
+			em.clear();
+			resultado = true;
+			
+		} catch (Exception e) {
+			t.rollback();
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
 	
 	
 }
