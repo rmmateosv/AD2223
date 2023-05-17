@@ -1,7 +1,12 @@
 package Examen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 
 public class AccesoDatos {
 	private EntityManager em= null;
@@ -32,4 +37,100 @@ public class AccesoDatos {
 			e.printStackTrace();
 		}
 	}
+
+	public List<Socio> obtenerSocios() {
+		List<Socio> resultado = new ArrayList();
+		try {
+			
+			Query consulta = em.createQuery("from Socio");
+			resultado = consulta.getResultList();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public Socio obtenerSocio(int id) {
+		Socio resultado = null;
+		try {
+			
+			
+			resultado = em.find(Socio.class, id);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public long obtenerPrestamosPendientes(Socio s) {
+		long resultado = 0;
+		
+		try {
+			
+			Query consulta = em.createQuery("select count(*) from Prestamo where cp.socio=?1 "
+					+ "and fechaDevolReal is null");
+			consulta.setParameter(1, s);
+			
+			Long i =  (Long) consulta.getResultList().get(0);
+			resultado = i;
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+
+	public List<Libro> obtenerLibros() {
+		List<Libro> resultado = new ArrayList();
+		try {
+			
+			Query consulta = em.createQuery("from Libro");
+			resultado = consulta.getResultList();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public Libro obtenerLibro(String isbn) {
+		Libro resultado = null;
+		try {
+			
+			
+			resultado = em.find(Libro.class, isbn);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+
+	public boolean crearPrestamo(Prestamo p) {
+		boolean resultado = false;
+		EntityTransaction t = em.getTransaction();
+		try {
+			t.begin();
+			
+			em.persist(p);
+			
+			t.commit();
+			em.clear();
+			resultado = true;
+			
+		} catch (Exception e) {
+			t.rollback();
+			e.printStackTrace();
+		}
+		
+		return resultado;
+		
+	}
+
+	
 }

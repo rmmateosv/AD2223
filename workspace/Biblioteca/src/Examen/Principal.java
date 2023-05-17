@@ -1,6 +1,8 @@
 package Examen;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -48,6 +50,69 @@ public class Principal {
 	}
 	private static void crearPrestamo() {
 		
+		mostrarSocios();
+		System.out.println("Introduce el id del socio: ");
+		int id = t.nextInt(); t.nextLine();
+		Socio s = ad.obtenerSocio(id);
+		if(s!=null) {
+			
+			if((s.getFechaSancion() == null) || (s.getFechaSancion().getTime() <= new Date().getTime())) {
+				
+				long pendientes = ad.obtenerPrestamosPendientes(s);
+				if(pendientes < 2) {
+					 mostrarLibros();
+					 System.out.println("Introduce un isbn: ");
+					 String isbn = t.nextLine();
+					 
+					 Libro l = ad.obtenerLibro(isbn);
+					 if(l!=null) {
+						 
+						 if(l.getNum_Ejemplares()>0) {
+							 
+							 Prestamo p = new Prestamo();
+							 p.setFechaDevolPrevista(new Date(new Date().getTime()+(15*24*60*60*1000)));
+							 p.setCp(new ClavePrestamo(new Date(), s, l));
+							 l.setNum_Ejemplares(l.getNum_Ejemplares()-1);
+							 if(ad.crearPrestamo(p)) {
+								 System.out.println("Préstamo registrado al socio con dni "+s.getNif());
+							 }else {
+								 System.out.println("Error al crear el prestamo");
+							 }
+							 
+						 }else {
+							 System.out.println("Error, no hay ejemplares del libro");
+						 }
+						 
+					 }else {
+						 System.out.println("Error, el libro no existe");
+					 }
+					 
+				}else {
+					System.out.println("Error, el socio tiene mas de un prestamo");
+				}
+				
+			}else {
+				System.out.println("Error, el socio está sancionado");
+			}
+			
+		}else {
+			System.out.println("Error, el socio no existe");
+		}
+		
+	}
+	private static void mostrarLibros() {
+		List<Libro> libros = ad.obtenerLibros();
+		for(Libro l:libros) {
+			l.mostrar();
+		}
+		
+	}
+	private static void mostrarSocios() {
+		
+		List<Socio> socios = ad.obtenerSocios();
+		for(Socio s:socios) {
+			s.mostrar();
+		}
 		
 	}
 }
