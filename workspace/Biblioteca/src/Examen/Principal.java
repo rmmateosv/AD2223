@@ -31,7 +31,7 @@ public class Principal {
 						crearPrestamo();
 						break;
 					case 2:
-						
+						mostrarPrestamos();
 						break;
 					case 3:
 						
@@ -47,6 +47,34 @@ public class Principal {
 			} else {
 				System.out.println("Error, no hay conexión con biblioteca");
 			}
+	}
+	private static void mostrarPrestamos() {
+		mostrarSocios();
+		System.out.println("Introduce el id del socio: ");
+		int id = t.nextInt(); t.nextLine();
+		Socio s = ad.obtenerSocio(id);
+		if(s!=null) {
+			int totalPrestamos=0;
+			int totalPendientes=0;
+			
+			for(Prestamo p:s.getPrestamos()) {
+				p.mostrar();
+				totalPrestamos++;
+				
+				if(p.getFechaDevolReal()==null) {
+					totalPendientes++;
+				}
+			}
+			
+			System.out.println("total de prestamos: " + totalPrestamos);
+			System.out.println("total de pretamos pendientes: "+ totalPendientes);
+			
+			
+			
+		}else {
+			System.out.println("Error, el socio no existe");
+		}
+		
 	}
 	private static void crearPrestamo() {
 		

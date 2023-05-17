@@ -21,10 +21,10 @@ public class Prestamo {
 	
 	public void mostrar() {
 		System.out.println("Prestamo [fechaDevolPrevista=" + fechaDevolPrevista +
-				", fechaDevolReal=" + fechaDevolReal + 
+				", fechaDevolReal=" + (fechaDevolReal==null?"pendiente":fechaDevolReal) + 
 				", Fecha Prestamo="+ cp.getFechaP() +
 				", Socio="+ cp.getSocio().getNombre() +
-				", Libro="+ cp.getLibro().getTitulo() +"]");
+				", Libro="+ cp.getLibro().getTitulo() +"-"+cp.getLibro().getIsbn() +"]");
 	}
 	public Prestamo() {
 	}
