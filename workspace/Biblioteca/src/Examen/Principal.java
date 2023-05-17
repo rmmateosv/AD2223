@@ -17,16 +17,16 @@ public class Principal {
 				do {
 					System.out.println("Introduce opción:");
 					System.out.println("0-Salir");
-					System.out.println("1-Crear Partido");
-					System.out.println("2-Mostrar Datos de Partido");
-					System.out.println("3-Registrar Datos de Partido");
-					System.out.println("4-Borrar Partido");
+					System.out.println("1-Crear Prestamo");
+					System.out.println("2-Mostrar prestamos de un socio");
+					System.out.println("3-Devolver un prestamo");
+					System.out.println("4-Borrar libro");
 	
 					opcion = t.nextInt();
 					t.nextLine();
 					switch (opcion) {
 					case 1:
-						
+						crearPrestamo();
 						break;
 					case 2:
 						
@@ -45,5 +45,9 @@ public class Principal {
 			} else {
 				System.out.println("Error, no hay conexión con biblioteca");
 			}
+	}
+	private static void crearPrestamo() {
+		
+		
 	}
 }
