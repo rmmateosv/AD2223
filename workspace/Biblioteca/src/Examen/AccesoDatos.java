@@ -189,5 +189,56 @@ public class AccesoDatos {
 		return resultado;
 	}
 
+	public boolean devolverPrestamo(Socio s, String isbn) {
+		// TODO Auto-generated method stub
+		boolean resultado=false;
+		Date fecha=new Date();
+		EntityTransaction t = em.getTransaction();
+		try {
+			t.begin();
+			Query consulta=em.createQuery("update Prestamo set fechaDevolReal =?1"
+					+ " where cp.socio=?2 and cp.libro.isbn=?3");
+			consulta.setParameter(1,fecha);
+			consulta.setParameter(2, s);
+			consulta.setParameter(3, isbn);
+			int r=consulta.executeUpdate();
+			if(r==1) {
+				//Obtener el prestamo que hemos devuelto
+				consulta=em.createQuery("from Prestamo where cp.socio=?1 and "
+						+ "cp.libro.isbn=?2 and fechaDevolReal=?3");
+				
+				consulta.setParameter(1, s);
+				consulta.setParameter(2, isbn);
+				consulta.setParameter(3,fecha);
+				Prestamo p=(Prestamo)consulta.getResultList().get(0);
+				if(p!=null) {
+					if(p.getFechaDevolReal().getTime()>p.getFechaDevolPrevista().getTime()) {
+						consulta=em.createQuery("update Socio set fechaSancion=?1 where id=?2");
+						consulta.setParameter(1,new Date(fecha.getTime()+15*24*60*60*1000));
+						consulta.setParameter(2, s.getId());
+						r=consulta.executeUpdate();
+						if(r==1) {
+							t.commit();
+							resultado=true;
+							em.clear();
+						}
+					}else {
+						t.commit();
+						resultado=true;
+						em.clear();
+					}
+					
+				}
+			}
+			
+		} catch (Exception e) {
+			t.rollback();
+			e.printStackTrace();
+		}
+		
+		
+		return resultado;
+	}
+
 	
 }

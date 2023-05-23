@@ -23,6 +23,7 @@ public class Principal {
 					System.out.println("2-Mostrar prestamos de un socio");
 					System.out.println("3-Devolver un prestamo");
 					System.out.println("4-Borrar libro");
+					System.out.println("5.Devolver prestamo 2");
 	
 					opcion = t.nextInt();
 					t.nextLine();
@@ -39,6 +40,9 @@ public class Principal {
 					case 4:
 						borrarLibro();
 						break;
+					case 5:
+						devolverPrestamo2();
+						break;
 					
 					}
 				} while (opcion != 0);
@@ -47,6 +51,27 @@ public class Principal {
 			} else {
 				System.out.println("Error, no hay conexión con biblioteca");
 			}
+	}
+	private static void devolverPrestamo2() {
+		// TODO Auto-generated method stub
+		mostrarSocios();
+		System.out.println("Introduce el id del socio: ");
+		int id = t.nextInt(); t.nextLine();
+		Socio s = ad.obtenerSocio(id);
+		if(s!=null) {
+			for(Prestamo p:s.getPrestamos()) {
+				if(p.getFechaDevolReal()==null) {
+					p.mostrar();
+				}
+			}
+			System.out.println("introduce isbn del libro");
+			String isbn = t.nextLine();
+			if(ad.devolverPrestamo(s,isbn)) {
+				System.out.println("Prestamo devuelto");
+			}else {
+				System.out.println("Error");
+			}
+		}
 	}
 	private static void borrarLibro() {
 		// TODO Auto-generated method stub
