@@ -162,11 +162,21 @@ public class AccesoDatos {
 		EntityTransaction t = em.getTransaction();
 		try {
 			t.begin();
-			Query consulta = em.createQuery("delete from Prestamo where cp.libro = ?1");
-			consulta.setParameter(1, l);
-			int r = consulta.executeUpdate();
+			if(!l.getPrestamos().isEmpty()) {
+				Query consulta = em.createQuery("delete from Prestamo where cp.libro = ?1");
+				consulta.setParameter(1, l);
+				int r = consulta.executeUpdate();
+				if(r==0) {
+					t.rollback();
+					return false;
+				}
+			}
+			Query consulta2 = em.createQuery("delete from Libro where isbn = ?1");
+			consulta2.setParameter(1, l.getIsbn());
+			int r = consulta2.executeUpdate();
 			if(r==0) {
-				System.out.print("");
+				t.rollback();
+				return false;
 			}
 			t.commit();
 			em.clear();
