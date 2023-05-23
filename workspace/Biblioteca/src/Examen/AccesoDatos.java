@@ -102,8 +102,6 @@ public class AccesoDatos {
 	public Libro obtenerLibro(String isbn) {
 		Libro resultado = null;
 		try {
-			
-			
 			resultado = em.find(Libro.class, isbn);
 			
 		} catch (Exception e) {
@@ -155,6 +153,29 @@ public class AccesoDatos {
 		}
 		
 		
+		return resultado;
+	}
+
+	public boolean borrarLibro(Libro l) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		EntityTransaction t = em.getTransaction();
+		try {
+			t.begin();
+			Query consulta = em.createQuery("delete from Prestamo where cp.libro = ?1");
+			consulta.setParameter(1, l);
+			int r = consulta.executeUpdate();
+			if(r==0) {
+				System.out.print("");
+			}
+			t.commit();
+			em.clear();
+			resultado = true;
+			
+		} catch (Exception e) {
+			t.rollback();
+			e.printStackTrace();
+		}
 		return resultado;
 	}
 
