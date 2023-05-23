@@ -1,6 +1,7 @@
 package Examen;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.EntityManager;
@@ -130,6 +131,31 @@ public class AccesoDatos {
 		
 		return resultado;
 		
+	}
+
+	public boolean devolverPrestamo(Prestamo p) {
+		// TODO Auto-generated method stub
+		boolean resultado = false;
+		EntityTransaction t = em.getTransaction();
+		try {
+			t.begin();
+			p.setFechaDevolReal(new Date());
+			if(p.getFechaDevolReal().getTime()>p.getFechaDevolPrevista().getTime()) {
+				p.getCp().getSocio().setFechaSancion(new Date(new Date().getTime()+(15*24*60*60*1000)));
+			}
+			em.persist(p);
+			
+			t.commit();
+			em.clear();
+			resultado = true;
+			
+		} catch (Exception e) {
+			t.rollback();
+			e.printStackTrace();
+		}
+		
+		
+		return resultado;
 	}
 
 	

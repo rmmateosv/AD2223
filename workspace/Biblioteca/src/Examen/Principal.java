@@ -34,10 +34,10 @@ public class Principal {
 						mostrarPrestamos();
 						break;
 					case 3:
-						
+						devolverPrestamo();
 						break;
 					case 4:
-						
+						borrarLibro();
 						break;
 					
 					}
@@ -47,6 +47,67 @@ public class Principal {
 			} else {
 				System.out.println("Error, no hay conexión con biblioteca");
 			}
+	}
+	private static void borrarLibro() {
+		// TODO Auto-generated method stub
+		mostrarLibros();
+		System.out.println("introduce isbn");
+		String isbn = t.nextLine();
+		Libro l = ad.obtenerLibro(isbn);
+		if(l!=null) {
+			if(!l.getPrestamos().isEmpty()) {
+				System.out.println("el libro tiene pretamos quieres borrar 0-no");
+				String respuesta = t.nextLine();
+				if(!respuesta.equals("0")) {
+					//borrar libro y sus prestamos
+					if(ad.borrarLibro(l)) {
+						System.out.println("libro y prestamo borrardo");
+					}else {
+						System.out.println("Error al borrar libro y prestamo");
+					}
+						
+					
+				}
+			}else {
+				//borrar libro
+				if(ad.borrarLibro(l)) {
+					System.out.println("libro borrardo");
+				}else {
+					System.out.println("Error al borrar libro");
+				}
+			}
+		}else {
+			System.out.println("el libro no existe");
+		}
+		
+	}
+	private static void devolverPrestamo() {
+		// TODO Auto-generated method stub
+		mostrarSocios();
+		System.out.println("Introduce el id del socio: ");
+		int id = t.nextInt(); t.nextLine();
+		Socio s = ad.obtenerSocio(id);
+		if(s!=null) {
+			for(Prestamo p:s.getPrestamos()) {
+				if(p.getFechaDevolReal()==null) {
+					p.mostrar();
+				}
+			}
+			System.out.println("introduce isbn del libro");
+			String isbn = t.nextLine();
+			for(Prestamo p:s.getPrestamos()) {
+				if(p.getFechaDevolReal()==null && p.getCp().getLibro().getIsbn().equalsIgnoreCase(isbn)){
+					if(ad.devolverPrestamo(p)) {
+						System.out.println("prestamo devuelto");
+					}else {
+						System.out.println("Error al devolver el prestamo");
+					}
+				}
+			}
+		}else {
+			System.out.println("Error, el socio no existe");
+		}
+		
 	}
 	private static void mostrarPrestamos() {
 		mostrarSocios();
