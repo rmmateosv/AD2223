@@ -4,7 +4,6 @@ import java.util.Date;
 
 public class Consulta {
 	private int id;
-	private String paciente;
 	private int medico;
 	private Date fecha;
 	private String diagnostico;
@@ -12,9 +11,8 @@ public class Consulta {
 	public Consulta() {
 	}
 
-	public Consulta(int id, String paciente, int medico, Date fecha, String diagnostico) {
+	public Consulta(int id, int medico, Date fecha, String diagnostico) {
 		this.id = id;
-		this.paciente = paciente;
 		this.medico = medico;
 		this.fecha = fecha;
 		this.diagnostico = diagnostico;
@@ -26,14 +24,6 @@ public class Consulta {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public String getPaciente() {
-		return paciente;
-	}
-
-	public void setPaciente(String paciente) {
-		this.paciente = paciente;
 	}
 
 	public int getMedico() {
@@ -62,8 +52,7 @@ public class Consulta {
 
 	@Override
 	public String toString() {
-		return "Consulta [id=" + id + ", paciente=" + paciente + ", medico=" + medico + ", fecha=" + fecha
-				+ ", diagnostico=" + diagnostico + "]";
+		return "Consulta [id=" + id + ", medico=" + medico + ", fecha=" + fecha + ", diagnostico=" + diagnostico + "]";
 	}
 	
 	
