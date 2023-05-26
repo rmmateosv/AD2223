@@ -3,7 +3,7 @@ package examen;
 import java.util.Date;
 
 public class Consulta {
-	private int id;
+	private int codigo;
 	private int medico;
 	private Date fecha;
 	private String diagnostico;
@@ -12,18 +12,18 @@ public class Consulta {
 	}
 
 	public Consulta(int id, int medico, Date fecha, String diagnostico) {
-		this.id = id;
+		this.codigo = id;
 		this.medico = medico;
 		this.fecha = fecha;
 		this.diagnostico = diagnostico;
 	}
 
-	public int getId() {
-		return id;
+	public int getCodigo() {
+		return codigo;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setCodigo(int id) {
+		this.codigo = id;
 	}
 
 	public int getMedico() {
@@ -52,7 +52,7 @@ public class Consulta {
 
 	@Override
 	public String toString() {
-		return "Consulta [id=" + id + ", medico=" + medico + ", fecha=" + fecha + ", diagnostico=" + diagnostico + "]";
+		return "Consulta [id=" + codigo + ", medico=" + medico + ", fecha=" + fecha + ", diagnostico=" + diagnostico + "]";
 	}
 	
 	

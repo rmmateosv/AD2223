@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.print.Doc;
+
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -18,8 +20,13 @@ import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
@@ -158,5 +165,190 @@ public class AccesoDatos {
 		}
 		return resultado;
 	}
+	public List<Paciente> obtenerPacientes() {
+		List<Paciente> resultado = new ArrayList();
+		try {
+			
+			MongoCollection<Paciente> col = bd.getCollection("pacientes", Paciente.class);
+			
+			col.find().into(resultado);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
+	}
+	public int obtenerIdConsulta() {
+		int resultado = 0;
+		
+		try {
+			
+			MongoCollection<Document> col = bd.getCollection("pacientes");
+			Document d = col.aggregate(Arrays.asList(Aggregates.group(null,
+					Accumulators.max("codigo", 
+							new Document("$max","$consultas.codigo"))))).first();
+			if(d.get("codigo")!=null) {
+				resultado = d.getInteger("codigo");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultado +1;
+	}
+	public boolean crearConsulta(Paciente p, Consulta c) {
+		boolean resultado = false;
+		
+		try {
+			
+			MongoCollection<Paciente> col = bd.getCollection("pacientes", Paciente.class);
+			Bson filtro = Filters.eq("dni", p.getDni());
+			Bson modif = Updates.combine(Updates.addToSet("consultas", c));
+			
+			UpdateResult r = col.updateOne(filtro, modif);
+			if(r.getModifiedCount()==1) {
+				resultado=true;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+	public ArrayList<Object[]> obtenerConsultas() {
+		ArrayList<Object[]> resultado = new ArrayList<>();
+		
+		try {
+			MongoCollection<Document> col = bd.getCollection("pacientes");
+			Bson campos = Projections.fields(Projections.exclude("_id"), 
+										Projections.include("consultas.codigo","nombre","consultas.medico",
+												"consultas.fecha"));
+			MongoCursor<Document> cursor = col.find().projection(campos).cursor();
+			while(cursor.hasNext()) {
+				Document d = cursor.next();
+				ArrayList<Document> consultas = (ArrayList<Document>) d.get("consultas");
+				for(Document c:consultas) {
+					resultado.add(new Object[] {
+							c.getInteger("codigo"),
+							d.getString("nombre"),
+							c.getInteger("medico"),
+							c.getDate("fecha")
+					});
+				}
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+	public Consulta obtenerConsulta(int id) {
+		Consulta resultado = null;
+		
+		try {
+			MongoCollection<Document> col = bd.getCollection("pacientes");
+			
+			Bson filtro = Filters.in("consultas.codigo", id);
+			Bson campos = Projections.fields(
+							Projections.excludeId(), 
+							Projections.elemMatch("consultas",Filters.eq("codigo", id)));
+			Document d = col.find(filtro).projection(campos).first();
+			if(d!=null) {
+				//System.out.println(d.toJson());
+				ArrayList<Document> dConsultas = (ArrayList<Document>) d.get("consultas");
+				resultado = new Consulta(dConsultas.get(0).getInteger("codigo"),
+						dConsultas.get(0).getInteger("medico"),
+						dConsultas.get(0).getDate("fecha"), dConsultas.get(0).getString("diagnostico"));
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+	public boolean borrarConsulta(Consulta c) {
+		boolean resultado = false;
+		
+		try {
+			MongoCollection<Document> col = bd.getCollection("pacientes");
+			
+			Bson filtro = Filters.in("consultas.codigo", c.getCodigo());
+			Bson modif = Updates.combine(
+						Updates.pull("consultas", new Document("codigo", c.getCodigo())));
+			
+			UpdateResult r = col.updateOne(filtro, modif);
+			if(r.getModifiedCount()==1) {
+				resultado = true;
+			}
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+	public boolean registrarDiagnostico(Consulta c) {
+		boolean resultado = false;
+		
+		try {
+			MongoCollection<Document> col = bd.getCollection("pacientes");
+			
+			Bson filtro = Filters.in("consultas.codigo", c.getCodigo());
+			Bson modif = Updates.combine(							
+							Updates.set("consultas.$[elem].diagnostico", c.getDiagnostico()));
+			UpdateOptions opModif = new UpdateOptions().arrayFilters(
+					Arrays.asList(Filters.eq("elem.codigo", c.getCodigo())));
+			UpdateResult r = col.updateOne(filtro, modif, opModif);
+			if(r.getModifiedCount()==1) {
+				resultado = true;
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+	public Object[] mostrarConsultas(int codigo) {
+		Object[] resultado =null;
+		
+		try {
+			MongoCollection<Document> col = bd.getCollection("pacientes");
+			//Filtro para la solamente 1 consulta
+			Bson filtro = Filters.eq("consultas.codigo",codigo);
+			
+			Document d = col.aggregate(Arrays.asList(
+					Aggregates.match(filtro),
+					Aggregates.unwind("$consultas"),
+					Aggregates.match(filtro),
+					Aggregates.lookup("medicos", "consultas.medico", "numColegiado","docMedico")
+					)).first();
+				//System.out.println(d.toJson());
+				Document consultas = (Document) d.get("consultas");
+				Document docMedico = (Document) d.getList("docMedico", Document.class).get(0);
+				resultado = new Object[] {d.getString("dni"),d.getString("nombre"),
+						consultas.getInteger("medico"),
+						consultas.getDate("fecha"),
+						consultas.getString("diagnostico"),
+						docMedico.getString("nombre")} ;			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		
+		return resultado;
+	}
+	
+	
 
 }

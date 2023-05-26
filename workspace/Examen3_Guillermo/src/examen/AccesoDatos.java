@@ -128,7 +128,8 @@ public class AccesoDatos {
 
 			MongoCollection<Mensaje> col = bd.getCollection("mensaje", Mensaje.class);
 
-			Mensaje m = col.aggregate(Arrays.asList(Aggregates.group(null, Accumulators.max("codigo", "$codigo"))))
+			Mensaje m = col.aggregate(Arrays.asList(
+					Aggregates.group(null, Accumulators.max("codigo", "$codigo"))))
 					.first();
 
 			if (m != null) {

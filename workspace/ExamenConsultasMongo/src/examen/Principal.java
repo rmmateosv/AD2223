@@ -2,6 +2,8 @@ package examen;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -152,22 +154,129 @@ public class Principal {
 	}
 
 	private static void crearConsulta() {
-		// TODO Auto-generated method stub
+		mostrarPacientes();
+		System.out.println("Introduce el dni del paciente: ");
+		String dni = t.nextLine();
+		Paciente p = ad.obtenerPaciente(dni);
+		if(p!=null) {
+			
+			mostrarMedicos();
+			System.out.println("Introduce el numero del colegiado del medico: ");
+			int numCol = t.nextInt();t.nextLine();
+			Medico m = ad.obtenerMedico(numCol);
+			if(m!=null) {
+				
+				Consulta c = new Consulta();
+				c.setCodigo(ad.obtenerIdConsulta());
+				c.setMedico(m.getNumColegiado());
+				c.setFecha(new Date());
+				
+				p.getConsultas().add(c);
+				
+				if(ad.crearConsulta(p, c)) {
+					
+					System.out.println("Se ha creado la consulta para el paciente con dni " + p.getDni());
+					
+				}else {
+					System.out.println("Error al crear la consulta");
+				}
+				
+			}else {
+				System.out.println("Error, el médico no existe");
+			}
+			
+		}else {
+			System.out.println("Error, el paciente no existe");
+		}
 
+	}
+
+	private static void mostrarPacientes() {
+		List<Paciente> pacientes = ad.obtenerPacientes();
+		for(Paciente p:pacientes) {
+			System.out.println(p.toString());
+		}
+		
 	}
 
 	private static void registrarDiagnosticos() {
-		// TODO Auto-generated method stub
+		mostrarConsultas();
+		System.out.println("Introduce el id de la consulta: ");
+		int id = t.nextInt();t.nextLine();
+		Consulta c = ad.obtenerConsulta(id);
+		if(c!=null) {
+			
+			System.out.println("Introduce el diagnostico: ");
+			c.setDiagnostico(t.nextLine());
+			if(ad.registrarDiagnostico(c)) {
+				
+				System.out.println("Diagnóstico registrado");
+				
+			}else {
+				
+				System.out.println("Error al registrar el diagnostico");
+			}
+			
+		}else {
+			System.out.println("Error, la consulta no existe");
+		}
+		
+		
 
 	}
 
+	private static void mostrarConsultas() {
+		ArrayList<Object[]> consultas = ad.obtenerConsultas();
+		for(Object[] o:consultas) {
+			System.out.println("Codigo: "+o[0]+
+								"\tPaciente: " +o[1] +
+								"\tMedico: " + o[2] + 
+								"\tFecha: " + o[3]);
+		}
+		
+	}
+
 	private static void borrarConsultas() {
-		// TODO Auto-generated method stub
+		mostrarConsultas();
+		System.out.println("Introduce el id de la consulta: ");
+		int id = t.nextInt();t.nextLine();
+		Consulta c = ad.obtenerConsulta(id);
+		if(c!=null) {
+			
+			if(ad.borrarConsulta(c)) {
+				System.out.println("Consulta eliminada");
+			}else {
+				System.out.println("Error al borrar la consulta");
+			}
+			
+			
+		}else {
+			System.out.println("Error, la consulta no existe");
+		}
+		
 
 	}
 
 	private static void mostrarConsulta() {
-		// TODO Auto-generated method stub
+		mostrarConsultas();
+		System.out.println("Introduce el id de la consulta: ");
+		int id = t.nextInt();t.nextLine();
+		Consulta c = ad.obtenerConsulta(id);
+		if(c!=null) {
+			
+			Object[] o = ad.mostrarConsultas(c.getCodigo());
+			if(o!=null) {
+				System.out.println(
+									"\tPaciente[Nif: " +o[0]+ " ,Nombre: " + o[1] +"]" +
+									"\tMedico[Numero colegiado: " + o[2]+ " ,Nombre: " + o[5]+ "]"+
+									"\tFecha: " + o[3] + 
+									"\tDiagnostico: " + o[4]);
+			
+			}
+		}else {
+			System.out.println("Error, la consulta no existe");
+		}
+		
 
 	}
 }
